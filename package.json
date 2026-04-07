@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node --experimental-strip-types scripts/generate-sitemap.cts",
+    "prebuild": "node --experimental-strip-types scripts/generate-sitemap.cts && node --experimental-strip-types scripts/generate-feed.cts",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
@@ -19,6 +19,7 @@
     "next": "16.2.2",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "sharp": "^0.34.5",
     "sugar-high": "^1.1.0"
   },
   "devDependencies": {

@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { JsonLd } from "@/components/json-ld";
+import { buildBreadcrumbSchema } from "@/lib/breadcrumbs";
 import { practiceUrl } from "@/lib/links";
 
 export const metadata: Metadata = {
@@ -66,8 +68,14 @@ const publications: Publication[] = [
 ];
 
 export default function PhysicianPage() {
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: "Home", href: "/" },
+    { name: "Physician", href: "/physician" },
+  ]);
+
   return (
     <div className="mx-auto max-w-3xl px-6">
+      <JsonLd data={breadcrumbSchema} />
       {/* Header */}
       <section className="pt-24 pb-12 sm:pt-32 sm:pb-16">
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">

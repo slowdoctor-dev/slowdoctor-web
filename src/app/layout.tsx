@@ -46,12 +46,21 @@ export const metadata: Metadata = {
     siteName: "slowdoctor.dev",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "/og-default.png",
+        width: 1200,
+        height: 630,
+        alt: "slowdoctor.dev",
+      },
+    ],
   },
   twitter: {
     card: "summary",
     title: "Joonho Lim - Plastic Surgeon & Engineer",
     description:
       "Board-certified plastic surgeon and engineer building an AI-operated clinic.",
+    images: ["/og-default.png"],
   },
   robots: {
     index: true,
@@ -98,6 +107,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${plusJakartaSans.variable} ${gowunDodum.variable} ${notoSansKR.variable} h-full antialiased`}>
       <head>
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="Blog"
+          href="/feed.xml"
+        />
         <JsonLd data={personSchema} />
       </head>
       <body className="min-h-full flex flex-col">

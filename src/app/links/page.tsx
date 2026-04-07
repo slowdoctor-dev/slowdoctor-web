@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { JsonLd } from "@/components/json-ld";
+import { buildBreadcrumbSchema } from "@/lib/breadcrumbs";
 import { socialLinks, academicLinks, practiceUrl } from "@/lib/links";
 
 export const metadata: Metadata = {
@@ -28,8 +30,14 @@ const sections = [
 ];
 
 export default function LinksPage() {
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: "Home", href: "/" },
+    { name: "Links", href: "/links" },
+  ]);
+
   return (
     <div className="mx-auto max-w-3xl px-6">
+      <JsonLd data={breadcrumbSchema} />
       {/* Header */}
       <section className="pt-24 pb-12 sm:pt-32 sm:pb-16">
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">

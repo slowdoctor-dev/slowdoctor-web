@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
-
 Sitemap: https://slowdoctor.dev/sitemap.xml
+Sitemap: https://slowdoctor.dev/feed.xml

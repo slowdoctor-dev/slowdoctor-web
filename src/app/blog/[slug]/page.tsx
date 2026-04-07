@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAllPosts, getPostBySlug, getPostFrontmatter } from "@/lib/blog";
 import { JsonLd } from "@/components/json-ld";
+import { buildBreadcrumbSchema } from "@/lib/breadcrumbs";
 
 export const dynamicParams = false;
 
@@ -24,38 +25,27 @@ export async function generateMetadata(
     return {};
   }
 
+  const image = post.image ?? "/og-default.png";
+
   return {
     title: post.title,
     description: post.description,
     alternates: {
       canonical: `/blog/${slug}`,
     },
-    openGraph: post.image
-      ? {
-          title: post.title,
-          description: post.description,
-          type: "article",
-          url: `/blog/${slug}`,
-          images: [post.image],
-        }
-      : {
-          title: post.title,
-          description: post.description,
-          type: "article",
-          url: `/blog/${slug}`,
-        },
-    twitter: post.image
-      ? {
-          card: "summary_large_image",
-          title: post.title,
-          description: post.description,
-          images: [post.image],
-        }
-      : {
-          card: "summary",
-          title: post.title,
-          description: post.description,
-        },
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      type: "article",
+      url: `/blog/${slug}`,
+      images: [image],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+      images: [image],
+    },
   };
 }
 
@@ -84,9 +74,16 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
     ...(post.image ? { image: post.image } : {}),
   };
 
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: "Home", href: "/" },
+    { name: "Blog", href: "/blog" },
+    { name: post.title, href: `/blog/${slug}` },
+  ]);
+
   return (
     <div className="mx-auto max-w-3xl px-6">
       <JsonLd data={articleSchema} />
+      <JsonLd data={breadcrumbSchema} />
       <section className="pt-24 pb-12 sm:pt-32 sm:pb-16">
         <Link href="/blog" className="text-sm text-accent hover:underline">
           &larr; Back to blog

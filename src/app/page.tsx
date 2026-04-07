@@ -3,7 +3,7 @@ import Link from "next/link";
 import { socialLinks, practiceUrl } from "@/lib/links";
 
 export const metadata: Metadata = {
-  title: "Joonho Lim - Plastic Surgeon & Engineer",
+  alternates: { canonical: "/" },
 };
 
 export default function Home() {

@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Physician",
   description:
     "Board-certified plastic surgeon specializing in slow-aging, scar treatment, and blepharoplasty.",
+  alternates: { canonical: "/physician" },
 };
 
 interface Publication {

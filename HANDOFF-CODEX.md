@@ -1,66 +1,95 @@
-# Codex Handoff: slowdoctor-web Improvements
+# Codex Handoff: SEO & Feed Improvements
 
 ## Project Context
 
-This is a statically exported Next.js 16 personal website for a plastic surgeon & engineer (slowdoctor.dev). Tech stack: Next.js 16, TypeScript, Tailwind CSS v4, MDX for blog posts. The site uses `output: "export"` — no server runtime.
+Static Next.js 16 personal website at `slowdoctor.dev`. Uses `output: "export"`, MDX blog, sugar-high syntax highlighting, and build-time sitemap generation.
 
-Key files:
-- `next.config.ts` — MDX + static export config
-- `src/lib/blog.ts` — blog pipeline (getAllPosts, getPostBySlug, getPostFrontmatter)
-- `src/mdx-components.tsx` — MDX component overrides (currently empty)
-- `src/content/blog/` — MDX blog posts
-- `public/sitemap.xml` — manually maintained sitemap
+Already completed (do NOT redo):
+- BlogPosting JSON-LD on blog posts (`src/app/blog/[slug]/page.tsx`)
+- `<lastmod>` in sitemap, `<priority>` removed (`scripts/generate-sitemap.cts`)
+- Canonical URLs on all pages
+- OG/Twitter metadata with optional image support
+- Person/Physician JSON-LD in root layout
 
-## Task 1: Auto-generate sitemap.xml at build time
+## Task 1: RSS feed generator
 
-**Problem:** `public/sitemap.xml` is manually maintained. As blog posts grow, this will drift out of sync.
-
-**Requirements:**
-- Create a build script (`scripts/generate-sitemap.ts` or similar) that:
-  - Reads all page routes from `src/app/` (excluding layout, error, not-found, loading files)
-  - Reads all blog post slugs from `src/content/blog/*.mdx`
-  - Generates `public/sitemap.xml` with all URLs under `https://slowdoctor.dev/`
-  - Static pages get priority 0.8, blog listing 0.7, individual posts 0.5, homepage 1.0
-- Add a `"prebuild"` script in `package.json` that runs this before `next build`
-- Remove the current manually written `public/sitemap.xml` (it will be auto-generated)
-- Add `public/sitemap.xml` to `.gitignore` since it's a build artifact
-
-**Constraints:**
-- Do NOT install `next-sitemap` or any external package. Use Node.js fs/path only.
-- Keep it simple — a single script file, no abstractions.
-- Use the same `blogDirectory` pattern as `src/lib/blog.ts` to find posts.
-
-## Task 2: Blog post OG images
-
-**Problem:** Blog posts have no unique `og:image`. Social sharing shows no preview image.
+**Problem:** No RSS feed exists. Google recommends RSS as a supplementary discovery signal, and it enables readers to subscribe.
 
 **Requirements:**
-- Add an optional `image` field to blog frontmatter in `src/lib/blog.ts` (type: `string | undefined`)
-- In `src/app/blog/[slug]/page.tsx` `generateMetadata`, if a post has an `image` field, include it as `openGraph.images`
-- For now, do NOT generate images automatically — just wire up the frontmatter field so images can be manually added per post
-- Update the `BlogFrontmatter` interface to include `image?: string`
-- Do NOT modify the existing hello-world.mdx post
+- Create `scripts/generate-feed.cts` that:
+  - Reads all `.mdx` files from `src/content/blog/`
+  - Parses frontmatter with `gray-matter` (already a dependency)
+  - Generates `public/feed.xml` in RSS 2.0 format
+  - Channel: title "Joonho Lim - Blog", link "https://slowdoctor.dev/blog", description from blog page metadata
+  - Each item: title, link (`https://slowdoctor.dev/blog/{slug}`), description, pubDate (RFC 822 format from frontmatter `date`), guid (same as link, with `isPermaLink="true"`)
+  - Sort items by date descending
+- Update the `prebuild` script in `package.json` to also run this script (chain with `&&`)
+- Add `public/feed.xml` to `.gitignore`
+- Add an `<link rel="alternate" type="application/rss+xml">` tag in `src/app/layout.tsx` inside `<head>`:
+  ```tsx
+  <link rel="alternate" type="application/rss+xml" title="Blog" href="/feed.xml" />
+  ```
+- Also add the feed URL to `public/robots.txt` as a second line after the Sitemap line (no blank line needed — just keep the format clean)
 
 **Constraints:**
-- Keep the `image` field optional — posts without it should work fine (no fallback needed yet)
+- Do NOT install any RSS library. Use string concatenation like the sitemap generator.
+- Use `require("gray-matter")` the same way `generate-sitemap.cts` does.
+- No abstractions — single simple script file.
 
-## Task 3: MDX component overrides with syntax highlighting
+## Task 2: BreadcrumbList JSON-LD on sub-pages
 
-**Problem:** `src/mdx-components.tsx` returns an empty object. Blog content relies on `.prose` CSS classes in `globals.css`, which works for basic formatting. But code blocks have no syntax highlighting.
+**Problem:** Google generates breadcrumbs from URL structure alone. Explicit BreadcrumbList structured data gives control over how breadcrumbs appear in search results.
 
 **Requirements:**
-- Install `sugar-high` (lightweight syntax highlighter, ~1KB, no heavy deps like shiki/prism)
-- In `src/mdx-components.tsx`, override the `code` component:
-  - If the code element has a `className` starting with `language-`, apply syntax highlighting via `sugar-high`
-  - Inline code (no language class) should remain unstyled (the `.prose code` CSS handles it)
-- Override the `pre` component to pass through cleanly (no double-wrapping)
-- Override the `a` component to add `target="_blank" rel="noopener noreferrer"` for external links (URLs starting with `http`)
+- Create a shared helper in `src/lib/breadcrumbs.ts`:
+  ```typescript
+  export function buildBreadcrumbSchema(items: { name: string; href: string }[]) {
+    return {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: items.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: item.name,
+        item: `https://slowdoctor.dev${item.href}`,
+      })),
+    };
+  }
+  ```
+- Add `<JsonLd data={breadcrumbSchema} />` to these pages:
+  - `/physician` — breadcrumbs: Home `/` → Physician `/physician`
+  - `/engineer` — breadcrumbs: Home `/` → Engineer `/engineer`
+  - `/links` — breadcrumbs: Home `/` → Links `/links`
+  - `/blog` — breadcrumbs: Home `/` → Blog `/blog`
+  - `/blog/[slug]` — breadcrumbs: Home `/` → Blog `/blog` → {post.title} `/blog/{slug}`
+- Import `JsonLd` from `@/components/json-ld` (already exists)
 
 **Constraints:**
-- Do NOT install shiki, prism, rehype-highlight, or any heavy highlighting library
-- `sugar-high` is the only acceptable dependency for this task
-- Keep the file simple — no abstractions, just direct component definitions
-- Verify it works by adding a code block to `src/content/blog/hello-world.mdx` (a simple TypeScript snippet)
+- The homepage does NOT need breadcrumbs.
+- Keep each page's breadcrumb inline — don't over-abstract.
+- The blog post page already has a `<JsonLd>` for BlogPosting. Add the BreadcrumbList as a second `<JsonLd>` (multiple JSON-LD blocks per page is valid and recommended by Google).
+
+## Task 3: Default OG image
+
+**Problem:** Social sharing and Google Discover show no preview image when a blog post has no `image` frontmatter. There is no fallback.
+
+**Requirements:**
+- Create a minimal OG image at `public/og-default.png` (1200x630px):
+  - Use a simple CLI tool like `node-canvas` or just create a solid dark background (#0a0a0a) with centered text "slowdoctor.dev" in white
+  - If generating programmatically is too complex, create a 1200x630 solid #0a0a0a PNG as a placeholder (the user can replace it later)
+- In `src/app/layout.tsx`, add to the root metadata's `openGraph`:
+  ```typescript
+  images: [{ url: "/og-default.png", width: 1200, height: 630, alt: "slowdoctor.dev" }],
+  ```
+- Also add to `twitter`:
+  ```typescript
+  images: ["/og-default.png"],
+  ```
+
+**Constraints:**
+- Do NOT install `@vercel/og`, `satori`, or any heavy image generation library.
+- A simple solid-color PNG placeholder is perfectly acceptable. Keep it minimal.
+- If you cannot generate a PNG programmatically, create it via a small Node.js script using only built-in modules, or just create a 1x1 placeholder and note that it should be replaced manually.
 
 ## Validation
 
@@ -68,15 +97,24 @@ After all three tasks, run:
 ```bash
 npm run build
 ```
-The build must succeed with no errors. All pages should be in the static output.
+The build must succeed. Verify:
+- `public/feed.xml` exists and is valid RSS 2.0
+- `public/sitemap.xml` exists with `<lastmod>` (no `<priority>`)
+- Blog post HTML contains both `BlogPosting` and `BreadcrumbList` JSON-LD
+- Sub-page HTML contains `BreadcrumbList` JSON-LD
+- Root layout HTML contains `<link rel="alternate" type="application/rss+xml">`
 
 ## Files You'll Touch
 
-- `scripts/generate-sitemap.ts` (new)
-- `package.json` (add prebuild script, add sugar-high dep)
-- `.gitignore` (add public/sitemap.xml)
-- `public/sitemap.xml` (delete — now auto-generated)
-- `src/lib/blog.ts` (add optional image field)
-- `src/app/blog/[slug]/page.tsx` (wire og:image in generateMetadata)
-- `src/mdx-components.tsx` (add component overrides)
-- `src/content/blog/hello-world.mdx` (add test code block)
+- `scripts/generate-feed.cts` (new)
+- `src/lib/breadcrumbs.ts` (new)
+- `public/og-default.png` (new — placeholder)
+- `package.json` (update prebuild)
+- `.gitignore` (add public/feed.xml)
+- `public/robots.txt` (add feed.xml reference)
+- `src/app/layout.tsx` (add RSS link tag, OG image)
+- `src/app/physician/page.tsx` (add BreadcrumbList)
+- `src/app/engineer/page.tsx` (add BreadcrumbList)
+- `src/app/links/page.tsx` (add BreadcrumbList)
+- `src/app/blog/page.tsx` (add BreadcrumbList)
+- `src/app/blog/[slug]/page.tsx` (add BreadcrumbList)

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAllPosts, getPostBySlug, getPostFrontmatter } from "@/lib/blog";
+import { JsonLd } from "@/components/json-ld";
 
 export const dynamicParams = false;
 
@@ -68,8 +69,24 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
 
   const { Content } = post;
 
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.description,
+    datePublished: post.date,
+    url: `https://slowdoctor.dev/blog/${slug}`,
+    author: {
+      "@type": "Person",
+      name: "Joonho Lim",
+      url: "https://slowdoctor.dev",
+    },
+    ...(post.image ? { image: post.image } : {}),
+  };
+
   return (
     <div className="mx-auto max-w-3xl px-6">
+      <JsonLd data={articleSchema} />
       <section className="pt-24 pb-12 sm:pt-32 sm:pb-16">
         <Link href="/blog" className="text-sm text-accent hover:underline">
           &larr; Back to blog

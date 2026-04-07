@@ -4,6 +4,7 @@ export const metadata: Metadata = {
   title: "Engineer",
   description:
     "Building an AI-operated clinic with Claude Code, multi-agent systems, and modern web infrastructure.",
+  alternates: { canonical: "/engineer" },
 };
 
 const projects = [

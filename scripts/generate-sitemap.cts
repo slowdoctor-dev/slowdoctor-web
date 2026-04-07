@@ -1,5 +1,6 @@
 const fs = require("node:fs/promises");
 const path = require("node:path");
+const matter = require("gray-matter");
 
 const siteUrl = "https://slowdoctor.dev";
 const appDirectory = path.join(process.cwd(), "src/app");
@@ -51,20 +52,31 @@ async function getStaticRoutes(directory, segments = []) {
 
 async function getBlogRoutes() {
   const entries = await fs.readdir(blogDirectory, { withFileTypes: true });
+  const results = [];
 
-  return entries
-    .filter((entry) => entry.isFile() && entry.name.endsWith(".mdx"))
-    .map((entry) => `/blog/${entry.name.replace(/\.mdx$/, "")}`)
-    .sort();
+  for (const entry of entries) {
+    if (!entry.isFile() || !entry.name.endsWith(".mdx")) continue;
+    const content = await fs.readFile(path.join(blogDirectory, entry.name), "utf8");
+    const { data } = matter(content);
+    results.push({
+      route: `/blog/${entry.name.replace(/\.mdx$/, "")}`,
+      lastmod: data.date ? new Date(data.date).toISOString().split("T")[0] : undefined,
+    });
+  }
+
+  return results.sort((a, b) => a.route.localeCompare(b.route));
 }
 
-function createUrl(route, priority) {
-  return [
+function createUrl(route, lastmod) {
+  const lines = [
     "  <url>",
     `    <loc>${siteUrl}${route === "/" ? "/" : route}</loc>`,
-    `    <priority>${priority}</priority>`,
-    "  </url>",
-  ].join("\n");
+  ];
+  if (lastmod) {
+    lines.push(`    <lastmod>${lastmod}</lastmod>`);
+  }
+  lines.push("  </url>");
+  return lines.join("\n");
 }
 
 async function main() {
@@ -74,13 +86,15 @@ async function main() {
     (route) => route !== "/" && route !== "/blog",
   );
 
+  const today = new Date().toISOString().split("T")[0];
+
   const sitemap = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    createUrl("/", "1.0"),
-    ...otherStaticRoutes.map((route) => createUrl(route, "0.8")),
-    createUrl("/blog", "0.7"),
-    ...blogRoutes.map((route) => createUrl(route, "0.5")),
+    createUrl("/", today),
+    ...otherStaticRoutes.map((route) => createUrl(route, today)),
+    createUrl("/blog", today),
+    ...blogRoutes.map((entry) => createUrl(entry.route, entry.lastmod)),
     "</urlset>",
     "",
   ].join("\n");

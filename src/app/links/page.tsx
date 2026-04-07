@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Links",
   description:
     "Professional and social links for Joonho Lim -- medical profiles, social media, and practice.",
+  alternates: { canonical: "/links" },
 };
 
 const sections = [

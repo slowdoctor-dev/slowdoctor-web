@@ -1,3 +1,5 @@
+import { SITE } from "@/lib/config";
+
 export function buildBreadcrumbSchema(items: { name: string; href: string }[]) {
   return {
     "@context": "https://schema.org",
@@ -6,7 +8,7 @@ export function buildBreadcrumbSchema(items: { name: string; href: string }[]) {
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: `https://slowdoctor.dev${item.href}`,
+      item: `${SITE.url}${item.href}`,
     })),
   };
 }

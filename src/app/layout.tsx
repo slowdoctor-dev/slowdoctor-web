@@ -3,6 +3,7 @@ import { Inter, Plus_Jakarta_Sans, Gowun_Dodum, Noto_Sans_KR } from "next/font/g
 import Link from "next/link";
 import { JsonLd } from "@/components/json-ld";
 import { socialLinks, allProfileUrls, practiceUrl } from "@/lib/links";
+import { SITE, AUTHOR, DESCRIPTIONS } from "@/lib/config";
 import "./globals.css";
 
 const inter = Inter({
@@ -32,35 +33,32 @@ const notoSansKR = Noto_Sans_KR({
 
 export const metadata: Metadata = {
   title: {
-    default: "Joonho Lim - Plastic Surgeon & Engineer",
-    template: "%s | Joonho Lim",
+    default: SITE.title,
+    template: SITE.titleTemplate,
   },
-  description:
-    "Board-certified plastic surgeon and engineer specializing in slow-aging, scar treatment, and blepharoplasty. Building an AI-operated clinic.",
-  metadataBase: new URL("https://slowdoctor.dev"),
+  description: DESCRIPTIONS.full,
+  metadataBase: new URL(SITE.url),
   openGraph: {
-    title: "Joonho Lim - Plastic Surgeon & Engineer",
-    description:
-      "Board-certified plastic surgeon and engineer building an AI-operated clinic.",
-    url: "https://slowdoctor.dev",
-    siteName: "slowdoctor.dev",
+    title: SITE.title,
+    description: DESCRIPTIONS.brief,
+    url: SITE.url,
+    siteName: SITE.name,
     locale: "en_US",
     type: "website",
     images: [
       {
-        url: "/og-default.png",
+        url: SITE.ogImage,
         width: 1200,
         height: 630,
-        alt: "slowdoctor.dev",
+        alt: SITE.name,
       },
     ],
   },
   twitter: {
     card: "summary",
-    title: "Joonho Lim - Plastic Surgeon & Engineer",
-    description:
-      "Board-certified plastic surgeon and engineer building an AI-operated clinic.",
-    images: ["/og-default.png"],
+    title: SITE.title,
+    description: DESCRIPTIONS.brief,
+    images: [SITE.ogImage],
   },
   robots: {
     index: true,
@@ -71,12 +69,11 @@ export const metadata: Metadata = {
 const personSchema = {
   "@context": "https://schema.org",
   "@type": ["Person", "Physician"],
-  name: "Joonho Lim",
-  alternateName: "\uc784\uc900\ud638",
-  jobTitle: "Board-Certified Plastic Surgeon",
-  url: "https://slowdoctor.dev",
-  description:
-    "Board-certified plastic surgeon and engineer specializing in slow-aging, scar treatment, and blepharoplasty. Building an AI-operated clinic.",
+  name: AUTHOR.name,
+  alternateName: AUTHOR.korean,
+  jobTitle: AUTHOR.jobTitle,
+  url: SITE.url,
+  description: DESCRIPTIONS.full,
   worksFor: {
     "@type": "MedicalBusiness",
     name: "LEAD Plastic Surgery",
@@ -144,7 +141,7 @@ export default function RootLayout({
         <footer aria-label="Site footer" className="border-t border-border">
           <div className="mx-auto max-w-3xl px-6 py-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-muted">
-              &copy; 2026 Joonho Lim
+              &copy; 2026 {AUTHOR.name}
             </p>
             <div className="flex items-center gap-5 text-sm text-muted">
               {socialLinks.slice(0, 4).map((link) => (

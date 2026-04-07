@@ -43,6 +43,7 @@ yarn-error.log*
 .playwright-mcp/
 
 # codex
+.codex
 .codex/
 
 # typescript

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getAllPosts, getPostBySlug, getPostFrontmatter } from "@/lib/blog";
 import { JsonLd } from "@/components/json-ld";
 import { buildBreadcrumbSchema } from "@/lib/breadcrumbs";
+import { SITE, AUTHOR } from "@/lib/config";
 
 export const dynamicParams = false;
 
@@ -65,13 +66,13 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
     headline: post.title,
     description: post.description,
     datePublished: post.date,
-    url: `https://slowdoctor.dev/blog/${slug}`,
+    url: `${SITE.url}/blog/${slug}`,
     author: {
       "@type": "Person",
-      name: "Joonho Lim",
-      url: "https://slowdoctor.dev",
+      name: AUTHOR.name,
+      url: SITE.url,
     },
-    image: `https://slowdoctor.dev${post.image ?? "/og-default.png"}`,
+    image: `${SITE.url}${post.image ?? SITE.ogImage}`,
   };
 
   const breadcrumbSchema = buildBreadcrumbSchema([

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AUTHOR, DESCRIPTIONS } from "@/lib/config";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -11,14 +12,13 @@ export default function Home() {
       {/* Hero */}
       <section className="pt-24 pb-16 sm:pt-32 sm:pb-20">
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-          Joonho Lim
+          {AUTHOR.name}
         </h1>
         <p className="mt-4 text-lg text-accent font-medium">
           Choosing the right way over the fast way.
         </p>
         <p className="mt-4 text-lg text-muted leading-relaxed max-w-xl">
-          Board-certified plastic surgeon and engineer building an AI-operated
-          clinic.
+          {DESCRIPTIONS.brief}
         </p>
       </section>
 

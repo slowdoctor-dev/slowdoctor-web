@@ -32,22 +32,38 @@ function formatDate(date: string) {
   }).format(new Date(date));
 }
 
+function parseFrontmatter(data: unknown, fileName: string): BlogFrontmatter {
+  if (typeof data !== "object" || data === null) {
+    throw new Error(`Invalid frontmatter in ${fileName}`);
+  }
+  const obj = data as Record<string, unknown>;
+  const missing: string[] = [];
+  if (typeof obj.title !== "string" || !obj.title) missing.push("title");
+  if (typeof obj.date !== "string" || !obj.date) missing.push("date");
+  if (typeof obj.description !== "string" || !obj.description)
+    missing.push("description");
+  if (missing.length > 0) {
+    throw new Error(
+      `Missing required frontmatter in ${fileName}: ${missing.join(", ")}`,
+    );
+  }
+  return {
+    title: obj.title as string,
+    date: obj.date as string,
+    description: obj.description as string,
+    image: typeof obj.image === "string" ? obj.image : undefined,
+  };
+}
+
 async function readBlogFrontmatter(fileName: string) {
   const fullPath = path.join(blogDirectory, fileName);
   const fileContents = await fs.readFile(fullPath, "utf8");
   const { data } = matter(fileContents);
-  const frontmatter = data as Partial<BlogFrontmatter>;
-
-  if (!frontmatter.title || !frontmatter.date || !frontmatter.description) {
-    throw new Error(`Missing required frontmatter in ${fileName}`);
-  }
+  const frontmatter = parseFrontmatter(data, fileName);
 
   return {
     slug: fileName.replace(/\.mdx$/, ""),
-    title: frontmatter.title,
-    date: frontmatter.date,
-    description: frontmatter.description,
-    image: frontmatter.image,
+    ...frontmatter,
     formattedDate: formatDate(frontmatter.date),
   } satisfies BlogPostSummary;
 }
@@ -85,11 +101,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
   }
 
   const { content, data } = matter(fileContents);
-  const frontmatter = data as Partial<BlogFrontmatter>;
-
-  if (!frontmatter.title || !frontmatter.date || !frontmatter.description) {
-    throw new Error(`Missing required frontmatter in ${slug}.mdx`);
-  }
+  const frontmatter = parseFrontmatter(data, `${slug}.mdx`);
 
   const module = (await evaluate(content, {
     ...runtime,
@@ -100,10 +112,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
 
   return {
     slug,
-    title: frontmatter.title,
-    date: frontmatter.date,
-    description: frontmatter.description,
-    image: frontmatter.image,
+    ...frontmatter,
     formattedDate: formatDate(frontmatter.date),
     Content: module.default,
   };

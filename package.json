@@ -7,7 +7,9 @@
     "prebuild": "node --experimental-strip-types scripts/generate-sitemap.cts && node --experimental-strip-types scripts/generate-feed.cts",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "new-post": "node --experimental-strip-types scripts/new-post.cts",
+    "validate": "node --experimental-strip-types scripts/validate.cts"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

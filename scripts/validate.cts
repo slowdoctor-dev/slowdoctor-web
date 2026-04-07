@@ -2,9 +2,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 const matter = require("gray-matter");
 
+const { parseDateOnly, formatDate } = require("./date-utils.cts");
+
 const outDir = path.join(process.cwd(), "out");
 let errors = 0;
-const DATE_ONLY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
 function check(condition: boolean, message: string) {
   if (!condition) {
@@ -13,36 +14,6 @@ function check(condition: boolean, message: string) {
   } else {
     console.log(`  OK: ${message}`);
   }
-}
-
-function parseDateOnly(value: string, fileName: string) {
-  if (!DATE_ONLY_PATTERN.test(value)) {
-    throw new Error(
-      `Invalid date in ${fileName}: expected YYYY-MM-DD, received "${value}"`,
-    );
-  }
-
-  const [year, month, day] = value.split("-").map(Number);
-  const parsed = new Date(Date.UTC(year, month - 1, day));
-
-  if (
-    parsed.getUTCFullYear() !== year ||
-    parsed.getUTCMonth() !== month - 1 ||
-    parsed.getUTCDate() !== day
-  ) {
-    throw new Error(`Invalid calendar date in ${fileName}: "${value}"`);
-  }
-
-  return parsed;
-}
-
-function formatDateLabel(value: string, fileName: string) {
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    timeZone: "UTC",
-  }).format(parseDateOnly(value, fileName));
 }
 
 // Check build output exists
@@ -105,7 +76,7 @@ for (const post of posts) {
   const htmlPath = path.join(outDir, "blog", `${slug}.html`);
   const fileContents = fs.readFileSync(path.join(blogDir, post), "utf8");
   const { data } = matter(fileContents);
-  const expectedDateLabel = formatDateLabel(String(data.date), post);
+  const expectedDateLabel = formatDate(String(data.date), post);
 
   if (!fs.existsSync(htmlPath)) {
     console.error(`  FAIL: /blog/${slug} — HTML not found`);

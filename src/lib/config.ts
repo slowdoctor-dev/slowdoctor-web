@@ -20,6 +20,7 @@ export const DESCRIPTIONS = {
 
 export const PRACTICE = {
   name: "LEAD Plastic Surgery",
+  fullName: "LEAD Plastic Surgery Clinic",
   location: "Dogok-dong, Gangnam-gu, Seoul, South Korea",
   phone: "+82-2-6953-3231",
 } as const;

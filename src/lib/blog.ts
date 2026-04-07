@@ -71,13 +71,11 @@ function parseFrontmatter(data: unknown, fileName: string): BlogFrontmatter {
       `Missing required frontmatter in ${fileName}: ${missing.join(", ")}`,
     );
   }
+  const date = obj.date as string;
+  parseDateOnly(date, fileName);
   return {
     title: obj.title as string,
-    date: (() => {
-      const value = obj.date as string;
-      parseDateOnly(value, fileName);
-      return value;
-    })(),
+    date,
     description: obj.description as string,
     image: typeof obj.image === "string" ? obj.image : undefined,
   };
@@ -102,11 +100,7 @@ export async function getAllPosts(): Promise<BlogPostSummary[]> {
     entries.filter((entry) => entry.endsWith(".mdx")).map(readBlogFrontmatter),
   );
 
-  return posts.sort(
-    (left, right) =>
-      parseDateOnly(right.date, `${right.slug}.mdx`).getTime() -
-      parseDateOnly(left.date, `${left.slug}.mdx`).getTime(),
-  );
+  return posts.sort((left, right) => right.date.localeCompare(left.date));
 }
 
 export async function getPostFrontmatter(

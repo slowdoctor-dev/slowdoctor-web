@@ -2,32 +2,13 @@ const fs = require("node:fs/promises");
 const path = require("node:path");
 const matter = require("gray-matter");
 
+const { parseDateOnly } = require("./date-utils.cts");
+
+// Keep in sync with src/lib/config.ts SITE.url
 const siteUrl = "https://slowdoctor.dev";
 const appDirectory = path.join(process.cwd(), "src/app");
 const blogDirectory = path.join(process.cwd(), "src/content/blog");
 const sitemapPath = path.join(process.cwd(), "public/sitemap.xml");
-const DATE_ONLY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
-
-function parseDateOnly(value, fileName) {
-  if (!DATE_ONLY_PATTERN.test(value)) {
-    throw new Error(
-      `Invalid date in ${fileName}: expected YYYY-MM-DD, received "${value}"`,
-    );
-  }
-
-  const [year, month, day] = value.split("-").map(Number);
-  const parsed = new Date(Date.UTC(year, month - 1, day));
-
-  if (
-    parsed.getUTCFullYear() !== year ||
-    parsed.getUTCMonth() !== month - 1 ||
-    parsed.getUTCDate() !== day
-  ) {
-    throw new Error(`Invalid calendar date in ${fileName}: "${value}"`);
-  }
-
-  return parsed;
-}
 
 async function getStaticRoutes(directory, segments = []) {
   const entries = await fs.readdir(directory, { withFileTypes: true });

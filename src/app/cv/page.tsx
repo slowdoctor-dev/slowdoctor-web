@@ -3,7 +3,7 @@ import { JsonLd } from "@/components/json-ld";
 import { buildBreadcrumbSchema } from "@/lib/breadcrumbs";
 import { practiceUrl } from "@/lib/links";
 import { buildPageMetadata } from "@/lib/metadata";
-import { AUTHOR, SITE } from "@/lib/config";
+import { AUTHOR, PRACTICE } from "@/lib/config";
 import { publications } from "@/lib/cv";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -50,8 +50,7 @@ export default function CvPage() {
         </h1>
         <p className="mt-1 text-muted text-sm">{AUTHOR.korean}</p>
         <p className="mt-3 text-sm text-muted">
-          LEAD Plastic Surgery Clinic &middot; Dogok-dong, Gangnam-gu, Seoul,
-          South Korea
+          {PRACTICE.fullName} &middot; {PRACTICE.location}
         </p>
         <p className="mt-1 text-sm text-muted">
           <a

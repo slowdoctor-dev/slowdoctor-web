@@ -3,6 +3,7 @@ import { JsonLd } from "@/components/json-ld";
 import { buildBreadcrumbSchema } from "@/lib/breadcrumbs";
 import { practiceUrl } from "@/lib/links";
 import { buildPageMetadata } from "@/lib/metadata";
+import { PRACTICE } from "@/lib/config";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Physician",
@@ -68,11 +69,9 @@ export default function PhysicianPage() {
           Practice
         </h2>
         <div className="rounded-lg border border-border bg-card p-6">
-          <h3 className="text-lg font-semibold">LEAD Plastic Surgery</h3>
-          <p className="mt-1 text-sm text-muted">
-            Dogok-dong, Gangnam-gu, Seoul, South Korea
-          </p>
-          <p className="mt-1 text-sm text-muted">+82-2-6953-3231</p>
+          <h3 className="text-lg font-semibold">{PRACTICE.name}</h3>
+          <p className="mt-1 text-sm text-muted">{PRACTICE.location}</p>
+          <p className="mt-1 text-sm text-muted">{PRACTICE.phone}</p>
           <a
             href={practiceUrl}
             target="_blank"

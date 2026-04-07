@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { JsonLd } from "@/components/json-ld";
 import { buildBreadcrumbSchema } from "@/lib/breadcrumbs";
 import { socialLinks, academicLinks, practiceUrl } from "@/lib/links";
@@ -13,8 +12,12 @@ export const metadata: Metadata = {
 
 const sections = [
   {
+    title: "Practice",
+    links: [{ label: "LEAD Plastic Surgery", url: practiceUrl }],
+  },
+  {
     title: "Medical",
-    links: academicLinks.map((l) => ({ label: l.label, url: l.url })),
+    links: [...academicLinks],
   },
   {
     title: "Social",
@@ -22,10 +25,6 @@ const sections = [
       label: `${l.label}${"handle" in l ? ` ${l.handle}` : ""}`,
       url: l.url,
     })),
-  },
-  {
-    title: "Practice",
-    links: [{ label: "LEAD Plastic Surgery", url: practiceUrl }],
   },
 ];
 
@@ -70,18 +69,6 @@ export default function LinksPage() {
           </section>
         ))}
 
-        {/* Blog */}
-        <section>
-          <h2 className="text-sm font-medium text-accent uppercase tracking-wider mb-4">
-            Blog
-          </h2>
-          <Link
-            href="/blog"
-            className="block py-2 text-foreground hover:text-accent transition-colors"
-          >
-            Blog &rarr;
-          </Link>
-        </section>
       </div>
     </div>
   );

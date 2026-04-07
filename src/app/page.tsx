@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { socialLinks, practiceUrl } from "@/lib/links";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -23,40 +22,8 @@ export default function Home() {
         </p>
       </section>
 
-      {/* CV Summary */}
-      <section className="pb-16">
-        <dl className="divide-y divide-border text-sm">
-          <div className="flex py-3 gap-4">
-            <dt className="text-muted whitespace-nowrap w-32 shrink-0">Education</dt>
-            <dd className="text-foreground">Seoul National University College of Medicine</dd>
-          </div>
-          <div className="flex py-3 gap-4">
-            <dt className="text-muted whitespace-nowrap w-32 shrink-0">Residency</dt>
-            <dd className="text-foreground">Seoul National University Hospital, Plastic Surgery</dd>
-          </div>
-          <div className="flex py-3 gap-4">
-            <dt className="text-muted whitespace-nowrap w-32 shrink-0">Board</dt>
-            <dd className="text-foreground">Korean Board of Plastic Surgery</dd>
-          </div>
-          <div className="flex py-3 gap-4">
-            <dt className="text-muted whitespace-nowrap w-32 shrink-0">Current</dt>
-            <dd className="text-foreground">
-              Founder & Lead Physician,{" "}
-              <a
-                href={practiceUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-accent hover:underline"
-              >
-                LEAD Plastic Surgery
-              </a>
-            </dd>
-          </div>
-        </dl>
-      </section>
-
       {/* Two Axes */}
-      <section className="pb-16 grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <section className="pb-24 grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Link
           href="/physician"
           className="group rounded-lg border border-border bg-card p-6 transition-all hover:border-accent/30 hover:bg-accent-muted"
@@ -87,23 +54,6 @@ export default function Home() {
         </Link>
       </section>
 
-      {/* Channels */}
-      <section className="pb-24">
-        <h2 className="text-sm font-medium text-muted mb-4">Channels</h2>
-        <div className="flex flex-wrap gap-4 text-sm">
-          {socialLinks.slice(0, 4).map((link) => (
-            <a
-              key={link.label}
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-foreground hover:text-accent transition-colors"
-            >
-              {link.label}
-            </a>
-          ))}
-        </div>
-      </section>
     </div>
   );
 }

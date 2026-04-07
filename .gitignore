@@ -39,6 +39,9 @@ yarn-error.log*
 # mcp config (contains API keys)
 .mcp.json
 
+# playwright mcp artifacts
+.playwright-mcp/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

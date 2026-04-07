@@ -93,10 +93,11 @@ const personSchema = {
 };
 
 const navLinks = [
+  { href: "/cv", label: "CV" },
   { href: "/physician", label: "Physician" },
   { href: "/engineer", label: "Engineer" },
-  { href: "/links", label: "Links" },
   { href: "/blog", label: "Blog" },
+  { href: "/links", label: "Links" },
 ];
 
 export default function RootLayout({
@@ -122,7 +123,7 @@ export default function RootLayout({
               href="/"
               className="text-sm font-semibold tracking-tight text-foreground hover:text-accent transition-colors"
             >
-              Joonho Lim
+              slowdoctor.dev
             </Link>
             <div className="flex items-center gap-6">
               {navLinks.map((link) => (

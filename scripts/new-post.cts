@@ -13,7 +13,12 @@ const slug = title
   .replace(/[^a-z0-9]+/g, "-")
   .replace(/^-|-$/g, "");
 
-const date = new Date().toISOString().split("T")[0];
+const now = new Date();
+const date = [
+  now.getFullYear(),
+  String(now.getMonth() + 1).padStart(2, "0"),
+  String(now.getDate()).padStart(2, "0"),
+].join("-");
 const filePath = path.join(process.cwd(), "src/content/blog", `${slug}.mdx`);
 
 if (fs.existsSync(filePath)) {

@@ -24,12 +24,36 @@ export interface BlogPost extends BlogPostSummary {
   Content: ComponentType;
 }
 
+const DATE_ONLY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
+function parseDateOnly(date: string, fileName: string) {
+  if (!DATE_ONLY_PATTERN.test(date)) {
+    throw new Error(
+      `Invalid date in ${fileName}: expected YYYY-MM-DD, received "${date}"`,
+    );
+  }
+
+  const [year, month, day] = date.split("-").map(Number);
+  const parsed = new Date(Date.UTC(year, month - 1, day));
+
+  if (
+    parsed.getUTCFullYear() !== year ||
+    parsed.getUTCMonth() !== month - 1 ||
+    parsed.getUTCDate() !== day
+  ) {
+    throw new Error(`Invalid calendar date in ${fileName}: "${date}"`);
+  }
+
+  return parsed;
+}
+
 function formatDate(date: string) {
   return new Intl.DateTimeFormat("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
-  }).format(new Date(date));
+    timeZone: "UTC",
+  }).format(parseDateOnly(date, "frontmatter"));
 }
 
 function parseFrontmatter(data: unknown, fileName: string): BlogFrontmatter {
@@ -49,7 +73,11 @@ function parseFrontmatter(data: unknown, fileName: string): BlogFrontmatter {
   }
   return {
     title: obj.title as string,
-    date: obj.date as string,
+    date: (() => {
+      const value = obj.date as string;
+      parseDateOnly(value, fileName);
+      return value;
+    })(),
     description: obj.description as string,
     image: typeof obj.image === "string" ? obj.image : undefined,
   };
@@ -76,7 +104,8 @@ export async function getAllPosts(): Promise<BlogPostSummary[]> {
 
   return posts.sort(
     (left, right) =>
-      new Date(right.date).getTime() - new Date(left.date).getTime(),
+      parseDateOnly(right.date, `${right.slug}.mdx`).getTime() -
+      parseDateOnly(left.date, `${left.slug}.mdx`).getTime(),
   );
 }
 

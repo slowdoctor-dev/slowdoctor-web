@@ -20,6 +20,16 @@
   --accent: #b59768;
   --accent-muted: rgba(181, 151, 104, 0.15);
   --card-bg: rgba(255, 255, 255, 0.04);
+  --sh-class: #f1c27d;
+  --sh-identifier: #ededed;
+  --sh-sign: #8f8f8f;
+  --sh-space: inherit;
+  --sh-property: #9ecbff;
+  --sh-entity: #7ed7c1;
+  --sh-jsxliterals: #d8b4fe;
+  --sh-string: #b8e986;
+  --sh-keyword: #ff9f7a;
+  --sh-comment: #7b7b7b;
 }
 
 body {
@@ -126,4 +136,8 @@ button:focus-visible {
   border: 0;
   background: transparent;
   padding: 0;
+}
+
+.prose .sh__line {
+  display: block;
 }

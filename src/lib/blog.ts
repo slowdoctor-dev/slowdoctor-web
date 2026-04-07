@@ -12,6 +12,7 @@ interface BlogFrontmatter {
   title: string;
   date: string;
   description: string;
+  image?: string;
 }
 
 export interface BlogPostSummary extends BlogFrontmatter {
@@ -46,6 +47,7 @@ async function readBlogFrontmatter(fileName: string) {
     title: frontmatter.title,
     date: frontmatter.date,
     description: frontmatter.description,
+    image: frontmatter.image,
     formattedDate: formatDate(frontmatter.date),
   } satisfies BlogPostSummary;
 }
@@ -101,6 +103,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     title: frontmatter.title,
     date: frontmatter.date,
     description: frontmatter.description,
+    image: frontmatter.image,
     formattedDate: formatDate(frontmatter.date),
     Content: module.default,
   };

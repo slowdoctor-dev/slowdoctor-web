@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# slowdoctor-web
 
-## Getting Started
+Personal site for Dr. Joonho Lim at `slowdoctor.dev`.
 
-First, run the development server:
+The site is built with Next.js 16, React 19, TypeScript, Tailwind CSS v4, and MDX. It is exported as a fully static site with `output: "export"`.
+
+## Structure
+
+- `src/app/` route pages and layout
+- `src/content/blog/` MDX blog posts
+- `src/lib/blog.ts` blog loading and frontmatter parsing
+- `src/mdx-components.tsx` MDX rendering overrides
+- `scripts/generate-sitemap.cts` build-time sitemap generation
+
+## Commands
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run build
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`npm run build` runs the sitemap generator first, then performs the production static build.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Content Authoring
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Blog posts live in `src/content/blog/*.mdx` and support this frontmatter:
 
-## Learn More
+```yaml
+---
+title: "Post title"
+date: "2026-04-07"
+description: "Short summary"
+image: "/optional-og-image.jpg"
+---
+```
 
-To learn more about Next.js, take a look at the following resources:
+`image` is optional and is used for per-post Open Graph and Twitter metadata.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Notes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `public/sitemap.xml` is generated during build and should not be edited manually.
+- The project uses `next/font/google`, so production builds need network access unless fonts are vendored locally.
+- `AGENTS.md` is authoritative for repo-specific agent instructions. Next.js 16 behavior may differ from older releases.

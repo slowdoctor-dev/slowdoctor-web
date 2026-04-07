@@ -8,6 +8,12 @@ export const metadata: Metadata = {
   description:
     "Board-certified plastic surgeon specializing in slow-aging, scar treatment, and blepharoplasty.",
   alternates: { canonical: "/physician" },
+  openGraph: {
+    title: "Physician",
+    description:
+      "Board-certified plastic surgeon specializing in slow-aging, scar treatment, and blepharoplasty.",
+    url: "/physician",
+  },
 };
 
 export default function PhysicianPage() {

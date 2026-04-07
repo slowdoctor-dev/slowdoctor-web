@@ -8,6 +8,11 @@ export const metadata: Metadata = {
   title: "Blog",
   description: "Writing by Joonho Lim on medicine, engineering, and the slower path.",
   alternates: { canonical: "/blog" },
+  openGraph: {
+    title: "Blog",
+    description: "Writing by Joonho Lim on medicine, engineering, and the slower path.",
+    url: "/blog",
+  },
 };
 
 export default async function BlogPage() {

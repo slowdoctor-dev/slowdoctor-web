@@ -42,6 +42,9 @@ yarn-error.log*
 # playwright mcp artifacts
 .playwright-mcp/
 
+# codex
+.codex/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

@@ -24,7 +24,7 @@ if (fs.existsSync(filePath)) {
 const content = `---
 title: "${title}"
 date: "${date}"
-description: ""
+description: "TODO: Write a short description for this post."
 ---
 
 `;

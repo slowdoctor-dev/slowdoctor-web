@@ -7,6 +7,12 @@ export const metadata: Metadata = {
   description:
     "Building an AI-operated clinic with Claude Code, multi-agent systems, and modern web infrastructure.",
   alternates: { canonical: "/engineer" },
+  openGraph: {
+    title: "Engineer",
+    description:
+      "Building an AI-operated clinic with Claude Code, multi-agent systems, and modern web infrastructure.",
+    url: "/engineer",
+  },
 };
 
 const projects = [

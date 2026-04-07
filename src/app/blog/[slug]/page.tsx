@@ -71,7 +71,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
       name: "Joonho Lim",
       url: "https://slowdoctor.dev",
     },
-    ...(post.image ? { image: post.image } : {}),
+    image: post.image ?? "/og-default.png",
   };
 
   const breadcrumbSchema = buildBreadcrumbSchema([

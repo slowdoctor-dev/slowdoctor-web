@@ -8,6 +8,12 @@ export const metadata: Metadata = {
   description:
     "Curriculum vitae of Joonho Lim -- education, training, professional experience, and publications.",
   alternates: { canonical: "/cv" },
+  openGraph: {
+    title: "CV",
+    description:
+      "Curriculum vitae of Joonho Lim -- education, training, professional experience, and publications.",
+    url: "/cv",
+  },
 };
 
 interface Publication {

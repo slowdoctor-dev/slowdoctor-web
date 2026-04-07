@@ -8,6 +8,12 @@ export const metadata: Metadata = {
   description:
     "Professional and social links for Joonho Lim -- medical profiles, social media, and practice.",
   alternates: { canonical: "/links" },
+  openGraph: {
+    title: "Links",
+    description:
+      "Professional and social links for Joonho Lim -- medical profiles, social media, and practice.",
+    url: "/links",
+  },
 };
 
 const sections = [

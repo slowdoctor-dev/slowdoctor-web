@@ -1,19 +1,14 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/json-ld";
 import { buildBreadcrumbSchema } from "@/lib/breadcrumbs";
+import { buildPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Engineer",
   description:
     "Building an AI-operated clinic with Claude Code, multi-agent systems, and modern web infrastructure.",
-  alternates: { canonical: "/engineer" },
-  openGraph: {
-    title: "Engineer",
-    description:
-      "Building an AI-operated clinic with Claude Code, multi-agent systems, and modern web infrastructure.",
-    url: "/engineer",
-  },
-};
+  path: "/engineer",
+});
 
 const projects = [
   {

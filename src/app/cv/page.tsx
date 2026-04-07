@@ -2,19 +2,14 @@ import type { Metadata } from "next";
 import { JsonLd } from "@/components/json-ld";
 import { buildBreadcrumbSchema } from "@/lib/breadcrumbs";
 import { practiceUrl } from "@/lib/links";
+import { buildPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "CV",
   description:
     "Curriculum vitae of Joonho Lim -- education, training, professional experience, and publications.",
-  alternates: { canonical: "/cv" },
-  openGraph: {
-    title: "CV",
-    description:
-      "Curriculum vitae of Joonho Lim -- education, training, professional experience, and publications.",
-    url: "/cv",
-  },
-};
+  path: "/cv",
+});
 
 interface Publication {
   title: string;

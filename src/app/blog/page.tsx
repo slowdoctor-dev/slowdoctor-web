@@ -3,17 +3,13 @@ import Link from "next/link";
 import { JsonLd } from "@/components/json-ld";
 import { buildBreadcrumbSchema } from "@/lib/breadcrumbs";
 import { getAllPosts } from "@/lib/blog";
+import { buildPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Blog",
   description: "Writing by Joonho Lim on medicine, engineering, and the slower path.",
-  alternates: { canonical: "/blog" },
-  openGraph: {
-    title: "Blog",
-    description: "Writing by Joonho Lim on medicine, engineering, and the slower path.",
-    url: "/blog",
-  },
-};
+  path: "/blog",
+});
 
 export default async function BlogPage() {
   const posts = await getAllPosts();

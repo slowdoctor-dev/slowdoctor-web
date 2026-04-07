@@ -2,19 +2,14 @@ import type { Metadata } from "next";
 import { JsonLd } from "@/components/json-ld";
 import { buildBreadcrumbSchema } from "@/lib/breadcrumbs";
 import { practiceUrl } from "@/lib/links";
+import { buildPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Physician",
   description:
     "Board-certified plastic surgeon specializing in slow-aging, scar treatment, and blepharoplasty.",
-  alternates: { canonical: "/physician" },
-  openGraph: {
-    title: "Physician",
-    description:
-      "Board-certified plastic surgeon specializing in slow-aging, scar treatment, and blepharoplasty.",
-    url: "/physician",
-  },
-};
+  path: "/physician",
+});
 
 export default function PhysicianPage() {
   const breadcrumbSchema = buildBreadcrumbSchema([

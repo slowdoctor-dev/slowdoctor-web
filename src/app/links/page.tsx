@@ -2,19 +2,14 @@ import type { Metadata } from "next";
 import { JsonLd } from "@/components/json-ld";
 import { buildBreadcrumbSchema } from "@/lib/breadcrumbs";
 import { socialLinks, academicLinks, practiceUrl } from "@/lib/links";
+import { buildPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Links",
   description:
     "Professional and social links for Joonho Lim -- medical profiles, social media, and practice.",
-  alternates: { canonical: "/links" },
-  openGraph: {
-    title: "Links",
-    description:
-      "Professional and social links for Joonho Lim -- medical profiles, social media, and practice.",
-    url: "/links",
-  },
-};
+  path: "/links",
+});
 
 const sections = [
   {

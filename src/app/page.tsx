@@ -1,65 +1,109 @@
-import Image from "next/image";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { socialLinks, practiceUrl } from "@/lib/links";
+
+export const metadata: Metadata = {
+  title: "Joonho Lim - Plastic Surgeon & Engineer",
+};
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="mx-auto max-w-3xl px-6">
+      {/* Hero */}
+      <section className="pt-24 pb-16 sm:pt-32 sm:pb-20">
+        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+          Joonho Lim
+        </h1>
+        <p className="mt-4 text-lg text-accent font-medium">
+          Choosing the right way over the fast way.
+        </p>
+        <p className="mt-4 text-lg text-muted leading-relaxed max-w-xl">
+          Board-certified plastic surgeon and engineer building an AI-operated
+          clinic.
+        </p>
+      </section>
+
+      {/* CV Summary */}
+      <section className="pb-16">
+        <dl className="divide-y divide-border text-sm">
+          <div className="flex py-3 gap-4">
+            <dt className="text-muted whitespace-nowrap w-32 shrink-0">Education</dt>
+            <dd className="text-foreground">Seoul National University College of Medicine</dd>
+          </div>
+          <div className="flex py-3 gap-4">
+            <dt className="text-muted whitespace-nowrap w-32 shrink-0">Residency</dt>
+            <dd className="text-foreground">Seoul National University Hospital, Plastic Surgery</dd>
+          </div>
+          <div className="flex py-3 gap-4">
+            <dt className="text-muted whitespace-nowrap w-32 shrink-0">Board</dt>
+            <dd className="text-foreground">Korean Board of Plastic Surgery</dd>
+          </div>
+          <div className="flex py-3 gap-4">
+            <dt className="text-muted whitespace-nowrap w-32 shrink-0">Current</dt>
+            <dd className="text-foreground">
+              Founder & Lead Physician,{" "}
+              <a
+                href={practiceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent hover:underline"
+              >
+                LEAD Plastic Surgery
+              </a>
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+      {/* Two Axes */}
+      <section className="pb-16 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Link
+          href="/physician"
+          className="group rounded-lg border border-border bg-card p-6 transition-all hover:border-accent/30 hover:bg-accent-muted"
+        >
+          <h2 className="text-lg font-semibold group-hover:text-accent transition-colors">
+            As a Physician
+          </h2>
+          <p className="mt-2 text-sm text-muted">
+            Slow-aging, scars, and natural eyes.
           </p>
+          <span className="mt-4 inline-block text-sm text-accent opacity-0 group-hover:opacity-100 transition-opacity">
+            Learn more &rarr;
+          </span>
+        </Link>
+        <Link
+          href="/engineer"
+          className="group rounded-lg border border-border bg-card p-6 transition-all hover:border-accent/30 hover:bg-accent-muted"
+        >
+          <h2 className="text-lg font-semibold group-hover:text-accent transition-colors">
+            As an Engineer
+          </h2>
+          <p className="mt-2 text-sm text-muted">
+            Building an AI-operated clinic.
+          </p>
+          <span className="mt-4 inline-block text-sm text-accent opacity-0 group-hover:opacity-100 transition-opacity">
+            Learn more &rarr;
+          </span>
+        </Link>
+      </section>
+
+      {/* Channels */}
+      <section className="pb-24">
+        <h2 className="text-sm font-medium text-muted mb-4">Channels</h2>
+        <div className="flex flex-wrap gap-4 text-sm">
+          {socialLinks.slice(0, 4).map((link) => (
+            <a
+              key={link.label}
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-foreground hover:text-accent transition-colors"
+            >
+              {link.label}
+            </a>
+          ))}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </section>
     </div>
   );
 }

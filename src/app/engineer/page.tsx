@@ -6,7 +6,7 @@ import { buildPageMetadata } from "@/lib/metadata";
 export const metadata: Metadata = buildPageMetadata({
   title: "Engineer",
   description:
-    "Medical informatics, infodemiology, and health IT — building custom tools for a solo clinic.",
+    "Medical informatics, infodemiology, and health IT. Building custom scheduling, inventory, and digital signage tools for a solo plastic surgery clinic.",
   path: "/engineer",
 });
 
@@ -64,7 +64,7 @@ export default function EngineerPage() {
       <JsonLd data={breadcrumbSchema} />
       {/* Header */}
       <section className="pt-24 pb-12 sm:pt-32 sm:pb-16">
-        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
           Engineer
         </h1>
         <p className="mt-4 text-lg text-muted leading-relaxed max-w-xl">
@@ -101,7 +101,7 @@ export default function EngineerPage() {
           {interests.map((interest) => (
             <div
               key={interest.name}
-              className="rounded-lg border border-border bg-card p-5"
+              className="rounded-2xl border border-border bg-card p-5"
             >
               <h3 className="text-base font-semibold text-foreground">
                 {interest.name}
@@ -123,7 +123,7 @@ export default function EngineerPage() {
           {projects.map((project) => (
             <div
               key={project.name}
-              className="flex items-start gap-4 rounded-lg border border-border bg-card p-4"
+              className="flex items-start gap-4 rounded-2xl border border-border bg-card p-4"
             >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">

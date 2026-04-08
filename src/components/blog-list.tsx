@@ -63,7 +63,7 @@ export function BlogList({ posts }: { posts: PostData[] }) {
         {filtered.map((post) => (
           <article
             key={post.slug}
-            className="rounded-lg border border-border bg-card p-5 transition-colors hover:border-accent/30"
+            className="rounded-2xl border border-border bg-card p-5 transition-colors hover:border-accent/30"
           >
             <div className="flex flex-col sm:flex-row sm:gap-6">
               <div className="flex-1 min-w-0">

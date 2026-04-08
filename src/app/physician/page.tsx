@@ -3,12 +3,12 @@ import { JsonLd } from "@/components/json-ld";
 import { buildBreadcrumbSchema } from "@/lib/breadcrumbs";
 import { practiceUrl, allProfileUrls } from "@/lib/links";
 import { buildPageMetadata } from "@/lib/metadata";
-import { AUTHOR, PRACTICE } from "@/lib/config";
+import { SITE, AUTHOR, PRACTICE } from "@/lib/config";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Physician",
   description:
-    "Board-certified plastic surgeon specializing in slow-aging, scar treatment, and blepharoplasty.",
+    "Board-certified plastic surgeon specializing in slow-aging, scar treatment, and natural blepharoplasty. Calibrated for long-term results, not quick fixes.",
   path: "/physician",
 });
 
@@ -42,7 +42,7 @@ export default function PhysicianPage() {
     name: AUTHOR.name,
     alternateName: AUTHOR.korean,
     jobTitle: AUTHOR.jobTitle,
-    url: `${practiceUrl}`,
+    url: SITE.url,
     worksFor: {
       "@type": "MedicalBusiness",
       name: PRACTICE.fullName,
@@ -69,7 +69,7 @@ export default function PhysicianPage() {
     founder: {
       "@type": "Person",
       name: AUTHOR.name,
-      url: `${practiceUrl}`,
+      url: SITE.url,
     },
   };
 
@@ -80,7 +80,7 @@ export default function PhysicianPage() {
       <JsonLd data={practiceSchema} />
       {/* Header */}
       <section className="pt-24 pb-12 sm:pt-32 sm:pb-16">
-        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
           Physician
         </h1>
         <p className="mt-4 text-lg text-muted leading-relaxed max-w-xl">
@@ -116,7 +116,7 @@ export default function PhysicianPage() {
           {clinicalFocus.map((area) => (
             <div
               key={area.name}
-              className="rounded-lg border border-border bg-card p-5"
+              className="rounded-2xl border border-border bg-card p-5"
             >
               <h3 className="text-base font-semibold text-foreground">
                 {area.name}
@@ -134,7 +134,7 @@ export default function PhysicianPage() {
         <h2 className="text-sm font-medium text-accent uppercase tracking-wider mb-6">
           Practice
         </h2>
-        <div className="rounded-lg border border-border bg-card p-6">
+        <div className="rounded-2xl border border-border bg-card p-6">
           <h3 className="text-lg font-semibold">{PRACTICE.name}</h3>
           <p className="mt-1 text-sm text-muted">{PRACTICE.location}</p>
           <p className="mt-1 text-sm text-muted">{PRACTICE.phone}</p>

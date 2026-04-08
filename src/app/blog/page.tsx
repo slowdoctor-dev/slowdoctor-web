@@ -8,7 +8,7 @@ import { BlogList } from "@/components/blog-list";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Blog",
-  description: "Writing by Joonho Lim on medicine, engineering, and the slower path.",
+  description: "Writing by Joonho Lim on plastic surgery, clinical thinking, engineering, and the slower path. Notes from a surgeon who builds his own tools.",
   path: "/blog",
 });
 
@@ -23,7 +23,7 @@ export default async function BlogPage() {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: "Blog",
-    description: "Writing by Joonho Lim on medicine, engineering, and the slower path.",
+    description: "Writing by Joonho Lim on plastic surgery, clinical thinking, engineering, and the slower path.",
     url: `${SITE.url}/blog`,
     mainEntity: {
       "@type": "ItemList",
@@ -41,7 +41,7 @@ export default async function BlogPage() {
       <JsonLd data={breadcrumbSchema} />
       <JsonLd data={collectionSchema} />
       <section className="pt-24 pb-12 sm:pt-32 sm:pb-16">
-        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">Blog</h1>
+        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Blog</h1>
         <p className="mt-4 max-w-xl text-lg leading-relaxed text-muted">
           Notes on plastic surgery, clinical thinking, and building with code.
         </p>

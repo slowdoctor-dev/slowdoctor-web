@@ -14,7 +14,7 @@ export const AUTHOR = {
 } as const;
 
 export const DESCRIPTIONS = {
-  full: "Board-certified plastic surgeon and engineer specializing in slow-aging, scar treatment, and blepharoplasty.",
+  full: "Board-certified plastic surgeon and engineer specializing in slow-aging, scar treatment, and blepharoplasty. Practicing in Gangnam, Seoul, with a focus on long-term results over quick fixes.",
   brief: "Board-certified plastic surgeon and engineer, practicing in Gangnam, Seoul.",
 } as const;
 

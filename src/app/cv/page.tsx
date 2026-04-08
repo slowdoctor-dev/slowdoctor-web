@@ -9,7 +9,7 @@ import { publications } from "@/lib/cv";
 export const metadata: Metadata = buildPageMetadata({
   title: "CV",
   description:
-    "Curriculum vitae of Joonho Lim – education, training, professional experience, and publications.",
+    "Curriculum vitae of Joonho Lim, M.D. — education at Seoul National University, plastic surgery residency, board certification, and eight peer-reviewed publications.",
   path: "/cv",
 });
 
@@ -47,7 +47,7 @@ export default function CvPage() {
       "@type": "Person",
       name,
     })),
-    datePublished: String(pub.year),
+    datePublished: pub.publishedDate ?? `${pub.year}`,
     isPartOf: {
       "@type": "Periodical",
       name: pub.journal,

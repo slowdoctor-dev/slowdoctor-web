@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { getAllPosts, getPostBySlug, getPostFrontmatter } from "@/lib/blog";
 import { JsonLd } from "@/components/json-ld";
 import { buildBreadcrumbSchema } from "@/lib/breadcrumbs";
-import { SITE, AUTHOR } from "@/lib/config";
+import { SITE, AUTHOR, PRACTICE } from "@/lib/config";
 import { practiceUrl } from "@/lib/links";
 import { AxisBar } from "@/components/axis-bar";
 
@@ -78,7 +78,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
       jobTitle: AUTHOR.jobTitle,
       worksFor: {
         "@type": "MedicalBusiness",
-        name: "LEAD Plastic Surgery",
+        name: PRACTICE.fullName,
         url: practiceUrl,
       },
     },
@@ -100,7 +100,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
         <Link href="/blog" className="text-sm text-accent hover:underline">
           &larr; Back to blog
         </Link>
-        <h1 className="mt-6 text-4xl font-bold tracking-tight sm:text-5xl">
+        <h1 className="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">
           {post.title}
         </h1>
         <p className="mt-4 text-sm text-muted">

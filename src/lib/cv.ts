@@ -3,6 +3,7 @@ export interface Publication {
   authors: string;
   journal: string;
   year: number;
+  publishedDate?: string;
   volume?: string;
   issue?: string;
   pages?: string;
@@ -18,6 +19,7 @@ export const publications: Publication[] = [
       "Ha JH, Hong KY, Lee HB, Moon HG, Han W, Noh DY, Lim J, Yoon S, Chang H, Jin US",
     journal: "BMC Cancer",
     year: 2020,
+    publishedDate: "2020-01-30",
     volume: "20",
     issue: "1",
     pages: "78",
@@ -30,6 +32,7 @@ export const publications: Publication[] = [
     authors: "Lim J, Oh J, Eun S",
     journal: "Archives of Craniofacial Surgery",
     year: 2020,
+    publishedDate: "2020-02-20",
     volume: "21",
     issue: "1",
     pages: "69-72",
@@ -42,6 +45,7 @@ export const publications: Publication[] = [
     authors: "Lim J, Eun S",
     journal: "Archives of Hand and Microsurgery",
     year: 2020,
+    publishedDate: "2020-03-01",
     volume: "25",
     issue: "1",
     pages: "67-70",
@@ -53,6 +57,7 @@ export const publications: Publication[] = [
     authors: "Chung J, Lim J, Kim S, Koo Y",
     journal: "Annals of Plastic Surgery",
     year: 2019,
+    publishedDate: "2019-08-08",
     volume: "83",
     issue: "6",
     pages: "655-659",
@@ -65,6 +70,7 @@ export const publications: Publication[] = [
     authors: "Lim J, Park E, Eun S",
     journal: "Korean Journal of Head & Neck Oncology",
     year: 2019,
+    publishedDate: "2019-11-30",
     volume: "35",
     issue: "2",
     pages: "77-81",
@@ -76,6 +82,7 @@ export const publications: Publication[] = [
     authors: "Chung J, Lim J, Park H, Yoo A, Kim S, Koo Y",
     journal: "The Journal of Craniofacial Surgery",
     year: 2019,
+    publishedDate: "2019-09-01",
     volume: "30",
     issue: "6",
     pages: "1855-1858",
@@ -89,6 +96,7 @@ export const publications: Publication[] = [
       "Pak C, Lim J, Kim BK, Kim H, Park S, Mun GH, Kim JT, Jeong JH, Heo CY",
     journal: "Journal of Wound Management and Research",
     year: 2019,
+    publishedDate: "2019-03-31",
     volume: "15",
     issue: "1",
     pages: "5-10",
@@ -100,6 +108,7 @@ export const publications: Publication[] = [
     authors: "Lim J, Kwon H, Lee KM, Pak C",
     journal: "The International Journal of Lower Extremity Wounds",
     year: 2019,
+    publishedDate: "2018-12-28",
     volume: "18",
     issue: "1",
     pages: "89-93",

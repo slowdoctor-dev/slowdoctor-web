@@ -92,13 +92,14 @@ async function main() {
   const otherStaticRoutes = staticRoutes.filter(
     (route) => route !== "/" && route !== "/blog",
   );
+  const buildDate = new Date().toISOString().split("T")[0];
 
   const sitemap = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    createUrl("/"),
-    ...otherStaticRoutes.map((route) => createUrl(route)),
-    createUrl("/blog"),
+    createUrl("/", buildDate),
+    ...otherStaticRoutes.map((route) => createUrl(route, buildDate)),
+    createUrl("/blog", buildDate),
     ...blogRoutes.map((entry) => createUrl(entry.route, entry.lastmod)),
     "</urlset>",
     "",

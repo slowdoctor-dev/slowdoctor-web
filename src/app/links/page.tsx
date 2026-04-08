@@ -8,7 +8,7 @@ import { PRACTICE } from "@/lib/config";
 export const metadata: Metadata = buildPageMetadata({
   title: "Links",
   description:
-    "Professional and social links for Joonho Lim \u2014 medical profiles, social media, and practice.",
+    "Official profiles and social links for Joonho Lim — ORCID, Google Scholar, ResearchGate, YouTube, Instagram, and LEAD Plastic Surgery Clinic.",
   path: "/links",
 });
 
@@ -23,7 +23,7 @@ export default function LinksPage() {
       <JsonLd data={breadcrumbSchema} />
       {/* Header */}
       <section className="pt-24 pb-12 sm:pt-32 sm:pb-16">
-        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
           Links
         </h1>
         <p className="mt-4 max-w-xl text-lg leading-relaxed text-muted">
@@ -37,12 +37,12 @@ export default function LinksPage() {
           <h2 className="text-sm font-medium text-accent uppercase tracking-wider mb-4">
             Practice
           </h2>
-          <div className="rounded-lg border border-border bg-card">
+          <div className="rounded-2xl border border-border bg-card">
             <a
               href={practiceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-between px-5 py-4 hover:bg-accent-muted transition-colors rounded-lg"
+              className="flex items-center justify-between px-5 py-4 hover:bg-accent-muted transition-colors rounded-2xl"
             >
               <div>
                 <p className="text-foreground font-medium">{PRACTICE.name}</p>
@@ -58,14 +58,14 @@ export default function LinksPage() {
           <h2 className="text-sm font-medium text-accent uppercase tracking-wider mb-4">
             Medical
           </h2>
-          <div className="rounded-lg border border-border bg-card divide-y divide-border">
+          <div className="rounded-2xl border border-border bg-card divide-y divide-border">
             {medicalLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-between px-5 py-3.5 hover:bg-accent-muted transition-colors first:rounded-t-lg last:rounded-b-lg"
+                className="flex items-center justify-between px-5 py-3.5 hover:bg-accent-muted transition-colors first:rounded-t-2xl last:rounded-b-2xl"
               >
                 <span className="text-foreground font-medium">
                   {link.label}
@@ -84,14 +84,14 @@ export default function LinksPage() {
           <h2 className="text-sm font-medium text-accent uppercase tracking-wider mb-4">
             Social (Korean)
           </h2>
-          <div className="rounded-lg border border-border bg-card divide-y divide-border">
+          <div className="rounded-2xl border border-border bg-card divide-y divide-border">
             {socialLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-between px-5 py-3.5 hover:bg-accent-muted transition-colors first:rounded-t-lg last:rounded-b-lg"
+                className="flex items-center justify-between px-5 py-3.5 hover:bg-accent-muted transition-colors first:rounded-t-2xl last:rounded-b-2xl"
               >
                 <span className="text-foreground font-medium">
                   {link.label}

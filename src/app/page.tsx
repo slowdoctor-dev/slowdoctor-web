@@ -19,7 +19,7 @@ export default async function Home() {
     <div className="mx-auto max-w-3xl px-6">
       {/* Hero */}
       <section className="pt-24 pb-16 sm:pt-32 sm:pb-20">
-        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
           {AUTHOR.name}
         </h1>
         <p className="mt-4 text-lg text-accent font-medium">
@@ -40,7 +40,7 @@ export default async function Home() {
       <section className="pb-16 grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Link
           href="/physician"
-          className="group rounded-lg border border-border bg-card p-6 transition-all hover:border-accent/30 hover:bg-accent-muted"
+          className="group rounded-2xl border border-border bg-card p-6 transition-all hover:border-accent/30 hover:bg-accent-muted"
         >
           <h2 className="text-lg font-semibold group-hover:text-accent transition-colors">
             As a Physician
@@ -54,7 +54,7 @@ export default async function Home() {
         </Link>
         <Link
           href="/engineer"
-          className="group rounded-lg border border-border bg-card p-6 transition-all hover:border-accent/30 hover:bg-accent-muted"
+          className="group rounded-2xl border border-border bg-card p-6 transition-all hover:border-accent/30 hover:bg-accent-muted"
         >
           <h2 className="text-lg font-semibold group-hover:text-accent transition-colors">
             As an Engineer
@@ -87,7 +87,7 @@ export default async function Home() {
               <Link
                 key={post.slug}
                 href={`/blog/${post.slug}`}
-                className="flex items-baseline justify-between gap-4 rounded-lg border border-border bg-card px-5 py-4 transition-colors hover:border-accent/30"
+                className="flex items-baseline justify-between gap-4 rounded-2xl border border-border bg-card px-5 py-4 transition-colors hover:border-accent/30"
               >
                 <span className="text-foreground font-medium truncate">
                   {post.title}

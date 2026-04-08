@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { AUTHOR, SITE } from "@/lib/config";
 
 const defaultImage = {
-  url: "/og-default.png",
+  url: SITE.ogImage,
   width: 1200,
   height: 630,
-  alt: "slowdoctor.dev",
+  alt: SITE.name,
 } as const;
 
 interface PageMetadataOptions {
@@ -20,15 +21,22 @@ export function buildPageMetadata({
   path,
   type = "website",
 }: PageMetadataOptions): Metadata {
+  const absoluteUrl = new URL(path, SITE.url).toString();
+
   return {
     title,
     description,
-    alternates: { canonical: path },
+    authors: [{ name: AUTHOR.name, url: SITE.url }],
+    creator: AUTHOR.name,
+    publisher: SITE.name,
+    alternates: { canonical: absoluteUrl },
     openGraph: {
       title,
       description,
-      url: path,
+      url: absoluteUrl,
       type,
+      siteName: SITE.name,
+      locale: "en_US",
       images: [defaultImage],
     },
     twitter: {

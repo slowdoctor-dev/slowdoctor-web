@@ -1,7 +1,7 @@
 import { SiYoutube, SiInstagram, SiThreads, SiTiktok, SiNaver } from "react-icons/si";
-import type { ComponentType } from "react";
+import type { IconType } from "react-icons";
 
-const iconMap: Record<string, ComponentType<{ className?: string }>> = {
+const iconMap: Record<string, IconType> = {
   YouTube: SiYoutube,
   Instagram: SiInstagram,
   Threads: SiThreads,
@@ -12,5 +12,5 @@ const iconMap: Record<string, ComponentType<{ className?: string }>> = {
 export function SocialIcon({ label, className }: { label: string; className?: string }) {
   const Icon = iconMap[label];
   if (!Icon) return null;
-  return <Icon className={className} />;
+  return <Icon aria-hidden="true" className={className} focusable="false" />;
 }

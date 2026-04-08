@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans, Gowun_Dodum, Noto_Sans_KR } from "next/font/google";
 import Link from "next/link";
-import { JsonLd } from "@/components/json-ld";
-import { socialLinks, allProfileUrls, practiceUrl } from "@/lib/links";
-import { SITE, AUTHOR, DESCRIPTIONS, PRACTICE } from "@/lib/config";
+import { NavLinks } from "@/components/nav-links";
+import { socialLinks } from "@/lib/links";
+import { SITE, AUTHOR, DESCRIPTIONS } from "@/lib/config";
 import { SocialIcon } from "@/components/social-icons";
 import "./globals.css";
 
@@ -39,6 +39,14 @@ export const metadata: Metadata = {
   },
   description: DESCRIPTIONS.full,
   metadataBase: new URL(SITE.url),
+  authors: [{ name: AUTHOR.name, url: SITE.url }],
+  creator: AUTHOR.name,
+  publisher: SITE.name,
+  alternates: {
+    types: {
+      "application/rss+xml": "/feed.xml",
+    },
+  },
   openGraph: {
     title: SITE.title,
     description: DESCRIPTIONS.brief,
@@ -67,57 +75,6 @@ export const metadata: Metadata = {
   },
 };
 
-const personSchema = {
-  "@context": "https://schema.org",
-  "@type": ["Person", "Physician"],
-  name: AUTHOR.name,
-  alternateName: AUTHOR.korean,
-  jobTitle: AUTHOR.jobTitle,
-  url: SITE.url,
-  description: DESCRIPTIONS.full,
-  worksFor: {
-    "@type": "MedicalBusiness",
-    name: "LEAD Plastic Surgery",
-    url: practiceUrl,
-  },
-  alumniOf: [
-    {
-      "@type": "CollegeOrUniversity",
-      name: "Seoul National University College of Medicine",
-    },
-  ],
-  medicalSpecialty: "PlasticSurgery",
-  sameAs: allProfileUrls,
-};
-
-const organizationSchema = {
-  "@context": "https://schema.org",
-  "@type": "MedicalBusiness",
-  name: PRACTICE.fullName,
-  url: practiceUrl,
-  telephone: PRACTICE.phone,
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Gangnam-gu",
-    addressRegion: "Seoul",
-    addressCountry: "KR",
-  },
-  medicalSpecialty: "PlasticSurgery",
-  founder: {
-    "@type": "Person",
-    name: AUTHOR.name,
-    url: SITE.url,
-  },
-};
-
-const navLinks = [
-  { href: "/cv", label: "CV" },
-  { href: "/physician", label: "Physician" },
-  { href: "/engineer", label: "Engineer" },
-  { href: "/blog", label: "Blog" },
-  { href: "/links", label: "Links" },
-];
-
 const currentYear = new Date().getFullYear();
 
 export default function RootLayout({
@@ -134,10 +91,14 @@ export default function RootLayout({
           title="Blog"
           href="/feed.xml"
         />
-        <JsonLd data={personSchema} />
-        <JsonLd data={organizationSchema} />
       </head>
       <body className="min-h-full flex flex-col">
+        <a
+          href="#main-content"
+          className="skip-link"
+        >
+          Skip to content
+        </a>
         <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
           <nav aria-label="Main" className="mx-auto flex max-w-3xl flex-col items-center gap-2 px-6 py-4 sm:flex-row sm:justify-between sm:gap-0">
             <Link
@@ -146,21 +107,13 @@ export default function RootLayout({
             >
               slowdoctor.dev
             </Link>
-            <div className="flex items-center gap-5 sm:gap-6">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-sm text-muted hover:text-foreground transition-colors"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
+            <NavLinks />
           </nav>
         </header>
 
-        <main className="flex-1">{children}</main>
+        <main id="main-content" className="flex-1">
+          {children}
+        </main>
 
         <footer aria-label="Site footer" className="border-t border-border">
           <div className="mx-auto max-w-3xl px-6 py-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

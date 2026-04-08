@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/json-ld";
 import { buildBreadcrumbSchema } from "@/lib/breadcrumbs";
-import { practiceUrl } from "@/lib/links";
+import { practiceUrl, allProfileUrls } from "@/lib/links";
 import { buildPageMetadata } from "@/lib/metadata";
-import { PRACTICE } from "@/lib/config";
+import { AUTHOR, PRACTICE } from "@/lib/config";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Physician",
@@ -36,9 +36,48 @@ export default function PhysicianPage() {
     { name: "Physician", href: "/physician" },
   ]);
 
+  const physicianSchema = {
+    "@context": "https://schema.org",
+    "@type": ["Person", "Physician"],
+    name: AUTHOR.name,
+    alternateName: AUTHOR.korean,
+    jobTitle: AUTHOR.jobTitle,
+    url: `${practiceUrl}`,
+    worksFor: {
+      "@type": "MedicalBusiness",
+      name: PRACTICE.fullName,
+      url: practiceUrl,
+      telephone: PRACTICE.phone,
+    },
+    medicalSpecialty: "PlasticSurgery",
+    sameAs: allProfileUrls,
+  };
+
+  const practiceSchema = {
+    "@context": "https://schema.org",
+    "@type": "MedicalBusiness",
+    name: PRACTICE.fullName,
+    url: practiceUrl,
+    telephone: PRACTICE.phone,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Gangnam-gu",
+      addressRegion: "Seoul",
+      addressCountry: "KR",
+    },
+    medicalSpecialty: "PlasticSurgery",
+    founder: {
+      "@type": "Person",
+      name: AUTHOR.name,
+      url: `${practiceUrl}`,
+    },
+  };
+
   return (
     <div className="mx-auto max-w-3xl px-6">
       <JsonLd data={breadcrumbSchema} />
+      <JsonLd data={physicianSchema} />
+      <JsonLd data={practiceSchema} />
       {/* Header */}
       <section className="pt-24 pb-12 sm:pt-32 sm:pb-16">
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
@@ -105,7 +144,7 @@ export default function PhysicianPage() {
             rel="noopener noreferrer"
             className="mt-4 inline-block text-sm text-accent hover:underline"
           >
-            leadps.co.kr &rarr;
+            Visit LEAD Plastic Surgery Clinic &rarr;
           </a>
         </div>
       </section>

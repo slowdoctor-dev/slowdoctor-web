@@ -85,7 +85,7 @@ export default function CvPage() {
             rel="noopener noreferrer"
             className="text-accent hover:underline"
           >
-            leadps.co.kr
+            LEAD Plastic Surgery Clinic website
           </a>
         </p>
       </section>
@@ -176,7 +176,7 @@ export default function CvPage() {
         <div className="space-y-3 text-sm">
           <CvEntry
             title="Founder & Director"
-            subtitle={<><a href={practiceUrl} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">LEAD Plastic Surgery Clinic</a>, Gangnam, Seoul</>}
+            subtitle={<><a href={practiceUrl} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">LEAD Plastic Surgery Clinic website</a>, Gangnam, Seoul</>}
             date="2024 – Present"
           />
           <CvEntry

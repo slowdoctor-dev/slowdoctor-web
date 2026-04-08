@@ -2,25 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SITE, AUTHOR, DESCRIPTIONS } from "@/lib/config";
 import { getAllPosts } from "@/lib/blog";
+import { buildPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: SITE.title,
   description: DESCRIPTIONS.full,
-  alternates: { canonical: "/" },
-  openGraph: {
-    title: SITE.title,
-    description: DESCRIPTIONS.full,
-    url: "/",
-    type: "website",
-    images: [{ url: SITE.ogImage, width: 1200, height: 630, alt: SITE.name }],
-  },
-  twitter: {
-    card: "summary",
-    title: SITE.title,
-    description: DESCRIPTIONS.full,
-    images: [SITE.ogImage],
-  },
-};
+  path: "/",
+});
 
 export default async function Home() {
   const posts = await getAllPosts();

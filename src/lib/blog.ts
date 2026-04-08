@@ -2,6 +2,7 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import { evaluate } from "@mdx-js/mdx";
 import type { ComponentType } from "react";
+import { cache } from "react";
 import * as runtime from "react/jsx-runtime";
 import matter from "gray-matter";
 import { useMDXComponents } from "@/mdx-components";
@@ -81,6 +82,21 @@ function parseAxes(raw: unknown): Axes | undefined {
   return { physician: p, engineer: e, life: l };
 }
 
+function parseTags(raw: unknown): string[] | undefined {
+  if (!Array.isArray(raw)) return undefined;
+
+  const tags = Array.from(
+    new Set(
+      raw
+        .filter((tag): tag is string => typeof tag === "string")
+        .map((tag) => tag.trim())
+        .filter(Boolean),
+    ),
+  );
+
+  return tags.length > 0 ? tags : undefined;
+}
+
 function parseFrontmatter(data: unknown, fileName: string): BlogFrontmatter {
   if (typeof data !== "object" || data === null) {
     throw new Error(`Invalid frontmatter in ${fileName}`);
@@ -103,14 +119,12 @@ function parseFrontmatter(data: unknown, fileName: string): BlogFrontmatter {
     date,
     description: obj.description as string,
     image: typeof obj.image === "string" ? obj.image : undefined,
-    tags: Array.isArray(obj.tags)
-      ? obj.tags.filter((t): t is string => typeof t === "string")
-      : undefined,
+    tags: parseTags(obj.tags),
     axes: parseAxes(obj.axes),
   };
 }
 
-async function readBlogFrontmatter(fileName: string) {
+const readBlogFrontmatter = cache(async (fileName: string) => {
   const fullPath = path.join(blogDirectory, fileName);
   const fileContents = await fs.readFile(fullPath, "utf8");
   const { data } = matter(fileContents);
@@ -121,28 +135,30 @@ async function readBlogFrontmatter(fileName: string) {
     ...frontmatter,
     formattedDate: formatDate(frontmatter.date),
   } satisfies BlogPostSummary;
-}
+});
 
-export async function getAllPosts(): Promise<BlogPostSummary[]> {
+export const getAllPosts = cache(async (): Promise<BlogPostSummary[]> => {
   const entries = await fs.readdir(blogDirectory);
   const posts = await Promise.all(
     entries.filter((entry) => entry.endsWith(".mdx")).map(readBlogFrontmatter),
   );
 
   return posts.sort((left, right) => right.date.localeCompare(left.date));
-}
+});
 
-export async function getPostFrontmatter(
+export const getPostFrontmatter = cache(async (
   slug: string,
-): Promise<BlogPostSummary | null> {
+): Promise<BlogPostSummary | null> => {
   try {
     return await readBlogFrontmatter(`${slug}.mdx`);
   } catch {
     return null;
   }
-}
+});
 
-export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
+export const getPostBySlug = cache(async (
+  slug: string,
+): Promise<BlogPost | null> => {
   const fullPath = path.join(blogDirectory, `${slug}.mdx`);
 
   let fileContents: string;
@@ -168,4 +184,4 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     formattedDate: formatDate(frontmatter.date),
     Content: evaluatedContent.default,
   };
-}
+});

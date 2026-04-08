@@ -29,18 +29,19 @@ export async function generateMetadata(
   }
 
   const image = post.image ?? "/og-default.png";
+  const canonicalUrl = new URL(`/blog/${slug}`, SITE.url).toString();
 
   return {
     title: post.title,
     description: post.description,
     alternates: {
-      canonical: `/blog/${slug}`,
+      canonical: canonicalUrl,
     },
     openGraph: {
       title: post.title,
       description: post.description,
       type: "article",
-      url: `/blog/${slug}`,
+      url: canonicalUrl,
       images: [image],
     },
     twitter: {
@@ -73,7 +74,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
     author: {
       "@type": "Person",
       name: AUTHOR.name,
-      url: SITE.url,
+      url: `${SITE.url}/cv`,
       jobTitle: AUTHOR.jobTitle,
       worksFor: {
         "@type": "MedicalBusiness",
@@ -102,7 +103,10 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
         <h1 className="mt-6 text-4xl font-bold tracking-tight sm:text-5xl">
           {post.title}
         </h1>
-        <p className="mt-4 text-sm text-muted">{post.formattedDate}</p>
+        <p className="mt-4 text-sm text-muted">
+          By <Link href="/cv" className="text-foreground hover:text-accent transition-colors">{AUTHOR.name}</Link>
+        </p>
+        <p className="mt-2 text-sm text-muted">{post.formattedDate}</p>
         {(post.axes || (post.tags && post.tags.length > 0)) && (
           <div className="mt-6 flex flex-col sm:flex-row sm:items-start gap-4">
             {post.axes && (

@@ -26,6 +26,9 @@ export default function LinksPage() {
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
           Links
         </h1>
+        <p className="mt-4 max-w-xl text-lg leading-relaxed text-muted">
+          Official profiles, social channels, and practice links for Joonho Lim.
+        </p>
       </section>
 
       <div className="pb-24 space-y-10">

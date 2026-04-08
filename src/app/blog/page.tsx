@@ -6,9 +6,12 @@ import { buildPageMetadata } from "@/lib/metadata";
 import { SITE } from "@/lib/config";
 import { BlogList } from "@/components/blog-list";
 
+const blogDescription =
+  "Writing by Joonho Lim on plastic surgery, clinical thinking, engineering, and the slower path. Notes from a surgeon who builds his own tools.";
+
 export const metadata: Metadata = buildPageMetadata({
   title: "Blog",
-  description: "Writing by Joonho Lim on plastic surgery, clinical thinking, engineering, and the slower path. Notes from a surgeon who builds his own tools.",
+  description: blogDescription,
   path: "/blog",
 });
 
@@ -23,7 +26,7 @@ export default async function BlogPage() {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: "Blog",
-    description: "Writing by Joonho Lim on plastic surgery, clinical thinking, engineering, and the slower path.",
+    description: blogDescription,
     url: `${SITE.url}/blog`,
     mainEntity: {
       "@type": "ItemList",

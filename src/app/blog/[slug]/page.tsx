@@ -34,6 +34,9 @@ export async function generateMetadata(
   return {
     title: post.title,
     description: post.description,
+    authors: [{ name: AUTHOR.name, url: SITE.url }],
+    creator: AUTHOR.name,
+    publisher: SITE.name,
     alternates: {
       canonical: canonicalUrl,
     },
@@ -42,6 +45,8 @@ export async function generateMetadata(
       description: post.description,
       type: "article",
       url: canonicalUrl,
+      siteName: SITE.name,
+      locale: "en_US",
       images: [image],
     },
     twitter: {

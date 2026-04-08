@@ -38,6 +38,17 @@ export const publications: Publication[] = [
   },
   {
     title:
+      "Neuroma of the dorsal rami in the back and its surgical treatment: a case report",
+    authors: "Lim J, Eun S",
+    journal: "Archives of Hand and Microsurgery",
+    year: 2020,
+    volume: "25",
+    issue: "1",
+    pages: "67-70",
+    doi: "10.12790/ahm.19.0047",
+  },
+  {
+    title:
       "The reconstruction of the central tubercle in bilateral cleft lips: bilateral lateral mucosal advancement flap with reinforcement of the orbicularis oris muscle",
     authors: "Chung J, Lim J, Kim S, Koo Y",
     journal: "Annals of Plastic Surgery",

@@ -1,3 +1,5 @@
+import { doctor } from "@/data/doctor";
+
 export const socialLinks = [
   { label: "YouTube", url: "https://www.youtube.com/@slowdoctor", handle: "@slowdoctor" },
   { label: "Instagram", url: "https://www.instagram.com/slowdoctor_/", handle: "@slowdoctor_" },
@@ -13,8 +15,4 @@ export const medicalLinks = [
   { label: "LinkedIn", url: "https://www.linkedin.com/in/slowdoctor/", detail: "@slowdoctor" },
 ] as const;
 
-import { doctor } from "@/data/doctor";
-
 export const practiceUrl = doctor.worksFor.url;
-
-export const allProfileUrls = [...doctor.sameAs];

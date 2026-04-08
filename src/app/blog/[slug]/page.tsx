@@ -78,11 +78,13 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
     inLanguage: "en",
     author: {
       "@type": "Person",
+      "@id": "https://slowdoctor.dev/#person",
       name: AUTHOR.name,
       url: `${SITE.url}/cv`,
       jobTitle: AUTHOR.jobTitle,
       worksFor: {
         "@type": "MedicalBusiness",
+        "@id": "https://leadps.co.kr/#organization",
         name: PRACTICE.fullName,
         url: practiceUrl,
       },

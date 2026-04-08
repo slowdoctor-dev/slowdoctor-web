@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/json-ld";
 import { buildBreadcrumbSchema } from "@/lib/breadcrumbs";
-import { practiceUrl, allProfileUrls } from "@/lib/links";
+import { practiceUrl } from "@/lib/links";
 import { buildPageMetadata } from "@/lib/metadata";
-import { SITE, AUTHOR, PRACTICE } from "@/lib/config";
+import { PRACTICE } from "@/lib/config";
+import { doctor } from "@/data/doctor";
+import { generatePersonSchema, generatePracticeSchema } from "@/lib/schema";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Physician",
@@ -36,47 +38,13 @@ export default function PhysicianPage() {
     { name: "Physician", href: "/physician" },
   ]);
 
-  const physicianSchema = {
-    "@context": "https://schema.org",
-    "@type": ["Person", "Physician"],
-    name: AUTHOR.name,
-    alternateName: AUTHOR.korean,
-    jobTitle: AUTHOR.jobTitle,
-    url: SITE.url,
-    worksFor: {
-      "@type": "MedicalBusiness",
-      name: PRACTICE.fullName,
-      url: practiceUrl,
-      telephone: PRACTICE.phone,
-    },
-    medicalSpecialty: "PlasticSurgery",
-    sameAs: allProfileUrls,
-  };
-
-  const practiceSchema = {
-    "@context": "https://schema.org",
-    "@type": "MedicalBusiness",
-    name: PRACTICE.fullName,
-    url: practiceUrl,
-    telephone: PRACTICE.phone,
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Gangnam-gu",
-      addressRegion: "Seoul",
-      addressCountry: "KR",
-    },
-    medicalSpecialty: "PlasticSurgery",
-    founder: {
-      "@type": "Person",
-      name: AUTHOR.name,
-      url: SITE.url,
-    },
-  };
+  const personSchema = generatePersonSchema();
+  const practiceSchema = generatePracticeSchema();
 
   return (
     <div className="mx-auto max-w-3xl px-6">
       <JsonLd data={breadcrumbSchema} />
-      <JsonLd data={physicianSchema} />
+      <JsonLd data={personSchema} />
       <JsonLd data={practiceSchema} />
       {/* Header */}
       <section className="pt-24 pb-12 sm:pt-32 sm:pb-16">
@@ -125,6 +93,23 @@ export default function PhysicianPage() {
                 {area.description}
               </p>
             </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Treatment Areas */}
+      <section className="pb-16">
+        <h2 className="text-sm font-medium text-accent uppercase tracking-wider mb-6">
+          Treatment Areas
+        </h2>
+        <div className="flex flex-wrap gap-2">
+          {doctor.knowsAbout.map((area) => (
+            <span
+              key={area}
+              className="text-sm text-muted border border-border rounded-full px-3 py-1"
+            >
+              {area}
+            </span>
           ))}
         </div>
       </section>

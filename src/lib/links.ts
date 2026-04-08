@@ -13,9 +13,8 @@ export const medicalLinks = [
   { label: "LinkedIn", url: "https://www.linkedin.com/in/slowdoctor/", detail: "@slowdoctor" },
 ] as const;
 
-export const practiceUrl = "https://leadps.co.kr";
+import { doctor } from "@/data/doctor";
 
-export const allProfileUrls = [
-  ...medicalLinks.map((l) => l.url),
-  ...socialLinks.map((l) => l.url),
-];
+export const practiceUrl = doctor.worksFor.url;
+
+export const allProfileUrls = [...doctor.sameAs];

@@ -1,16 +1,18 @@
+import { doctor } from "@/data/doctor";
+
 export const SITE = {
-  url: "https://slowdoctor.dev",
+  url: doctor.url,
   name: "slowdoctor.dev",
-  title: "Joonho Lim - Plastic Surgeon & Engineer",
-  titleTemplate: "%s | Joonho Lim",
+  title: `${doctor.name} - Plastic Surgeon & Engineer`,
+  titleTemplate: `%s | ${doctor.name}`,
   ogImage: "/og-default.png",
 } as const;
 
 export const AUTHOR = {
-  name: "Joonho Lim",
-  korean: "임준호",
-  title: "Joonho Lim, M.D.",
-  jobTitle: "Board-Certified Plastic Surgeon",
+  name: doctor.name,
+  korean: doctor.alternateName,
+  title: doctor.title,
+  jobTitle: doctor.jobTitle,
 } as const;
 
 export const DESCRIPTIONS = {
@@ -20,7 +22,7 @@ export const DESCRIPTIONS = {
 
 export const PRACTICE = {
   name: "LEAD Plastic Surgery",
-  fullName: "LEAD Plastic Surgery Clinic",
-  location: "Dogok-dong, Gangnam-gu, Seoul, South Korea",
-  phone: "+82-2-6953-3231",
+  fullName: doctor.worksFor.fullName,
+  location: doctor.worksFor.location,
+  phone: doctor.worksFor.phone,
 } as const;

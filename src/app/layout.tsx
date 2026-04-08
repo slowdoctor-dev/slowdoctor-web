@@ -97,6 +97,8 @@ const navLinks = [
   { href: "/links", label: "Links" },
 ];
 
+const currentYear = new Date().getFullYear();
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -141,7 +143,7 @@ export default function RootLayout({
         <footer aria-label="Site footer" className="border-t border-border">
           <div className="mx-auto max-w-3xl px-6 py-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-muted">
-              &copy; 2026 {AUTHOR.name}
+              &copy; {currentYear} {AUTHOR.name}
             </p>
             <div className="flex items-center gap-5 text-sm text-muted">
               {socialLinks.slice(0, 4).map((link) => (

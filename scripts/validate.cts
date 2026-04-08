@@ -2,7 +2,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const matter = require("gray-matter");
 
-const { parseDateOnly, formatDate } = require("./date-utils.cts");
+const { formatDate } = require("./date-utils.cts");
 
 const outDir = path.join(process.cwd(), "out");
 let errors = 0;

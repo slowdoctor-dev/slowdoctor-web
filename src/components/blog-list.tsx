@@ -30,7 +30,9 @@ export function BlogList({ posts }: { posts: PostData[] }) {
       {allTags.length > 0 && (
         <div className="pb-8 flex flex-wrap gap-1.5">
           <button
+            type="button"
             onClick={() => setActiveTag(null)}
+            aria-pressed={activeTag === null}
             className={`text-xs rounded-full px-2.5 py-1 transition-colors ${
               activeTag === null
                 ? "bg-accent text-background"
@@ -42,7 +44,9 @@ export function BlogList({ posts }: { posts: PostData[] }) {
           {allTags.map((tag) => (
             <button
               key={tag}
+              type="button"
               onClick={() => setActiveTag(activeTag === tag ? null : tag)}
+              aria-pressed={activeTag === tag}
               className={`text-xs rounded-full px-2.5 py-1 transition-colors ${
                 activeTag === tag
                   ? "bg-accent text-background"
@@ -80,9 +84,11 @@ export function BlogList({ posts }: { posts: PostData[] }) {
                     {post.tags.map((tag) => (
                       <button
                         key={tag}
+                        type="button"
                         onClick={() =>
                           setActiveTag(activeTag === tag ? null : tag)
                         }
+                        aria-pressed={activeTag === tag}
                         className={`text-xs rounded-full px-2 py-0.5 transition-colors ${
                           activeTag === tag
                             ? "bg-accent text-background"

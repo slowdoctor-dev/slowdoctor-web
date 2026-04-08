@@ -60,6 +60,14 @@ ${content.slice(0, 3000)}
 
 Respond with ONLY the JSON object, no explanation.`;
 
+function isValidAxisValue(value) {
+  return Number.isInteger(value) && value >= 0 && value <= 10;
+}
+
+function isValidTag(tag) {
+  return typeof tag === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(tag);
+}
+
 async function main() {
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -102,6 +110,20 @@ async function main() {
     typeof axes.life !== "number"
   ) {
     console.error("Invalid AI response structure:", parsed);
+    process.exit(1);
+  }
+
+  if (tags.length < 2 || tags.length > 5 || !tags.every(isValidTag)) {
+    console.error("Invalid tags returned by AI:", tags);
+    process.exit(1);
+  }
+
+  if (
+    !isValidAxisValue(axes.physician) ||
+    !isValidAxisValue(axes.engineer) ||
+    !isValidAxisValue(axes.life)
+  ) {
+    console.error("Invalid axis values returned by AI:", axes);
     process.exit(1);
   }
 

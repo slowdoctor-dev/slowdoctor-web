@@ -13,6 +13,13 @@ const slug = title
   .replace(/[^a-z0-9]+/g, "-")
   .replace(/^-|-$/g, "");
 
+if (!slug) {
+  console.error(
+    "Could not derive an ASCII slug from the title. Use at least one Latin letter or number.",
+  );
+  process.exit(1);
+}
+
 const now = new Date();
 const date = [
   now.getFullYear(),

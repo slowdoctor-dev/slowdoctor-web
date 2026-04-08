@@ -70,7 +70,14 @@ function parseAxes(raw: unknown): Axes | undefined {
   const p = Number(obj.physician);
   const e = Number(obj.engineer);
   const l = Number(obj.life);
-  if (isNaN(p) || isNaN(e) || isNaN(l)) return undefined;
+  const values = [p, e, l];
+  const hasInvalidValue = values.some(
+    (value) => !Number.isFinite(value) || !Number.isInteger(value),
+  );
+  if (hasInvalidValue) return undefined;
+  const isOutOfRange = values.some((value) => value < 0 || value > 10);
+  if (isOutOfRange) return undefined;
+  if (p + e + l !== 10) return undefined;
   return { physician: p, engineer: e, life: l };
 }
 
@@ -148,7 +155,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
   const { content, data } = matter(fileContents);
   const frontmatter = parseFrontmatter(data, `${slug}.mdx`);
 
-  const module = (await evaluate(content, {
+  const evaluatedContent = (await evaluate(content, {
     ...runtime,
     useMDXComponents,
   })) as {
@@ -159,6 +166,6 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     slug,
     ...frontmatter,
     formattedDate: formatDate(frontmatter.date),
-    Content: module.default,
+    Content: evaluatedContent.default,
   };
 }

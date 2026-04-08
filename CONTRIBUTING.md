@@ -6,11 +6,14 @@ This is a static Next.js 16 site. All content lives in source files — there is
 
 | What to change | File | Notes |
 |---|---|---|
-| Homepage (hero, CV) | `src/app/page.tsx` | Edit text directly |
-| Physician page | `src/app/physician/page.tsx` | `publications` array for papers |
+| Homepage (hero) | `src/app/page.tsx` | Edit text directly |
+| Physician page | `src/app/physician/page.tsx` | Clinical focus, philosophy |
 | Engineer page | `src/app/engineer/page.tsx` | `projects`, `techStack` arrays |
+| CV page | `src/app/cv/page.tsx` | Education, career, publications |
+| Publications | `src/lib/cv.ts` | `publications` array |
 | Links page | `src/app/links/page.tsx` | Auto-populated from shared data |
 | Navigation & footer | `src/app/layout.tsx` | `navLinks` array |
+| Site constants | `src/lib/config.ts` | `SITE`, `AUTHOR`, `PRACTICE` |
 | Social / profile URLs | `src/lib/links.ts` | Single source of truth for all URLs |
 | Site metadata & SEO | `src/app/layout.tsx` | `metadata` and `personSchema` objects |
 | Theme & colors | `src/app/globals.css` | CSS variables in `:root` |
@@ -59,12 +62,24 @@ const x = 42;
 | `date` | Yes | ISO date string, e.g. `"2026-04-08"` |
 | `description` | Yes | Short summary for SEO and blog listing |
 | `image` | No | Path to OG image (falls back to `/og-default.png`) |
+| `tags` | No | Array of lowercase tags, e.g. `["meta", "introduction"]` |
+| `axes` | No | Physician/Engineer/Life weights (integers 0-10, must sum to 10) |
 
 **File naming:** The filename becomes the URL slug. `my-post.mdx` → `/blog/my-post`
 
+### Auto-tagging
+
+Use the tagging script to classify a post with AI:
+
+```bash
+npm run tag-post -- hello-world
+```
+
+This adds `tags` and `axes` to the frontmatter via Claude Haiku. Use `--force` to re-tag.
+
 ## Adding a Publication
 
-Edit `src/app/physician/page.tsx`. Add an entry to the `publications` array:
+Edit `src/lib/cv.ts`. Add an entry to the `publications` array:
 
 ```typescript
 {
@@ -72,6 +87,9 @@ Edit `src/app/physician/page.tsx`. Add an entry to the `publications` array:
   authors: "Author A, Author B, Lim J",
   journal: "Journal Name",
   year: 2026,
+  volume: "1",                 // optional
+  issue: "2",                  // optional
+  pages: "10-15",              // optional
   doi: "10.xxxx/xxxxx",       // optional
   pubmed: "12345678",          // optional
 },
@@ -124,24 +142,34 @@ src/
     blog/
       page.tsx          # Blog listing
       [slug]/page.tsx   # Individual blog post
-    physician/page.tsx
-    engineer/page.tsx
-    links/page.tsx
+    cv/page.tsx         # Curriculum vitae
+    physician/page.tsx  # Clinical philosophy and focus
+    engineer/page.tsx   # Engineering thesis and projects
+    links/page.tsx      # External profile links
   components/
+    axis-bar.tsx        # Physician/Engineer/Life axis visualization
+    blog-list.tsx       # Blog listing with tag filtering
     json-ld.tsx         # JSON-LD structured data component
   content/
     blog/*.mdx          # Blog posts (Markdown + JSX)
   lib/
     blog.ts             # Blog utilities (read posts, parse MDX)
-    links.ts            # Centralized social/profile URLs
     breadcrumbs.ts      # BreadcrumbList JSON-LD helper
+    config.ts           # Site, author, practice constants
+    cv.ts               # Publication data
+    links.ts            # Centralized social/profile URLs
+    metadata.ts         # Page metadata builder
   mdx-components.tsx    # MDX component overrides (syntax highlighting, links)
 scripts/
-  generate-sitemap.cts  # Build-time sitemap generator
+  date-utils.cts        # Shared date parsing for build scripts
   generate-feed.cts     # Build-time RSS feed generator
+  generate-sitemap.cts  # Build-time sitemap generator
+  new-post.cts          # Scaffold new blog post
+  tag-post.cts          # AI-powered blog post tagging
+  validate.cts          # Post-build SEO validation
 public/
   robots.txt
   og-default.png        # Default social sharing image
-  feed.xml              # Generated RSS feed (gitignored)
-  sitemap.xml           # Generated sitemap (gitignored)
+  feed.xml              # Generated RSS feed
+  sitemap.xml           # Generated sitemap
 ```

@@ -8,7 +8,7 @@ import { PRACTICE } from "@/lib/config";
 export const metadata: Metadata = buildPageMetadata({
   title: "Links",
   description:
-    "Professional and social links for Joonho Lim -- medical profiles, social media, and practice.",
+    "Professional and social links for Joonho Lim \u2014 medical profiles, social media, and practice.",
   path: "/links",
 });
 

@@ -13,6 +13,7 @@ interface PageMetadataOptions {
   description: string;
   path: string;
   type?: "website" | "article";
+  absoluteTitle?: boolean;
 }
 
 export function buildPageMetadata({
@@ -20,11 +21,12 @@ export function buildPageMetadata({
   description,
   path,
   type = "website",
+  absoluteTitle = false,
 }: PageMetadataOptions): Metadata {
   const absoluteUrl = new URL(path, SITE.url).toString();
 
   return {
-    title,
+    title: absoluteTitle ? { absolute: title } : title,
     description,
     authors: [{ name: AUTHOR.name, url: SITE.url }],
     creator: AUTHOR.name,

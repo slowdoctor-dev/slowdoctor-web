@@ -8,6 +8,7 @@ export const metadata: Metadata = buildPageMetadata({
   title: SITE.title,
   description: DESCRIPTIONS.full,
   path: "/",
+  absoluteTitle: true,
 });
 
 export default async function Home() {

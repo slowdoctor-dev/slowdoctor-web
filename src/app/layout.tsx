@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Plus_Jakarta_Sans, Gowun_Dodum, Noto_Sans_KR } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import Link from "next/link";
 import { NavLinks } from "@/components/nav-links";
 import { socialLinks } from "@/lib/links";
@@ -19,18 +19,6 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   display: "swap",
 });
 
-const gowunDodum = Gowun_Dodum({
-  variable: "--font-gowun",
-  weight: "400",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const notoSansKR = Noto_Sans_KR({
-  variable: "--font-noto-kr",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: {
@@ -83,7 +71,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${plusJakartaSans.variable} ${gowunDodum.variable} ${notoSansKR.variable} h-full antialiased`}>
+    <html lang="en" className={`${inter.variable} ${plusJakartaSans.variable} h-full antialiased`}>
       <head>
         <link
           rel="alternate"

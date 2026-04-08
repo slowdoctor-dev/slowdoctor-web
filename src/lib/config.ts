@@ -14,8 +14,8 @@ export const AUTHOR = {
 } as const;
 
 export const DESCRIPTIONS = {
-  full: "Board-certified plastic surgeon and engineer specializing in slow-aging, scar treatment, and blepharoplasty. Building an AI-operated clinic.",
-  brief: "Board-certified plastic surgeon and engineer building an AI-operated clinic.",
+  full: "Board-certified plastic surgeon and engineer specializing in slow-aging, scar treatment, and blepharoplasty.",
+  brief: "Board-certified plastic surgeon and engineer, practicing in Gangnam, Seoul.",
 } as const;
 
 export const PRACTICE = {

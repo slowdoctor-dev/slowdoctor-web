@@ -9,7 +9,7 @@ import { publications } from "@/lib/cv";
 export const metadata: Metadata = buildPageMetadata({
   title: "CV",
   description:
-    "Curriculum vitae of Joonho Lim -- education, training, professional experience, and publications.",
+    "Curriculum vitae of Joonho Lim – education, training, professional experience, and publications.",
   path: "/cv",
 });
 
@@ -39,9 +39,35 @@ export default function CvPage() {
     { name: "CV", href: "/cv" },
   ]);
 
+  const publicationSchemas = publications.map((pub) => ({
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    headline: pub.title,
+    author: pub.authors.split(", ").map((name) => ({
+      "@type": "Person",
+      name,
+    })),
+    datePublished: String(pub.year),
+    isPartOf: {
+      "@type": "Periodical",
+      name: pub.journal,
+    },
+    ...(pub.doi && { url: `https://doi.org/${pub.doi}` }),
+    ...(pub.doi && {
+      identifier: {
+        "@type": "PropertyValue",
+        propertyID: "DOI",
+        value: pub.doi,
+      },
+    }),
+  }));
+
   return (
     <div className="mx-auto max-w-3xl px-6">
       <JsonLd data={breadcrumbSchema} />
+      {publicationSchemas.map((schema, i) => (
+        <JsonLd key={i} data={schema} />
+      ))}
 
       {/* Header */}
       <section className="pt-24 pb-8 sm:pt-32 sm:pb-10 text-center">
@@ -75,17 +101,17 @@ export default function CvPage() {
           <CvEntry
             title="Korea National Open University"
             subtitle="B.S. in Statistics and Data Science / B.S. in Computer Science (Double Major, in progress)"
-            date="2025 -- Present"
+            date="2025 – Present"
           />
           <CvEntry
             title="Seoul National University College of Medicine"
             subtitle="Doctor of Medicine (M.D.)"
-            date="2006 -- 2012"
+            date="2006 – 2012"
           />
           <CvEntry
             title="Seoul Science High School"
             subtitle="Early graduation, Valedictorian"
-            date="2004 -- 2006"
+            date="2004 – 2006"
           />
         </div>
       </section>
@@ -99,12 +125,12 @@ export default function CvPage() {
           <CvEntry
             title="Residency, Department of Plastic and Reconstructive Surgery"
             subtitle="Seoul National University Hospital"
-            date="2016 -- 2020"
+            date="2016 – 2020"
           />
           <CvEntry
             title="Internship"
             subtitle="Seoul National University Hospital"
-            date="2012 -- 2013"
+            date="2012 – 2013"
           />
         </div>
       </section>
@@ -118,7 +144,7 @@ export default function CvPage() {
           <CvEntry
             title="Military Medical Officer"
             subtitle="Republic of Korea Army, Daejeon"
-            date="2013 -- 2016"
+            date="2013 – 2016"
           />
         </div>
       </section>
@@ -151,22 +177,22 @@ export default function CvPage() {
           <CvEntry
             title="Founder & Director"
             subtitle={<><a href={practiceUrl} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">LEAD Plastic Surgery Clinic</a>, Gangnam, Seoul</>}
-            date="2024 -- Present"
+            date="2024 – Present"
           />
           <CvEntry
             title="Plastic Surgeon"
             subtitle="Wonderful Plastic Surgery Clinic, Gangnam, Seoul"
-            date="2022 -- 2024"
+            date="2022 – 2024"
           />
           <CvEntry
             title="Plastic Surgeon"
             subtitle="POP Plastic Surgery Clinic, Gangnam, Seoul"
-            date="2021 -- 2022"
+            date="2021 – 2022"
           />
           <CvEntry
             title="Plastic Surgeon"
             subtitle="THE Plastic Surgery Clinic, Gangnam, Seoul"
-            date="2020 -- 2021"
+            date="2020 – 2021"
           />
         </div>
       </section>

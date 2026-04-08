@@ -1,10 +1,25 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AUTHOR, DESCRIPTIONS } from "@/lib/config";
+import { SITE, AUTHOR, DESCRIPTIONS } from "@/lib/config";
 import { getAllPosts } from "@/lib/blog";
 
 export const metadata: Metadata = {
+  title: SITE.title,
+  description: DESCRIPTIONS.full,
   alternates: { canonical: "/" },
+  openGraph: {
+    title: SITE.title,
+    description: DESCRIPTIONS.full,
+    url: "/",
+    type: "website",
+    images: [{ url: SITE.ogImage, width: 1200, height: 630, alt: SITE.name }],
+  },
+  twitter: {
+    card: "summary",
+    title: SITE.title,
+    description: DESCRIPTIONS.full,
+    images: [SITE.ogImage],
+  },
 };
 
 export default async function Home() {
@@ -21,14 +36,14 @@ export default async function Home() {
         <p className="mt-4 text-lg text-accent font-medium">
           Choosing the right way over the fast way.
         </p>
-        <p className="mt-4 text-lg text-muted leading-relaxed max-w-xl">
+        <p className="mt-4 text-lg text-muted leading-relaxed">
           {DESCRIPTIONS.brief}
         </p>
-        <p className="mt-6 text-foreground/90 leading-relaxed max-w-xl">
-          A plastic surgeon who practices both surgery and non-surgical
-          treatments at depth -- so the recommendation is always what you
-          actually need, not what I happen to specialize in. Currently running a
-          one-physician clinic in Gangnam, powered by AI.
+        <p className="mt-6 text-foreground/90 leading-relaxed">
+          I practice both surgery and non-surgical medicine — so the
+          recommendation is always what you actually need. Outside the
+          clinic, I explore CS and AI, looking for where they can solve
+          real problems.
         </p>
       </section>
 
@@ -56,7 +71,7 @@ export default async function Home() {
             As an Engineer
           </h2>
           <p className="mt-2 text-sm text-muted">
-            Medicine gave me the problems. Engineering gives me the tools.
+            AI, automation, and real-world problem solving.
           </p>
           <span className="mt-4 inline-block text-sm text-accent opacity-0 group-hover:opacity-100 transition-opacity">
             Learn more &rarr;

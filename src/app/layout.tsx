@@ -3,7 +3,8 @@ import { Inter, Plus_Jakarta_Sans, Gowun_Dodum, Noto_Sans_KR } from "next/font/g
 import Link from "next/link";
 import { JsonLd } from "@/components/json-ld";
 import { socialLinks, allProfileUrls, practiceUrl } from "@/lib/links";
-import { SITE, AUTHOR, DESCRIPTIONS } from "@/lib/config";
+import { SITE, AUTHOR, DESCRIPTIONS, PRACTICE } from "@/lib/config";
+import { SocialIcon } from "@/components/social-icons";
 import "./globals.css";
 
 const inter = Inter({
@@ -89,6 +90,26 @@ const personSchema = {
   sameAs: allProfileUrls,
 };
 
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "MedicalBusiness",
+  name: PRACTICE.fullName,
+  url: practiceUrl,
+  telephone: PRACTICE.phone,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Gangnam-gu",
+    addressRegion: "Seoul",
+    addressCountry: "KR",
+  },
+  medicalSpecialty: "PlasticSurgery",
+  founder: {
+    "@type": "Person",
+    name: AUTHOR.name,
+    url: SITE.url,
+  },
+};
+
 const navLinks = [
   { href: "/cv", label: "CV" },
   { href: "/physician", label: "Physician" },
@@ -114,17 +135,18 @@ export default function RootLayout({
           href="/feed.xml"
         />
         <JsonLd data={personSchema} />
+        <JsonLd data={organizationSchema} />
       </head>
       <body className="min-h-full flex flex-col">
         <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
-          <nav aria-label="Main" className="mx-auto flex max-w-3xl items-center justify-between px-6 py-4">
+          <nav aria-label="Main" className="mx-auto flex max-w-3xl flex-col items-center gap-2 px-6 py-4 sm:flex-row sm:justify-between sm:gap-0">
             <Link
               href="/"
-              className="text-sm font-semibold tracking-tight text-foreground hover:text-accent transition-colors"
+              className="text-sm font-semibold tracking-tight text-foreground hover:text-accent transition-colors border border-border rounded-md px-2.5 py-1"
             >
               slowdoctor.dev
             </Link>
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-5 sm:gap-6">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -145,16 +167,17 @@ export default function RootLayout({
             <p className="text-sm text-muted">
               &copy; {currentYear} {AUTHOR.name}
             </p>
-            <div className="flex items-center gap-5 text-sm text-muted">
-              {socialLinks.slice(0, 4).map((link) => (
+            <div className="flex items-center gap-4">
+              {socialLinks.map((link) => (
                 <a
                   key={link.label}
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-foreground transition-colors"
+                  aria-label={link.label}
+                  className="text-muted hover:text-foreground transition-colors"
                 >
-                  {link.label}
+                  <SocialIcon label={link.label} className="w-4 h-4" />
                 </a>
               ))}
             </div>

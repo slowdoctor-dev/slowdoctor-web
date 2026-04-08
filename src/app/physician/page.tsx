@@ -16,17 +16,17 @@ const clinicalFocus = [
   {
     name: "Slow-aging",
     description:
-      "Non-surgical facial rejuvenation using energy-based devices and injectables, calibrated for long-term results over quick fixes. Management is planned in quarterly cycles over years, not one-off sessions.",
+      "Knowing when a device is enough, when injectables are right, and when surgery is the honest answer. Calibrated for long-term results over quick fixes. I plan treatment as an ongoing relationship, not a one-off session.",
   },
   {
     name: "Scars",
     description:
-      "Evidence-based scar treatment combining lasers, microneedling, and subcision. A plastic surgeon's understanding of tissue behavior meets non-surgical precision -- covering the full scar lifecycle from fresh wounds to mature scars.",
+      "Every scar has its own timeline and its own answer. Lasers, devices, injectables, or surgery — I match the tool to the stage. Covering the full lifecycle from fresh wounds to mature scars.",
   },
   {
     name: "Natural Eyes",
     description:
-      "Blepharoplasty that preserves individuality. Minimal, precise, and designed to look like nothing was done at all. Result over speed, every time.",
+      "Specializing in nonincisional blepharoplasty at a level few surgeons attempt. Minimal, precise, and designed to look like nothing was done at all. Results over speed, every time.",
   },
 ];
 
@@ -45,7 +45,7 @@ export default function PhysicianPage() {
           Physician
         </h1>
         <p className="mt-4 text-lg text-muted leading-relaxed max-w-xl">
-          Choosing the right way over the fast way.
+          The right treatment at the right time.
         </p>
       </section>
 
@@ -56,15 +56,14 @@ export default function PhysicianPage() {
         </h2>
         <div className="space-y-5 text-foreground/90 leading-relaxed">
           <p>
-            I practice slow-aging, not anti-aging. The goal is not to reverse
-            time but to age well -- gracefully, naturally, and at the right
-            pace. Every face has its own timeline, and my work is about
-            respecting that timeline while guiding it in a better direction.
+            I practice both surgery and non-surgical medicine in depth.
+            That means the recommendation is always based on what a patient
+            actually needs — not limited by what I happen to offer.
           </p>
           <p>
-            In a field driven by trends and speed, I choose the slower path.
-            Better outcomes take more time. That patience is the foundation of
-            everything I do.
+            Better outcomes take more time. I&apos;d rather see someone regularly
+            over years, adjusting as they change, than chase a single dramatic
+            result. If a treatment is not needed, I say so.
           </p>
         </div>
       </section>
@@ -88,28 +87,6 @@ export default function PhysicianPage() {
               </p>
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* Approach */}
-      <section className="pb-16">
-        <h2 className="text-sm font-medium text-accent uppercase tracking-wider mb-6">
-          Approach
-        </h2>
-        <div className="space-y-5 text-foreground/90 leading-relaxed">
-          <p>
-            Most plastic surgeons specialize in either surgery or non-surgical
-            procedures. I practice both at depth. This means I can assess
-            whether a patient genuinely needs an operation or whether a
-            well-calibrated device treatment would serve them better -- without
-            the bias that comes from only knowing one side.
-          </p>
-          <p>
-            I plan care over quarters and years, not single visits. If a
-            treatment is not needed, I say so. The goal is the smallest
-            effective intervention at the right time -- not the most expensive
-            one, not the most popular one.
-          </p>
         </div>
       </section>
 

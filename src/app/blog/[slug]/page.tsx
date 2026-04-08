@@ -5,6 +5,7 @@ import { getAllPosts, getPostBySlug, getPostFrontmatter } from "@/lib/blog";
 import { JsonLd } from "@/components/json-ld";
 import { buildBreadcrumbSchema } from "@/lib/breadcrumbs";
 import { SITE, AUTHOR } from "@/lib/config";
+import { practiceUrl } from "@/lib/links";
 import { AxisBar } from "@/components/axis-bar";
 
 export const dynamicParams = false;
@@ -68,12 +69,20 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
     description: post.description,
     datePublished: post.date,
     url: `${SITE.url}/blog/${slug}`,
+    inLanguage: "en",
     author: {
       "@type": "Person",
       name: AUTHOR.name,
       url: SITE.url,
+      jobTitle: AUTHOR.jobTitle,
+      worksFor: {
+        "@type": "MedicalBusiness",
+        name: "LEAD Plastic Surgery",
+        url: practiceUrl,
+      },
     },
     image: `${SITE.url}${post.image ?? SITE.ogImage}`,
+    ...(post.tags && post.tags.length > 0 && { keywords: post.tags.join(", ") }),
   };
 
   const breadcrumbSchema = buildBreadcrumbSchema([

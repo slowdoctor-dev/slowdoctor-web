@@ -6,7 +6,7 @@ import { buildPageMetadata } from "@/lib/metadata";
 export const metadata: Metadata = buildPageMetadata({
   title: "Engineer",
   description:
-    "Building an AI-operated clinic with Claude Code, multi-agent systems, and modern web infrastructure.",
+    "Medical informatics, infodemiology, and health IT — building custom tools for a solo clinic.",
   path: "/engineer",
 });
 
@@ -14,30 +14,18 @@ const interests = [
   {
     name: "Medical Informatics",
     description:
-      "Applying computing and data systems to clinical workflows -- from AI-assisted charting to structured knowledge bases.",
+      "Applying computing to clinical workflows — charting, records, and knowledge systems that actually fit how medicine works.",
   },
   {
     name: "Infodemiology",
     description:
-      "Studying how health information spreads online and using search/social data to understand public health behavior.",
+      "How health information spreads online — using search and social data to understand what patients are actually looking for.",
   },
   {
-    name: "AI-operated Healthcare",
+    name: "Health IT",
     description:
-      "Proving that a solo practitioner can deliver enterprise-level operations by treating AI as infrastructure, not a novelty.",
+      "Building custom tools for a solo clinic — scheduling, inventory, patient flow, and digital signage — instead of relying on off-the-shelf solutions.",
   },
-];
-
-const techStack = [
-  "Next.js",
-  "TypeScript",
-  "Claude Code",
-  "MCP",
-  "Docker",
-  "WSL2",
-  "Node.js",
-  "SQLite",
-  "Tailwind",
 ];
 
 const projects = [
@@ -91,22 +79,15 @@ export default function EngineerPage() {
         </h2>
         <div className="space-y-5 text-foreground/90 leading-relaxed">
           <p>
-            Healthcare is full of workflows that were designed for a world
-            before software -- charting, scheduling, inventory, patient
-            communication, even clinical decision-making. Most solutions come
-            from engineers who have never been in a consultation room. The
-            result is tools that technically work but miss the context that
-            matters.
+            I&apos;ve always been curious about computing — not just using
+            tools, but understanding how they work underneath. Medicine is
+            where I practice, but engineering is how I think.
           </p>
           <p>
-            My current experiment: run an entire clinic with a single physician
-            and a multi-agent AI system, no dedicated marketing or IT staff.
-            Not to prove that AI replaces people, but to find out which parts
-            of medicine genuinely benefit from automation and which ones
-            should never be delegated.
-          </p>
-          <p>
-            This is a thesis, not an answer. I am still testing it.
+            I&apos;d rather build something myself than rely on a tool that
+            almost works. Most of what I make is for my own clinic, but the
+            mindset applies everywhere — understand the problem first,
+            then write the solution.
           </p>
         </div>
       </section>
@@ -129,23 +110,6 @@ export default function EngineerPage() {
                 {interest.description}
               </p>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Tech Stack */}
-      <section className="pb-16">
-        <h2 className="text-sm font-medium text-accent uppercase tracking-wider mb-6">
-          Tech Stack
-        </h2>
-        <div className="flex flex-wrap gap-2">
-          {techStack.map((tech) => (
-            <span
-              key={tech}
-              className="text-sm text-foreground/80 border border-border rounded-full px-3 py-1"
-            >
-              {tech}
-            </span>
           ))}
         </div>
       </section>

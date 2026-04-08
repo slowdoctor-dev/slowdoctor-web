@@ -22,7 +22,7 @@ export const DESCRIPTIONS = {
 
 export const PRACTICE = {
   name: "LEAD Plastic Surgery",
-  fullName: doctor.worksFor.fullName,
+  fullName: doctor.worksFor.name,
   location: doctor.worksFor.location,
   phone: doctor.worksFor.phone,
 } as const;

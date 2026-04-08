@@ -6,6 +6,7 @@ import { JsonLd } from "@/components/json-ld";
 import { buildBreadcrumbSchema } from "@/lib/breadcrumbs";
 import { SITE, AUTHOR, PRACTICE } from "@/lib/config";
 import { practiceUrl } from "@/lib/links";
+import { doctor } from "@/data/doctor";
 import { AxisBar } from "@/components/axis-bar";
 
 export const dynamicParams = false;
@@ -78,13 +79,13 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
     inLanguage: "en",
     author: {
       "@type": "Person",
-      "@id": "https://slowdoctor.dev/#person",
+      "@id": doctor.id,
       name: AUTHOR.name,
       url: `${SITE.url}/cv`,
       jobTitle: AUTHOR.jobTitle,
       worksFor: {
         "@type": "MedicalBusiness",
-        "@id": "https://leadps.co.kr/#organization",
+        "@id": doctor.worksFor.id,
         name: PRACTICE.fullName,
         url: practiceUrl,
       },

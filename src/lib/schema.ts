@@ -4,7 +4,7 @@ export function generatePersonSchema() {
   return {
     "@context": "https://schema.org",
     "@type": ["Person", "Physician"],
-    "@id": "https://slowdoctor.dev/#person",
+    "@id": doctor.id,
     name: doctor.name,
     alternateName: doctor.alternateName,
     givenName: doctor.givenName,
@@ -38,7 +38,7 @@ export function generatePersonSchema() {
       },
     },
     knowsAbout: doctor.knowsAbout,
-    sameAs: [...doctor.sameAs],
+    sameAs: doctor.sameAs,
   };
 }
 
@@ -47,7 +47,7 @@ export function generatePracticeSchema() {
     "@context": "https://schema.org",
     "@type": ["MedicalBusiness", "LocalBusiness"],
     "@id": doctor.worksFor.id,
-    name: doctor.worksFor.fullName,
+    name: doctor.worksFor.name,
     alternateName: doctor.worksFor.alternateName,
     url: doctor.worksFor.url,
     telephone: doctor.worksFor.phone,
@@ -60,7 +60,7 @@ export function generatePracticeSchema() {
     medicalSpecialty: doctor.medicalSpecialty,
     founder: {
       "@type": "Person",
-      "@id": "https://slowdoctor.dev/#person",
+      "@id": doctor.id,
       name: doctor.name,
     },
   };

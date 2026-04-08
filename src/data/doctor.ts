@@ -7,6 +7,7 @@ export const doctor = {
   jobTitle: "Board-Certified Plastic Surgeon",
   description:
     "Board-certified plastic surgeon specializing in slow-aging, scar treatment, and natural eye surgery. Founder of LEAD Plastic Surgery Clinic in Seoul.",
+  id: "https://slowdoctor.dev/#person",
   url: "https://slowdoctor.dev",
   image: "",
 
@@ -33,7 +34,6 @@ export const doctor = {
     id: "https://leadps.co.kr/#organization",
     name: "LEAD Plastic Surgery Clinic",
     alternateName: "리드성형외과의원",
-    fullName: "LEAD Plastic Surgery Clinic",
     url: "https://leadps.co.kr",
     location: "Dogok-dong, Gangnam-gu, Seoul, South Korea",
     phone: "+82-2-6953-3231",

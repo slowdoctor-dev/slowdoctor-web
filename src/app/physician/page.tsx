@@ -12,6 +12,24 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/physician",
 });
 
+const clinicalFocus = [
+  {
+    name: "Slow-aging",
+    description:
+      "Non-surgical facial rejuvenation using energy-based devices and injectables, calibrated for long-term results over quick fixes. Management is planned in quarterly cycles over years, not one-off sessions.",
+  },
+  {
+    name: "Scars",
+    description:
+      "Evidence-based scar treatment combining lasers, microneedling, and subcision. A plastic surgeon's understanding of tissue behavior meets non-surgical precision -- covering the full scar lifecycle from fresh wounds to mature scars.",
+  },
+  {
+    name: "Natural Eyes",
+    description:
+      "Blepharoplasty that preserves individuality. Minimal, precise, and designed to look like nothing was done at all. Result over speed, every time.",
+  },
+];
+
 export default function PhysicianPage() {
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: "Home", href: "/" },
@@ -44,21 +62,53 @@ export default function PhysicianPage() {
             respecting that timeline while guiding it in a better direction.
           </p>
           <p>
-            My clinical focus sits on three axes.{" "}
-            <strong className="text-foreground">Slow-aging</strong>: non-surgical
-            facial rejuvenation using energy-based devices and injectables,
-            calibrated for long-term results over quick fixes.{" "}
-            <strong className="text-foreground">Scars</strong>: evidence-based,
-            non-surgical scar treatment combining lasers, microneedling, and
-            subcision for both surgical scars and acne scarring.{" "}
-            <strong className="text-foreground">Natural Eyes</strong>:
-            blepharoplasty that preserves individuality -- minimal, precise, and
-            designed to look like nothing was done at all.
-          </p>
-          <p>
             In a field driven by trends and speed, I choose the slower path.
             Better outcomes take more time. That patience is the foundation of
             everything I do.
+          </p>
+        </div>
+      </section>
+
+      {/* Clinical Focus */}
+      <section className="pb-16">
+        <h2 className="text-sm font-medium text-accent uppercase tracking-wider mb-6">
+          Clinical Focus
+        </h2>
+        <div className="space-y-3">
+          {clinicalFocus.map((area) => (
+            <div
+              key={area.name}
+              className="rounded-lg border border-border bg-card p-5"
+            >
+              <h3 className="text-base font-semibold text-foreground">
+                {area.name}
+              </h3>
+              <p className="mt-2 text-sm text-muted leading-relaxed">
+                {area.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Approach */}
+      <section className="pb-16">
+        <h2 className="text-sm font-medium text-accent uppercase tracking-wider mb-6">
+          Approach
+        </h2>
+        <div className="space-y-5 text-foreground/90 leading-relaxed">
+          <p>
+            Most plastic surgeons specialize in either surgery or non-surgical
+            procedures. I practice both at depth. This means I can assess
+            whether a patient genuinely needs an operation or whether a
+            well-calibrated device treatment would serve them better -- without
+            the bias that comes from only knowing one side.
+          </p>
+          <p>
+            I plan care over quarters and years, not single visits. If a
+            treatment is not needed, I say so. The goal is the smallest
+            effective intervention at the right time -- not the most expensive
+            one, not the most popular one.
           </p>
         </div>
       </section>

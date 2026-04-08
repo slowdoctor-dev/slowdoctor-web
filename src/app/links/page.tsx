@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/json-ld";
 import { buildBreadcrumbSchema } from "@/lib/breadcrumbs";
-import { socialLinks, academicLinks, practiceUrl } from "@/lib/links";
+import { socialLinks, medicalLinks, practiceUrl } from "@/lib/links";
 import { buildPageMetadata } from "@/lib/metadata";
+import { PRACTICE } from "@/lib/config";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Links",
@@ -10,24 +11,6 @@ export const metadata: Metadata = buildPageMetadata({
     "Professional and social links for Joonho Lim -- medical profiles, social media, and practice.",
   path: "/links",
 });
-
-const sections = [
-  {
-    title: "Practice",
-    links: [{ label: "LEAD Plastic Surgery", url: practiceUrl }],
-  },
-  {
-    title: "Medical",
-    links: [...academicLinks],
-  },
-  {
-    title: "Social",
-    links: socialLinks.map((l) => ({
-      label: `${l.label}${"handle" in l ? ` ${l.handle}` : ""}`,
-      url: l.url,
-    })),
-  },
-];
 
 export default function LinksPage() {
   const breadcrumbSchema = buildBreadcrumbSchema([
@@ -45,31 +28,79 @@ export default function LinksPage() {
         </h1>
       </section>
 
-      {/* Link Sections */}
-      <div className="pb-16 space-y-12">
-        {sections.map((section) => (
-          <section key={section.title}>
-            <h2 className="text-sm font-medium text-accent uppercase tracking-wider mb-4">
-              {section.title}
-            </h2>
-            <ul className="space-y-2">
-              {section.links.map((link) => (
-                <li key={link.label}>
-                  <a
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block py-2 text-foreground hover:text-accent transition-colors"
-                  >
-                    {link.label}
-                    <span className="ml-1 text-muted">↗</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))}
+      <div className="pb-24 space-y-10">
+        {/* Practice */}
+        <section>
+          <h2 className="text-sm font-medium text-accent uppercase tracking-wider mb-4">
+            Practice
+          </h2>
+          <div className="rounded-lg border border-border bg-card">
+            <a
+              href={practiceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-between px-5 py-4 hover:bg-accent-muted transition-colors rounded-lg"
+            >
+              <div>
+                <p className="text-foreground font-medium">{PRACTICE.name}</p>
+                <p className="text-sm text-muted">{PRACTICE.location}</p>
+              </div>
+              <span className="text-muted shrink-0 ml-4">&#8599;</span>
+            </a>
+          </div>
+        </section>
 
+        {/* Medical */}
+        <section>
+          <h2 className="text-sm font-medium text-accent uppercase tracking-wider mb-4">
+            Medical
+          </h2>
+          <div className="rounded-lg border border-border bg-card divide-y divide-border">
+            {medicalLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between px-5 py-3.5 hover:bg-accent-muted transition-colors first:rounded-t-lg last:rounded-b-lg"
+              >
+                <span className="text-foreground font-medium">
+                  {link.label}
+                </span>
+                <span className="text-sm text-muted flex items-center gap-2">
+                  {link.detail}
+                  <span>&#8599;</span>
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        {/* Social */}
+        <section>
+          <h2 className="text-sm font-medium text-accent uppercase tracking-wider mb-4">
+            Social (Korean)
+          </h2>
+          <div className="rounded-lg border border-border bg-card divide-y divide-border">
+            {socialLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between px-5 py-3.5 hover:bg-accent-muted transition-colors first:rounded-t-lg last:rounded-b-lg"
+              >
+                <span className="text-foreground font-medium">
+                  {link.label}
+                </span>
+                <span className="text-sm text-muted flex items-center gap-2">
+                  {link.handle}
+                  <span>&#8599;</span>
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
       </div>
     </div>
   );

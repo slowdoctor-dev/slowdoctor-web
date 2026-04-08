@@ -8,11 +8,19 @@ import { useMDXComponents } from "@/mdx-components";
 
 const blogDirectory = path.join(process.cwd(), "src/content/blog");
 
+export interface Axes {
+  physician: number;
+  engineer: number;
+  life: number;
+}
+
 interface BlogFrontmatter {
   title: string;
   date: string;
   description: string;
   image?: string;
+  tags?: string[];
+  axes?: Axes;
 }
 
 export interface BlogPostSummary extends BlogFrontmatter {
@@ -56,6 +64,16 @@ function formatDate(date: string) {
   }).format(parseDateOnly(date, "frontmatter"));
 }
 
+function parseAxes(raw: unknown): Axes | undefined {
+  if (typeof raw !== "object" || raw === null) return undefined;
+  const obj = raw as Record<string, unknown>;
+  const p = Number(obj.physician);
+  const e = Number(obj.engineer);
+  const l = Number(obj.life);
+  if (isNaN(p) || isNaN(e) || isNaN(l)) return undefined;
+  return { physician: p, engineer: e, life: l };
+}
+
 function parseFrontmatter(data: unknown, fileName: string): BlogFrontmatter {
   if (typeof data !== "object" || data === null) {
     throw new Error(`Invalid frontmatter in ${fileName}`);
@@ -78,6 +96,10 @@ function parseFrontmatter(data: unknown, fileName: string): BlogFrontmatter {
     date,
     description: obj.description as string,
     image: typeof obj.image === "string" ? obj.image : undefined,
+    tags: Array.isArray(obj.tags)
+      ? obj.tags.filter((t): t is string => typeof t === "string")
+      : undefined,
+    axes: parseAxes(obj.axes),
   };
 }
 

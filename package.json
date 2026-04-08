@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint",
     "new-post": "node --experimental-strip-types scripts/new-post.cts",
-    "validate": "node --experimental-strip-types scripts/validate.cts"
+    "validate": "node --experimental-strip-types scripts/validate.cts",
+    "tag-post": "node --experimental-strip-types scripts/tag-post.cts"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

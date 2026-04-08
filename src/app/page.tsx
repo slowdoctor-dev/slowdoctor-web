@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AUTHOR, DESCRIPTIONS } from "@/lib/config";
+import { getAllPosts } from "@/lib/blog";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-export default function Home() {
+export default async function Home() {
+  const posts = await getAllPosts();
+  const recent = posts.slice(0, 3);
+
   return (
     <div className="mx-auto max-w-3xl px-6">
       {/* Hero */}
@@ -20,10 +24,16 @@ export default function Home() {
         <p className="mt-4 text-lg text-muted leading-relaxed max-w-xl">
           {DESCRIPTIONS.brief}
         </p>
+        <p className="mt-6 text-foreground/90 leading-relaxed max-w-xl">
+          A plastic surgeon who practices both surgery and non-surgical
+          treatments at depth -- so the recommendation is always what you
+          actually need, not what I happen to specialize in. Currently running a
+          one-physician clinic in Gangnam, powered by AI.
+        </p>
       </section>
 
       {/* Two Axes */}
-      <section className="pb-24 grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <section className="pb-16 grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Link
           href="/physician"
           className="group rounded-lg border border-border bg-card p-6 transition-all hover:border-accent/30 hover:bg-accent-muted"
@@ -46,7 +56,7 @@ export default function Home() {
             As an Engineer
           </h2>
           <p className="mt-2 text-sm text-muted">
-            Building an AI-operated clinic.
+            Medicine gave me the problems. Engineering gives me the tools.
           </p>
           <span className="mt-4 inline-block text-sm text-accent opacity-0 group-hover:opacity-100 transition-opacity">
             Learn more &rarr;
@@ -54,6 +64,38 @@ export default function Home() {
         </Link>
       </section>
 
+      {/* Latest */}
+      {recent.length > 0 && (
+        <section className="pb-24">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-sm font-medium text-accent uppercase tracking-wider">
+              Latest
+            </h2>
+            <Link
+              href="/blog"
+              className="text-sm text-muted hover:text-foreground transition-colors"
+            >
+              All posts &rarr;
+            </Link>
+          </div>
+          <div className="space-y-3">
+            {recent.map((post) => (
+              <Link
+                key={post.slug}
+                href={`/blog/${post.slug}`}
+                className="flex items-baseline justify-between gap-4 rounded-lg border border-border bg-card px-5 py-4 transition-colors hover:border-accent/30"
+              >
+                <span className="text-foreground font-medium truncate">
+                  {post.title}
+                </span>
+                <span className="text-sm text-muted whitespace-nowrap shrink-0">
+                  {post.formattedDate}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

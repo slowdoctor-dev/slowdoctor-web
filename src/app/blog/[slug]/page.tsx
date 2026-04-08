@@ -5,6 +5,7 @@ import { getAllPosts, getPostBySlug, getPostFrontmatter } from "@/lib/blog";
 import { JsonLd } from "@/components/json-ld";
 import { buildBreadcrumbSchema } from "@/lib/breadcrumbs";
 import { SITE, AUTHOR } from "@/lib/config";
+import { AxisBar } from "@/components/axis-bar";
 
 export const dynamicParams = false;
 
@@ -93,6 +94,27 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
           {post.title}
         </h1>
         <p className="mt-4 text-sm text-muted">{post.formattedDate}</p>
+        {(post.axes || (post.tags && post.tags.length > 0)) && (
+          <div className="mt-6 flex flex-col sm:flex-row sm:items-start gap-4">
+            {post.axes && (
+              <div className="sm:w-48">
+                <AxisBar values={post.axes} />
+              </div>
+            )}
+            {post.tags && post.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {post.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-xs text-muted border border-border rounded-full px-2 py-0.5"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </section>
 
       <article className="prose pb-24">

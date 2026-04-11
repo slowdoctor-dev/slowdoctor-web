@@ -8,7 +8,7 @@ const axes: { key: keyof Axes; label: string }[] = [
 
 export function AxisBar({ values }: { values: Axes }) {
   return (
-    <div className="space-y-1.5" aria-label="Post axes">
+    <div role="group" aria-label="Post axes" className="space-y-1.5">
       {axes.map(({ key, label }) => (
         <div key={key} className="flex items-center gap-2 text-xs">
           <span className="w-16 text-muted shrink-0">{label}</span>

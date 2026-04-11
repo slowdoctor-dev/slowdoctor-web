@@ -46,6 +46,9 @@ yarn-error.log*
 .codex
 .codex/
 
+# claude code
+.claude/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

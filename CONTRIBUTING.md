@@ -21,6 +21,24 @@ This is a static Next.js 16 site. All content lives in source files — there is
 
 ## Adding a Blog Post
 
+### From external drafts (recommended pipeline)
+
+1. Copy the confirmed Markdown file to `src/content/incoming/`
+2. Run the conversion:
+
+```bash
+npm run convert                              # convert all files in incoming/
+npm run convert -- "2026-04-11_PT_my-post.md"  # convert a single file
+```
+
+3. The script creates `src/content/blog/my-post.mdx` with correct frontmatter
+4. Optionally tag it: `npm run tag-post -- my-post`
+5. Review and edit as needed
+
+Files follow the naming convention `YYYY-MM-DD_CHANNEL_slug.md`. The date and slug are extracted automatically.
+
+### From scratch
+
 Run the helper script:
 
 ```bash
@@ -152,6 +170,7 @@ src/
     json-ld.tsx         # JSON-LD structured data component
   content/
     blog/*.mdx          # Blog posts (Markdown + JSX)
+    incoming/           # Drop zone for MD drafts
   lib/
     blog.ts             # Blog utilities (read posts, parse MDX)
     breadcrumbs.ts      # BreadcrumbList JSON-LD helper
@@ -164,6 +183,7 @@ scripts/
   date-utils.cts        # Shared date parsing for build scripts
   generate-feed.cts     # Build-time RSS feed generator
   generate-sitemap.cts  # Build-time sitemap generator
+  convert-md.cts        # Convert incoming MD drafts to MDX blog posts
   new-post.cts          # Scaffold new blog post
   tag-post.cts          # AI-powered blog post tagging
   validate.cts          # Post-build SEO validation

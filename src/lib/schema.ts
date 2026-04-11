@@ -54,8 +54,10 @@ export function generatePracticeSchema() {
     // Structured address for Schema.org — derived from doctor.worksFor.location
     address: {
       "@type": "PostalAddress",
+      streetAddress: "21 Eonju-ro 30-gil, B101-31-1",
       addressLocality: "Gangnam-gu",
       addressRegion: "Seoul",
+      postalCode: "06258",
       addressCountry: "KR",
     },
     medicalSpecialty: doctor.medicalSpecialty,

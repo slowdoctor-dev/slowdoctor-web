@@ -9,7 +9,7 @@ export const doctor = {
     "Board-certified plastic surgeon specializing in slow-aging, scar treatment, and natural eye surgery. Founder of LEAD Plastic Surgery Clinic in Seoul.",
   id: "https://slowdoctor.dev/#person",
   url: "https://slowdoctor.dev",
-  image: "",
+  image: "https://slowdoctor.dev/images/profile.jpg",
 
   alumniOf: [
     { name: "Seoul Science High School", type: "EducationalOrganization" as const },

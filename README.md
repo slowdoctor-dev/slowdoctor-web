@@ -23,7 +23,6 @@ npm run build        # production static build (generates sitemap + RSS first)
 npm run lint         # eslint
 npm run convert      # convert incoming MD drafts to MDX blog posts
 npm run new-post     # scaffold a new blog post
-npm run tag-post     # AI-powered tagging via Claude Haiku
 npm run validate     # post-build SEO validation
 ```
 
@@ -33,8 +32,8 @@ npm run validate     # post-build SEO validation
 
 1. Place confirmed Markdown drafts into `src/content/incoming/`
 2. Run `npm run convert` to transform them into MDX blog posts
-3. Optionally run `npm run tag-post -- <slug>` to auto-tag with AI
-4. Run `npm run build` to rebuild the site
+3. Claude Code adds `tags` and `axes` to the frontmatter
+4. Branch, commit, PR, merge — auto-deploys to production
 
 The convert script handles:
 - Filename convention: `YYYY-MM-DD_CHANNEL_english-kebab-slug.md` -> `english-kebab-slug.mdx`
@@ -64,24 +63,11 @@ axes:
 
 Required: `title`, `date`, `description`. Optional: `image`, `tags`, `axes` (must sum to 10).
 
-## Deployment (Cloudflare Pages)
+## Deployment (Cloudflare Workers)
 
-The site is a fully static export (`output: "export"` in `next.config.ts`). The build produces an `out/` directory that Cloudflare Pages serves directly.
+The site is a fully static export (`output: "export"` in `next.config.ts`). The build produces an `out/` directory served via Cloudflare Workers + Assets.
 
-### Option A: Git integration (recommended)
-
-Connect the GitHub repository in the Cloudflare Dashboard:
-
-- **Build command:** `npm run build`
-- **Build output directory:** `out`
-- **Root directory:** `/` (default)
-- **Node.js version:** 20+
-
-Push to main triggers automatic deployment.
-
-### Custom domain
-
-After the first deployment, add `slowdoctor.dev` as a custom domain in Cloudflare Pages settings. DNS records are managed in the same Cloudflare account.
+Push to `main` triggers automatic build and deployment. PRs get preview URLs.
 
 ### Configuration files
 

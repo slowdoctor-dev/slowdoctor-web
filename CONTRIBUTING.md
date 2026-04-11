@@ -32,7 +32,7 @@ npm run convert -- "2026-04-11_PT_my-post.md"  # convert a single file
 ```
 
 3. The script creates `src/content/blog/my-post.mdx` with correct frontmatter
-4. Optionally tag it: `npm run tag-post -- my-post`
+4. Claude Code reads the post and adds `tags` and `axes` to the frontmatter
 5. Review and edit as needed
 
 Files follow the naming convention `YYYY-MM-DD_CHANNEL_slug.md`. The date and slug are extracted automatically.
@@ -84,16 +84,6 @@ const x = 42;
 | `axes` | No | Physician/Engineer/Life weights (integers 0-10, must sum to 10) |
 
 **File naming:** The filename becomes the URL slug. `my-post.mdx` → `/blog/my-post`
-
-### Auto-tagging
-
-Use the tagging script to classify a post with AI:
-
-```bash
-npm run tag-post -- hello-world
-```
-
-This adds `tags` and `axes` to the frontmatter via Claude Haiku. Use `--force` to re-tag.
 
 ## Adding a Publication
 
@@ -185,7 +175,6 @@ scripts/
   generate-sitemap.cts  # Build-time sitemap generator
   convert-md.cts        # Convert incoming MD drafts to MDX blog posts
   new-post.cts          # Scaffold new blog post
-  tag-post.cts          # AI-powered blog post tagging
   validate.cts          # Post-build SEO validation
 public/
   robots.txt

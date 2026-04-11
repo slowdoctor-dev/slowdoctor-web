@@ -14,10 +14,8 @@
  *
  * After successful conversion the source file is removed from incoming/.
  *
- * When axes or tags are missing from frontmatter, the script calls the
- * Anthropic API (claude-haiku-4-5-20251001) to classify the post automatically.
- * Set ANTHROPIC_API_KEY to enable; without it the script warns and leaves
- * axes/tags empty.
+ * Tags and axes are NOT auto-generated — Claude Code handles classification
+ * directly after conversion.
  */
 
 const fs = require("node:fs");
@@ -156,139 +154,6 @@ function stripLeadingH1(content: string): string {
 }
 
 // ---------------------------------------------------------------------------
-// AI Classification (axes + tags)
-// ---------------------------------------------------------------------------
-
-const CLASSIFY_MODEL = "claude-haiku-4-5-20251001";
-
-const CLASSIFY_PROMPT_TEMPLATE = `You are a blog post classifier for slowdoctor.dev, a personal site by a board-certified plastic surgeon who is also an engineer.
-
-Analyze this blog post and return a JSON object with:
-1. "tags": an array of 3-5 lowercase English tags (no spaces, use hyphens). Tags should be specific and descriptive.
-2. "axes": an object with three keys — "physician", "engineer", "life" — each an integer 0-10. The three values MUST sum to exactly 10.
-
-Axis definitions:
-- physician: medical knowledge, clinical practice, surgery, dermatology, slow-aging, evidence-based medicine
-- engineer: software engineering, AI, automation, programming, data science, system design
-- life: personal reflection, career, identity, daily life, philosophy, non-professional topics
-
-Title: {{TITLE}}
-Description: {{DESCRIPTION}}
-
-Content:
-{{CONTENT}}
-
-Respond with ONLY the JSON object, no explanation.`;
-
-function isValidAxisValue(value: unknown): value is number {
-  return typeof value === "number" && Number.isInteger(value) && value >= 0 && value <= 10;
-}
-
-function isValidTag(tag: unknown): tag is string {
-  return typeof tag === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(tag);
-}
-
-interface ClassifyResult {
-  tags: string[];
-  axes: { physician: number; engineer: number; life: number };
-}
-
-async function classifyPost(
-  title: string,
-  description: string,
-  content: string,
-): Promise<ClassifyResult | null> {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-
-  if (!apiKey) {
-    console.warn("  WARN: ANTHROPIC_API_KEY not set — skipping AI classification");
-    return null;
-  }
-
-  const prompt = CLASSIFY_PROMPT_TEMPLATE
-    .replace("{{TITLE}}", title)
-    .replace("{{DESCRIPTION}}", description || "")
-    .replace("{{CONTENT}}", content.slice(0, 3000));
-
-  let response: Response;
-  try {
-    response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: CLASSIFY_MODEL,
-        max_tokens: 256,
-        messages: [{ role: "user", content: prompt }],
-      }),
-    });
-  } catch (err) {
-    console.warn(`  WARN: API request failed — ${err}`);
-    return null;
-  }
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.warn(`  WARN: API error (${response.status}): ${errorText}`);
-    return null;
-  }
-
-  const result = await response.json();
-  const text = (result as { content: { text: string }[] }).content[0].text.trim();
-
-  let parsed: Record<string, unknown>;
-  try {
-    parsed = JSON.parse(text);
-  } catch {
-    console.warn("  WARN: Failed to parse AI response:", text);
-    return null;
-  }
-
-  const { tags, axes } = parsed as {
-    tags: unknown;
-    axes: unknown;
-  };
-
-  // Validate axes
-  if (
-    typeof axes !== "object" ||
-    axes === null ||
-    !isValidAxisValue((axes as Record<string, unknown>).physician) ||
-    !isValidAxisValue((axes as Record<string, unknown>).engineer) ||
-    !isValidAxisValue((axes as Record<string, unknown>).life)
-  ) {
-    console.warn("  WARN: Invalid axes from AI:", axes);
-    return null;
-  }
-
-  const axesObj = axes as { physician: number; engineer: number; life: number };
-  if (axesObj.physician + axesObj.engineer + axesObj.life !== 10) {
-    console.warn(
-      `  WARN: Axes sum is ${axesObj.physician + axesObj.engineer + axesObj.life}, expected 10`,
-    );
-    return null;
-  }
-
-  // Validate tags
-  if (!Array.isArray(tags) || tags.length < 3 || tags.length > 5 || !tags.every(isValidTag)) {
-    console.warn("  WARN: Invalid tags from AI:", tags);
-    return null;
-  }
-
-  return {
-    tags: tags as string[],
-    axes: {
-      physician: axesObj.physician,
-      engineer: axesObj.engineer,
-      life: axesObj.life,
-    },
-  };
-}
-
-// ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
 
@@ -299,7 +164,7 @@ interface ConvertResult {
   skipped?: string;
 }
 
-async function convertFile(fileName: string): Promise<ConvertResult> {
+function convertFile(fileName: string): ConvertResult {
   const sourcePath = path.join(incomingDir, fileName);
   const raw = fs.readFileSync(sourcePath, "utf8");
 
@@ -335,37 +200,17 @@ async function convertFile(fileName: string): Promise<ConvertResult> {
     frontmatter.image = existingFm.image;
   }
 
-  // Preserve existing tags/axes if present
-  const hasExistingTags = existingFm.tags && Array.isArray(existingFm.tags);
-  const hasExistingAxes =
-    existingFm.axes &&
-    typeof existingFm.axes === "object" &&
-    typeof existingFm.axes.physician === "number";
-
-  if (hasExistingTags) {
+  // Preserve existing tags/axes if present in source frontmatter
+  if (existingFm.tags && Array.isArray(existingFm.tags)) {
     frontmatter.tags = existingFm.tags;
   }
 
-  if (hasExistingAxes) {
+  if (
+    existingFm.axes &&
+    typeof existingFm.axes === "object" &&
+    typeof existingFm.axes.physician === "number"
+  ) {
     frontmatter.axes = existingFm.axes;
-  }
-
-  // Auto-classify with AI when tags or axes are missing
-  if (!hasExistingTags || !hasExistingAxes) {
-    const classified = await classifyPost(title, description, rawContent);
-
-    if (classified) {
-      if (!hasExistingTags) {
-        frontmatter.tags = classified.tags;
-        console.log(`    AI tags: ${classified.tags.join(", ")}`);
-      }
-      if (!hasExistingAxes) {
-        frontmatter.axes = classified.axes;
-        console.log(
-          `    AI axes: physician=${classified.axes.physician} engineer=${classified.axes.engineer} life=${classified.axes.life}`,
-        );
-      }
-    }
   }
 
   // Clean body: strip leading H1 (becomes title), trim whitespace
@@ -389,7 +234,7 @@ async function convertFile(fileName: string): Promise<ConvertResult> {
   };
 }
 
-async function main() {
+function main() {
   if (!fs.existsSync(incomingDir)) {
     console.error(`Incoming directory not found: ${incomingDir}`);
     process.exit(1);
@@ -425,7 +270,7 @@ async function main() {
   let skipped = 0;
 
   for (const file of files) {
-    const result = await convertFile(file);
+    const result = convertFile(file);
     if (result.skipped) {
       console.log(`  SKIP: ${result.source} -> ${result.target} (${result.skipped})`);
       skipped++;

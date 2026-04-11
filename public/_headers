@@ -1,0 +1,22 @@
+# Cloudflare Pages custom headers
+# https://developers.cloudflare.com/pages/configuration/headers/
+
+# Hashed static assets — immutable long cache
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Images and fonts
+/images/*
+  Cache-Control: public, max-age=86400
+
+# RSS and sitemap — short cache
+/feed.xml
+  Cache-Control: public, max-age=3600
+/sitemap.xml
+  Cache-Control: public, max-age=3600
+
+# Security headers for all pages
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin

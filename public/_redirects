@@ -1,0 +1,5 @@
+# Cloudflare Pages redirects
+# https://developers.cloudflare.com/pages/configuration/redirects/
+
+# SPA-style catch-all is NOT needed — this is a fully static site.
+# Cloudflare Pages serves 404.html automatically for missing routes.

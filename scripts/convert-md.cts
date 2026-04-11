@@ -164,15 +164,72 @@ interface ConvertResult {
   skipped?: string;
 }
 
+interface AxesFrontmatter {
+  physician: number;
+  engineer: number;
+  life: number;
+}
+
+interface ExistingFrontmatter {
+  title?: string;
+  date?: string;
+  description?: string;
+  image?: string;
+  tags?: unknown;
+  axes?: unknown;
+}
+
+interface OutputFrontmatter {
+  title: string;
+  date: string;
+  description: string;
+  image?: string;
+  tags?: string[];
+  axes?: AxesFrontmatter;
+}
+
+function parseAxesFrontmatter(value: unknown): AxesFrontmatter | undefined {
+  if (typeof value !== "object" || value === null) {
+    return undefined;
+  }
+
+  const axes = value as Partial<AxesFrontmatter>;
+  const values = [axes.physician, axes.engineer, axes.life];
+
+  if (
+    values.some((entry) => typeof entry !== "number" || !Number.isInteger(entry))
+  ) {
+    return undefined;
+  }
+
+  const [physician, engineer, life] = values as [number, number, number];
+
+  if (
+    physician < 0 ||
+    physician > 10 ||
+    engineer < 0 ||
+    engineer > 10 ||
+    life < 0 ||
+    life > 10 ||
+    physician + engineer + life !== 10
+  ) {
+    return undefined;
+  }
+
+  return { physician, engineer, life };
+}
+
 function convertFile(fileName: string): ConvertResult {
   const sourcePath = path.join(incomingDir, fileName);
   const raw = fs.readFileSync(sourcePath, "utf8");
 
   // Parse existing frontmatter if any
-  const { data: existingFm, content: rawContent } = matter(raw);
+  const { data, content: rawContent } = matter(raw);
+  const existingFm = data as ExistingFrontmatter;
 
   const slug = deriveSlug(fileName);
-  const date = (existingFm.date as string) || deriveDate(fileName);
+  const date =
+    typeof existingFm.date === "string" ? existingFm.date : deriveDate(fileName);
   const targetPath = path.join(blogDir, `${slug}.mdx`);
 
   // Check for collision
@@ -186,34 +243,35 @@ function convertFile(fileName: string): ConvertResult {
   }
 
   // Build frontmatter
-  const title = (existingFm.title as string) || deriveTitle(rawContent, slug);
+  const title =
+    typeof existingFm.title === "string"
+      ? existingFm.title
+      : deriveTitle(rawContent, slug);
   const description =
-    (existingFm.description as string) || deriveDescription(rawContent);
+    typeof existingFm.description === "string"
+      ? existingFm.description
+      : deriveDescription(rawContent);
 
-  const frontmatter: Record<string, unknown> = {
+  const frontmatter: OutputFrontmatter = {
     title,
     date,
     description,
   };
 
-  if (existingFm.image) {
+  if (typeof existingFm.image === "string") {
     frontmatter.image = existingFm.image;
   }
 
   // Preserve existing tags/axes if present in source frontmatter
-  if (existingFm.tags && Array.isArray(existingFm.tags)) {
-    frontmatter.tags = existingFm.tags;
+  if (Array.isArray(existingFm.tags)) {
+    frontmatter.tags = existingFm.tags.filter(
+      (tag): tag is string => typeof tag === "string",
+    );
   }
 
-  if (
-    existingFm.axes &&
-    typeof existingFm.axes === "object" &&
-    typeof existingFm.axes.physician === "number" &&
-    typeof existingFm.axes.engineer === "number" &&
-    typeof existingFm.axes.life === "number" &&
-    existingFm.axes.physician + existingFm.axes.engineer + existingFm.axes.life === 10
-  ) {
-    frontmatter.axes = existingFm.axes;
+  const axes = parseAxesFrontmatter(existingFm.axes);
+  if (axes) {
+    frontmatter.axes = axes;
   }
 
   // Clean body: strip leading H1 (becomes title), trim whitespace

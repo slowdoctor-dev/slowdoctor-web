@@ -24,6 +24,7 @@ export function buildPageMetadata({
   absoluteTitle = false,
 }: PageMetadataOptions): Metadata {
   const absoluteUrl = new URL(path, SITE.url).toString();
+  const ogTitle = absoluteTitle ? title : `${title} | ${AUTHOR.name}`;
 
   return {
     title: absoluteTitle ? { absolute: title } : title,
@@ -33,7 +34,7 @@ export function buildPageMetadata({
     publisher: SITE.name,
     alternates: { canonical: absoluteUrl },
     openGraph: {
-      title,
+      title: ogTitle,
       description,
       url: absoluteUrl,
       type,
@@ -43,7 +44,7 @@ export function buildPageMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: ogTitle,
       description,
       images: [defaultImage.url],
     },

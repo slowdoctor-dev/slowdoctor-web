@@ -8,11 +8,14 @@ const axes: { key: keyof Axes; label: string }[] = [
 
 export function AxisBar({ values }: { values: Axes }) {
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-1.5" aria-label="Post axes">
       {axes.map(({ key, label }) => (
         <div key={key} className="flex items-center gap-2 text-xs">
           <span className="w-16 text-muted shrink-0">{label}</span>
-          <div className="flex-1 h-1.5 rounded-full bg-border overflow-hidden">
+          <div
+            aria-hidden="true"
+            className="flex-1 h-1.5 rounded-full bg-border overflow-hidden"
+          >
             <div
               className="h-full rounded-full bg-accent"
               style={{ width: `${values[key] * 10}%` }}

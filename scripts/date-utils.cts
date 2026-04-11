@@ -30,4 +30,8 @@ function formatDate(value: string, fileName: string) {
   }).format(parseDateOnly(value, fileName));
 }
 
-module.exports = { parseDateOnly, formatDate };
+// Canonical site URL — single source for build scripts.
+// Keep in sync with src/lib/config.ts SITE.url
+const siteUrl = "https://slowdoctor.dev";
+
+module.exports = { parseDateOnly, formatDate, siteUrl };

@@ -161,6 +161,8 @@ src/
   content/
     blog/*.mdx          # Blog posts (Markdown + JSX)
     incoming/           # Drop zone for MD drafts
+  data/
+    doctor.ts           # Doctor profile (single source of truth)
   lib/
     blog.ts             # Blog utilities (read posts, parse MDX)
     breadcrumbs.ts      # BreadcrumbList JSON-LD helper

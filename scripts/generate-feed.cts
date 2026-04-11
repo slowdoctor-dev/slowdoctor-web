@@ -2,10 +2,7 @@ const fs = require("node:fs/promises");
 const path = require("node:path");
 const matter = require("gray-matter");
 
-const { parseDateOnly } = require("./date-utils.cts");
-
-// Keep in sync with src/lib/config.ts SITE.url
-const siteUrl = "https://slowdoctor.dev";
+const { parseDateOnly, siteUrl } = require("./date-utils.cts");
 const blogDirectory = path.join(process.cwd(), "src/content/blog");
 const feedPath = path.join(process.cwd(), "public/feed.xml");
 

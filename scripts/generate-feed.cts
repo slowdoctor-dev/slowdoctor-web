@@ -2,7 +2,7 @@ const fs = require("node:fs/promises");
 const path = require("node:path");
 const matter = require("gray-matter");
 
-const { parseDateOnly, siteUrl } = require("./date-utils.cts");
+const { parseDateOnly, stripDatePrefix, siteUrl } = require("./date-utils.cts");
 const blogDirectory = path.join(process.cwd(), "src/content/blog");
 const feedPath = path.join(process.cwd(), "public/feed.xml");
 
@@ -24,7 +24,7 @@ async function getPosts() {
       continue;
     }
 
-    const slug = entry.name.replace(/\.mdx$/, "");
+    const slug = stripDatePrefix(entry.name.replace(/\.mdx$/, ""));
     const fileContents = await fs.readFile(path.join(blogDirectory, entry.name), "utf8");
     const { data } = matter(fileContents);
 

@@ -34,6 +34,7 @@ export interface BlogPost extends BlogPostSummary {
 }
 
 const DATE_ONLY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+const DATE_PREFIX_PATTERN = /^\d{4}-\d{2}-\d{2}-/;
 
 function parseDateOnly(date: string, fileName: string) {
   if (!DATE_ONLY_PATTERN.test(date)) {
@@ -130,8 +131,13 @@ const readBlogFrontmatter = cache(async (fileName: string) => {
   const { data } = matter(fileContents);
   const frontmatter = parseFrontmatter(data, fileName);
 
+  // Strip YYYY-MM-DD- date prefix from filename to produce a clean slug.
+  // File: 2026-04-07-hello-world.mdx → slug: hello-world → URL: /blog/hello-world
+  const stem = fileName.replace(/\.mdx$/, "");
+  const slug = stem.replace(DATE_PREFIX_PATTERN, "");
+
   return {
-    slug: fileName.replace(/\.mdx$/, ""),
+    slug,
     ...frontmatter,
     formattedDate: formatDate(frontmatter.date),
   } satisfies BlogPostSummary;
@@ -146,11 +152,34 @@ export const getAllPosts = cache(async (): Promise<BlogPostSummary[]> => {
   return posts.sort((left, right) => right.date.localeCompare(left.date));
 });
 
+/**
+ * Resolve a clean slug to its .mdx filename on disk.
+ * Handles both date-prefixed (2026-04-07-hello-world.mdx) and plain (hello-world.mdx) filenames.
+ */
+async function resolveSlugToFile(slug: string): Promise<string | null> {
+  // Try exact match first (supports legacy non-prefixed files)
+  const exactName = `${slug}.mdx`;
+  try {
+    await fs.access(path.join(blogDirectory, exactName));
+    return exactName;
+  } catch {
+    // Not found — try date-prefixed pattern
+  }
+
+  // Scan directory for YYYY-MM-DD-{slug}.mdx
+  const entries = await fs.readdir(blogDirectory);
+  const pattern = new RegExp(`^\\d{4}-\\d{2}-\\d{2}-${slug.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\.mdx$`);
+  const match = entries.find((entry) => pattern.test(entry));
+  return match ?? null;
+}
+
 export const getPostFrontmatter = cache(async (
   slug: string,
 ): Promise<BlogPostSummary | null> => {
+  const fileName = await resolveSlugToFile(slug);
+  if (!fileName) return null;
   try {
-    return await readBlogFrontmatter(`${slug}.mdx`);
+    return await readBlogFrontmatter(fileName);
   } catch {
     return null;
   }
@@ -159,7 +188,10 @@ export const getPostFrontmatter = cache(async (
 export const getPostBySlug = cache(async (
   slug: string,
 ): Promise<BlogPost | null> => {
-  const fullPath = path.join(blogDirectory, `${slug}.mdx`);
+  const fileName = await resolveSlugToFile(slug);
+  if (!fileName) return null;
+
+  const fullPath = path.join(blogDirectory, fileName);
 
   let fileContents: string;
   try {
@@ -169,7 +201,7 @@ export const getPostBySlug = cache(async (
   }
 
   const { content, data } = matter(fileContents);
-  const frontmatter = parseFrontmatter(data, `${slug}.mdx`);
+  const frontmatter = parseFrontmatter(data, fileName);
 
   const evaluatedContent = (await evaluate(content, {
     ...runtime,

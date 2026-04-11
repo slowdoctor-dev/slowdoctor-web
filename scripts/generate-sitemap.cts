@@ -2,7 +2,7 @@ const fs = require("node:fs/promises");
 const path = require("node:path");
 const matter = require("gray-matter");
 
-const { parseDateOnly, siteUrl } = require("./date-utils.cts");
+const { parseDateOnly, stripDatePrefix, siteUrl } = require("./date-utils.cts");
 const appDirectory = path.join(process.cwd(), "src/app");
 const blogDirectory = path.join(process.cwd(), "src/content/blog");
 const sitemapPath = path.join(process.cwd(), "public/sitemap.xml");
@@ -62,8 +62,9 @@ async function getBlogRoutes() {
       typeof data.date === "string"
         ? parseDateOnly(data.date, entry.name).toISOString().split("T")[0]
         : undefined;
+    const slug = stripDatePrefix(entry.name.replace(/\.mdx$/, ""));
     results.push({
-      route: `/blog/${entry.name.replace(/\.mdx$/, "")}`,
+      route: `/blog/${slug}`,
       lastmod,
     });
   }

@@ -36,7 +36,7 @@ npm run validate     # post-build SEO validation
 4. Branch, commit, PR, merge — auto-deploys to production
 
 The convert script handles:
-- Filename convention: `YYYY-MM-DD_CHANNEL_english-kebab-slug.md` -> `english-kebab-slug.mdx`
+- Filename convention: `YYYY-MM-DD_CHANNEL_english-kebab-slug.md` -> `YYYY-MM-DD-english-kebab-slug.mdx`
 - Date extraction from filename prefix
 - Title extraction from first H1 heading
 - Auto-generated description from content

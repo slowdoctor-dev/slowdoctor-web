@@ -2,7 +2,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const matter = require("gray-matter");
 
-const { formatDate } = require("./date-utils.cts");
+const { formatDate, stripDatePrefix } = require("./date-utils.cts");
 
 const outDir = path.join(process.cwd(), "out");
 let errors = 0;
@@ -72,7 +72,7 @@ const blogDir = path.join(process.cwd(), "src/content/blog");
 const posts = fs.readdirSync(blogDir).filter((f: string) => f.endsWith(".mdx"));
 
 for (const post of posts) {
-  const slug = post.replace(/\.mdx$/, "");
+  const slug = stripDatePrefix(post.replace(/\.mdx$/, ""));
   const htmlPath = path.join(outDir, "blog", `${slug}.html`);
   const fileContents = fs.readFileSync(path.join(blogDir, post), "utf8");
   const { data } = matter(fileContents);

@@ -26,7 +26,8 @@ const date = [
   String(now.getMonth() + 1).padStart(2, "0"),
   String(now.getDate()).padStart(2, "0"),
 ].join("-");
-const filePath = path.join(process.cwd(), "src/content/blog", `${slug}.mdx`);
+const fileName = `${date}-${slug}.mdx`;
+const filePath = path.join(process.cwd(), "src/content/blog", fileName);
 
 if (fs.existsSync(filePath)) {
   console.error(`File already exists: ${filePath}`);
@@ -42,4 +43,4 @@ description: "TODO: Write a short description for this post."
 `;
 
 fs.writeFileSync(filePath, content, "utf8");
-console.log(`Created: src/content/blog/${slug}.mdx`);
+console.log(`Created: src/content/blog/${fileName}`);

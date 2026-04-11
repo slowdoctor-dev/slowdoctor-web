@@ -30,8 +30,16 @@ function formatDate(value: string, fileName: string) {
   }).format(parseDateOnly(value, fileName));
 }
 
+/**
+ * Strip a leading YYYY-MM-DD- date prefix from a blog filename stem.
+ * e.g. "2026-04-07-hello-world" → "hello-world"
+ */
+function stripDatePrefix(stem: string): string {
+  return stem.replace(/^\d{4}-\d{2}-\d{2}-/, "");
+}
+
 // Canonical site URL — single source for build scripts.
 // Keep in sync with src/lib/config.ts SITE.url
 const siteUrl = "https://slowdoctor.dev";
 
-module.exports = { parseDateOnly, formatDate, siteUrl };
+module.exports = { parseDateOnly, formatDate, stripDatePrefix, siteUrl };

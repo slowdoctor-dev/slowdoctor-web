@@ -45,11 +45,11 @@ Run the helper script:
 npm run new-post -- "My Post Title"
 ```
 
-This creates `src/content/blog/my-post-title.mdx` with frontmatter pre-filled. Open it and write your content in Markdown/MDX.
+This creates `src/content/blog/2026-04-11-my-post-title.mdx` (with today's date) with frontmatter pre-filled. Open it and write your content in Markdown/MDX.
 
 ### Manual creation
 
-Create a file in `src/content/blog/` with the `.mdx` extension:
+Create a file in `src/content/blog/` with the `YYYY-MM-DD-slug.mdx` naming convention:
 
 ```mdx
 ---
@@ -83,7 +83,7 @@ const x = 42;
 | `tags` | No | Array of lowercase tags, e.g. `["meta", "introduction"]` |
 | `axes` | No | Physician/Engineer/Life weights (integers 0-10, must sum to 10) |
 
-**File naming:** The filename becomes the URL slug. `my-post.mdx` → `/blog/my-post`
+**File naming:** Blog filenames use a `YYYY-MM-DD-slug.mdx` convention. The date prefix is stripped to produce the URL slug. `2026-04-08-my-post.mdx` → `/blog/my-post`
 
 ## Adding a Publication
 
@@ -172,7 +172,7 @@ src/
     metadata.ts         # Page metadata builder
   mdx-components.tsx    # MDX component overrides (syntax highlighting, links)
 scripts/
-  date-utils.cts        # Shared date parsing for build scripts
+  date-utils.cts        # Shared date parsing + stripDatePrefix for build scripts
   generate-feed.cts     # Build-time RSS feed generator
   generate-sitemap.cts  # Build-time sitemap generator
   convert-md.cts        # Convert incoming MD drafts to MDX blog posts

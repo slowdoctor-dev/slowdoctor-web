@@ -9,7 +9,7 @@ Decisions made during the 2026-04-10 session. This file serves as a reference fo
 - **Hosting**: Cloudflare Pages (static site)
 - **Domain**: `slowdoctor.dev` — registered under personal Cloudflare account (separate from clinic account for `lead.ps`/`leadps.co.kr`)
 - **GitHub repo**: `slowdoctor-dev/slowdoctor-web` (public)
-- **Git remotes**: `origin` = Gitea (`git.lead.ps`), `github` = GitHub
+- **Git remotes**: `origin` = GitHub (primary), `gitea` = Gitea `git.lead.ps` (pull mirror recommended)
 - **Deploy trigger**: Push/merge to `main` on GitHub triggers automatic Cloudflare Pages build
 - **Build settings**: command `npm run build`, output directory `out`
 - **Preview deploys**: Every PR gets an automatic preview URL (`*.slowdoctor-web.pages.dev`)
@@ -82,9 +82,12 @@ All changes below were made in this session. Review, then commit to `main` (init
 
 ### Immediate tasks (in order)
 
-1. **Commit and push to Gitea** (`origin`): `git add` the above files, commit
-2. **Add GitHub remote**: `git remote add github https://github.com/slowdoctor-dev/slowdoctor-web.git`
-3. **Push to GitHub**: `git push -u github main`
+1. ~~**Commit and push**~~ — done (2026-04-11, commit `9c96edb`)
+2. ~~**GitHub remote + push**~~ — done. Remote strategy changed: `origin` = GitHub (primary), `gitea` = Gitea (pull mirror recommended)
+3. **Gitea pull mirror setup** (owner does in Gitea dashboard):
+   - `git.lead.ps` → `slowdoctor-web` repo → Settings → Mirror Settings
+   - Convert to pull mirror from `https://github.com/slowdoctor-dev/slowdoctor-web.git`
+   - This replaces manual dual-push with automatic sync
 4. **Cloudflare Pages setup** (owner does in dashboard):
    - Log into **personal** Cloudflare account (not clinic account)
    - Workers & Pages → Create → Pages → Connect to Git

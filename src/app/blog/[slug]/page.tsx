@@ -90,6 +90,11 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
         url: practiceUrl,
       },
     },
+    publisher: {
+      "@type": "Person",
+      "@id": doctor.id,
+      name: AUTHOR.name,
+    },
     image: `${SITE.url}${post.image ?? SITE.ogImage}`,
     ...(post.tags && post.tags.length > 0 && { keywords: post.tags.join(", ") }),
   };

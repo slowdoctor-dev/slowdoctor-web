@@ -208,7 +208,10 @@ function convertFile(fileName: string): ConvertResult {
   if (
     existingFm.axes &&
     typeof existingFm.axes === "object" &&
-    typeof existingFm.axes.physician === "number"
+    typeof existingFm.axes.physician === "number" &&
+    typeof existingFm.axes.engineer === "number" &&
+    typeof existingFm.axes.life === "number" &&
+    existingFm.axes.physician + existingFm.axes.engineer + existingFm.axes.life === 10
   ) {
     frontmatter.axes = existingFm.axes;
   }

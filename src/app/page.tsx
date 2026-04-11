@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { JsonLd } from "@/components/json-ld";
 import { SITE, AUTHOR, DESCRIPTIONS } from "@/lib/config";
 import { getAllPosts } from "@/lib/blog";
 import { buildPageMetadata } from "@/lib/metadata";
+import { generatePersonSchema } from "@/lib/schema";
 
 export const metadata: Metadata = buildPageMetadata({
   title: SITE.title,
@@ -14,9 +16,11 @@ export const metadata: Metadata = buildPageMetadata({
 export default async function Home() {
   const posts = await getAllPosts();
   const recent = posts.slice(0, 3);
+  const personSchema = generatePersonSchema();
 
   return (
     <div className="mx-auto max-w-3xl px-6">
+      <JsonLd data={personSchema} />
       {/* Hero */}
       <section className="pt-24 pb-16 sm:pt-32 sm:pb-20">
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">

@@ -10,7 +10,6 @@
     "lint": "eslint",
     "new-post": "node --experimental-strip-types scripts/new-post.cts",
     "validate": "node --experimental-strip-types scripts/validate.cts",
-    "tag-post": "node --experimental-strip-types scripts/tag-post.cts",
     "convert": "node --experimental-strip-types scripts/convert-md.cts"
   },
   "dependencies": {

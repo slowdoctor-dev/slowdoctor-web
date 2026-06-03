@@ -21,8 +21,8 @@ export const DESCRIPTIONS = {
 } as const;
 
 export const PRACTICE = {
-  name: "LEAD Plastic Surgery",
-  fullName: doctor.worksFor.name,
+  // Canonical practice name — single source of truth (리드성형외과의원).
+  name: doctor.worksFor.name,
   location: doctor.worksFor.location,
   phone: doctor.worksFor.phone,
 } as const;

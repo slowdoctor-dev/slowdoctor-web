@@ -8,7 +8,7 @@ This is a static Next.js 16 site. All content lives in source files — there is
 |---|---|---|
 | Homepage (hero) | `src/app/page.tsx` | Edit text directly |
 | Physician page | `src/app/physician/page.tsx` | Clinical focus, philosophy |
-| Engineer page | `src/app/engineer/page.tsx` | `projects`, `techStack` arrays |
+| Engineer page | `src/app/engineer/page.tsx` | `interests`, `projects` arrays |
 | CV page | `src/app/cv/page.tsx` | Education, career, publications |
 | Publications | `src/lib/cv.ts` | `publications` array |
 | Links page | `src/app/links/page.tsx` | Auto-populated from shared data |

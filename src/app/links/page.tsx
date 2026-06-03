@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/json-ld";
 import { buildBreadcrumbSchema } from "@/lib/breadcrumbs";
-import { socialLinks, medicalLinks, practiceUrl } from "@/lib/links";
+import { socialLinks, medicalLinks, practiceUrl, githubUrl } from "@/lib/links";
 import { buildPageMetadata } from "@/lib/metadata";
 import { PRACTICE } from "@/lib/config";
 
@@ -76,6 +76,27 @@ export default function LinksPage() {
                 </span>
               </a>
             ))}
+          </div>
+        </section>
+
+        {/* Code */}
+        <section>
+          <h2 className="text-sm font-medium text-accent uppercase tracking-wider mb-4">
+            Code
+          </h2>
+          <div className="rounded-2xl border border-border bg-card">
+            <a
+              href={githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-between px-5 py-3.5 hover:bg-accent-muted transition-colors rounded-2xl"
+            >
+              <span className="text-foreground font-medium">GitHub</span>
+              <span className="text-sm text-muted flex items-center gap-2">
+                @slowdoctor-dev
+                <span>&#8599;</span>
+              </span>
+            </a>
           </div>
         </section>
 

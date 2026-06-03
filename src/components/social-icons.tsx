@@ -1,4 +1,4 @@
-import { SiYoutube, SiInstagram, SiThreads, SiTiktok, SiNaver } from "react-icons/si";
+import { SiYoutube, SiInstagram, SiThreads, SiTiktok, SiNaver, SiGithub } from "react-icons/si";
 import type { IconType } from "react-icons";
 
 const iconMap: Record<string, IconType> = {
@@ -7,6 +7,7 @@ const iconMap: Record<string, IconType> = {
   Threads: SiThreads,
   TikTok: SiTiktok,
   "Naver Blog": SiNaver,
+  GitHub: SiGithub,
 };
 
 export function SocialIcon({ label, className }: { label: string; className?: string }) {

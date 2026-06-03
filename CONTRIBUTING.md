@@ -31,11 +31,11 @@ npm run convert                              # convert all files in incoming/
 npm run convert -- "2026-04-11_PT_my-post.md"  # convert a single file
 ```
 
-3. The script creates `src/content/blog/my-post.mdx` with correct frontmatter
+3. The script creates `src/content/blog/2026-04-11-my-post.mdx` (date-prefixed) with correct frontmatter
 4. Claude Code reads the post and adds `tags` and `axes` to the frontmatter
 5. Review and edit as needed
 
-Files follow the naming convention `YYYY-MM-DD_CHANNEL_slug.md`. The date and slug are extracted automatically.
+Files follow the naming convention `YYYY-MM-DD_CHANNEL_slug.md`. The date and slug are extracted from the filename, and the output keeps the `YYYY-MM-DD-slug.mdx` convention (the date prefix is stripped to form the URL slug).
 
 ### From scratch
 

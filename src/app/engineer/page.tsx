@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { JsonLd } from "@/components/json-ld";
 import { buildBreadcrumbSchema } from "@/lib/breadcrumbs";
 import { buildPageMetadata } from "@/lib/metadata";
+import { githubUrl, repoUrl } from "@/lib/links";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Engineer",
@@ -28,7 +29,12 @@ const interests = [
   },
 ];
 
-const projects = [
+const projects: {
+  name: string;
+  description: string;
+  tag?: string;
+  repo?: string;
+}[] = [
   {
     name: "lead-signage",
     description: "Digital signage system for in-clinic displays.",
@@ -50,6 +56,7 @@ const projects = [
     name: "slowdoctor.dev",
     description: "This site.",
     tag: "meta",
+    repo: repoUrl,
   },
 ];
 
@@ -69,6 +76,16 @@ export default function EngineerPage() {
         </h1>
         <p className="mt-4 text-lg text-muted leading-relaxed max-w-xl">
           Medicine gave me the problems. Engineering gives me the tools.
+        </p>
+        <p className="mt-4 text-sm">
+          <a
+            href={githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-accent hover:underline"
+          >
+            github.com/slowdoctor-dev &#8599;
+          </a>
         </p>
       </section>
 
@@ -140,6 +157,17 @@ export default function EngineerPage() {
                   {project.description}
                 </p>
               </div>
+              {project.repo && (
+                <a
+                  href={project.repo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${project.name} source on GitHub`}
+                  className="shrink-0 text-xs text-accent hover:underline"
+                >
+                  Source &#8599;
+                </a>
+              )}
             </div>
           ))}
         </div>

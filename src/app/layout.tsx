@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import Link from "next/link";
 import { NavLinks } from "@/components/nav-links";
-import { socialLinks } from "@/lib/links";
+import { socialLinks, githubUrl } from "@/lib/links";
 import { SITE, AUTHOR, DESCRIPTIONS } from "@/lib/config";
 import { SocialIcon } from "@/components/social-icons";
 import "./globals.css";
@@ -120,6 +120,15 @@ export default function RootLayout({
                   <SocialIcon label={link.label} className="w-4 h-4" />
                 </a>
               ))}
+              <a
+                href={githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+                className="text-muted hover:text-foreground transition-colors"
+              >
+                <SocialIcon label="GitHub" className="w-4 h-4" />
+              </a>
             </div>
           </div>
         </footer>

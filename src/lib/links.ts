@@ -15,4 +15,7 @@ export const medicalLinks = [
   { label: "LinkedIn", url: "https://www.linkedin.com/in/slowdoctor/", detail: "@slowdoctor" },
 ] as const;
 
+export const githubUrl = "https://github.com/slowdoctor-dev";
+export const repoUrl = "https://github.com/slowdoctor-dev/slowdoctor-web";
+
 export const practiceUrl = doctor.worksFor.url;

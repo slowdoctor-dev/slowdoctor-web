@@ -60,6 +60,7 @@ export const doctor = {
     "https://scholar.google.com/citations?user=i_e44lEAAAAJ",
     "https://www.researchgate.net/profile/Joonho-Lim",
     "https://www.linkedin.com/in/slowdoctor/",
+    "https://github.com/slowdoctor-dev",
     "https://www.youtube.com/@slowdoctor",
     "https://www.instagram.com/slowdoctor_/",
     "https://www.threads.net/@slowdoctor_",

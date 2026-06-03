@@ -86,7 +86,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
       worksFor: {
         "@type": "MedicalBusiness",
         "@id": doctor.worksFor.id,
-        name: PRACTICE.fullName,
+        name: PRACTICE.name,
         url: practiceUrl,
       },
     },

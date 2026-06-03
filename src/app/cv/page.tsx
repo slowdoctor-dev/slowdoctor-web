@@ -5,6 +5,7 @@ import { practiceUrl } from "@/lib/links";
 import { buildPageMetadata } from "@/lib/metadata";
 import { AUTHOR, PRACTICE } from "@/lib/config";
 import { publications } from "@/lib/cv";
+import { doctor } from "@/data/doctor";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "CV",
@@ -76,7 +77,7 @@ export default function CvPage() {
         </h1>
         <p className="mt-1 text-muted text-sm">{AUTHOR.korean}</p>
         <p className="mt-3 text-sm text-muted">
-          {PRACTICE.fullName} &middot; {PRACTICE.location}
+          {PRACTICE.name} &middot; {PRACTICE.location}
         </p>
         <p className="mt-1 text-sm text-muted">
           <a
@@ -203,8 +204,9 @@ export default function CvPage() {
           Professional Memberships
         </h2>
         <ul className="space-y-1 text-sm text-foreground">
-          <li>Korean Society of Plastic and Reconstructive Surgeons</li>
-          <li>Korean Society of Aesthetic Plastic Surgery</li>
+          {doctor.memberOf.map((society) => (
+            <li key={society}>{society}</li>
+          ))}
         </ul>
       </section>
 

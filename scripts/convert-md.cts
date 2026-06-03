@@ -22,6 +22,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const matter = require("gray-matter");
 
+const { parseDateOnly } = require("./date-utils.cts");
 const incomingDir = path.join(process.cwd(), "src/content/incoming");
 const blogDir = path.join(process.cwd(), "src/content/blog");
 
@@ -46,6 +47,24 @@ function deriveSlug(fileName: string): string {
     .replace(/^-|-$/g, "");
 
   return kebab || "untitled";
+}
+
+/**
+ * Find an existing blog file that resolves to the same URL slug, if any.
+ * Blog filenames carry a `YYYY-MM-DD-` date prefix that is stripped to form
+ * the slug (see src/lib/blog.ts), so a collision can hide behind either a
+ * date-prefixed name or a legacy bare `slug.mdx`. Returns the colliding
+ * filename, or null when the slug is free.
+ */
+function findExistingPostForSlug(slug: string): string | null {
+  const escaped = slug.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const datePrefixed = new RegExp(`^\\d{4}-\\d{2}-\\d{2}-${escaped}\\.mdx$`);
+  const entries = fs.readdirSync(blogDir);
+  return (
+    entries.find(
+      (entry: string) => entry === `${slug}.mdx` || datePrefixed.test(entry),
+    ) ?? null
+  );
 }
 
 /** Extract date from lead filename (YYYY-MM-DD prefix) or use today. */
@@ -230,15 +249,27 @@ function convertFile(fileName: string): ConvertResult {
   const slug = deriveSlug(fileName);
   const date =
     typeof existingFm.date === "string" ? existingFm.date : deriveDate(fileName);
-  const targetPath = path.join(blogDir, `${slug}.mdx`);
 
-  // Check for collision
-  if (fs.existsSync(targetPath)) {
+  // The slug is embedded in the output filename, so the date must be a valid
+  // YYYY-MM-DD — fail fast with a clear message rather than writing a file the
+  // blog loader would later reject.
+  parseDateOnly(date, fileName);
+
+  // Output follows the date-prefixed convention (YYYY-MM-DD-slug.mdx), matching
+  // new-post.cts and the slug-stripping in src/lib/blog.ts.
+  const targetName = `${date}-${slug}.mdx`;
+  const targetPath = path.join(blogDir, targetName);
+
+  // Guard against collisions on the resolved slug, not just the exact target
+  // path: an existing date-prefixed or legacy bare file can map to the same
+  // URL slug and would otherwise produce duplicate /blog/[slug] routes.
+  const existing = findExistingPostForSlug(slug);
+  if (existing) {
     return {
       source: fileName,
-      target: `${slug}.mdx`,
+      target: targetName,
       slug,
-      skipped: "target file already exists",
+      skipped: `slug "${slug}" already exists as ${existing}`,
     };
   }
 
@@ -290,7 +321,7 @@ function convertFile(fileName: string): ConvertResult {
 
   return {
     source: fileName,
-    target: `${slug}.mdx`,
+    target: targetName,
     slug,
   };
 }

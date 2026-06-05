@@ -55,6 +55,9 @@ jobs:
       - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3
         with:
+          # wrangler >= 4 parses _headers/_redirects for Workers static assets;
+          # the action's bundled default (3.90) uploads them as plain files instead.
+          wranglerVersion: "4.98.0"
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy

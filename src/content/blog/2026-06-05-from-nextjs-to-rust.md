@@ -13,7 +13,7 @@ A few weeks ago I wrote about building this site in a week with Next.js, Claude 
 
 Then I rewrote the whole thing from scratch in Rust.
 
-If you visit slowdoctor.dev now, you won't notice. Same pages, same design, same content, same metadata and SEO. The rewrite is entirely under the hood. To be clear about why: it didn't need rewriting. I did it to learn Rust and WebAssembly. This post is the retrospective.
+The rewrite itself is invisible: same pages, same design, same content, same metadata and SEO — all of it under the hood. (The small mini-game now on the home page came later; this post is about the rewrite beneath it.) To be clear about why: it didn't need rewriting. I did it to learn Rust and WebAssembly. This post is the retrospective.
 
 ## Why rewrite something that works
 
@@ -25,7 +25,7 @@ So this was a study, and the subject was Rust on the web: Leptos, WebAssembly, a
 
 **Before:** Next.js 16, React 19, TypeScript, MDX, Tailwind v4, static export, served by Cloudflare.
 
-**After:** Rust 1.96 with Leptos 0.8, Tailwind v4 (the standalone CLI, no Node), comrak and syntect for Markdown and syntax highlighting, one small WebAssembly island, built in GitHub Actions and deployed to Cloudflare with wrangler.
+**After:** Rust 1.96 with Leptos 0.8, Tailwind v4 (the standalone CLI, no Node), comrak and syntect for Markdown and syntax highlighting, a small WebAssembly island, built in GitHub Actions and deployed to Cloudflare with wrangler.
 
 To the visitor: identical. Underneath: a different machine.
 
@@ -37,11 +37,11 @@ So I wrote my own build program. It walks every page, renders each one to a stat
 
 ## Mostly static, one island
 
-Almost the entire site is pre-rendered HTML — no JavaScript, no hydration. The one exception is the tag filter on the blog index.
+Almost the entire site is pre-rendered HTML — no JavaScript, no hydration. When the rewrite shipped, the one interactive exception was the tag filter on the blog index.
 
 It ships as a small Leptos component compiled to WebAssembly: an island of interactivity in a static page. It enhances a fallback rather than replacing it — with JavaScript off, or for a crawler, the blog index still lists every post, fully linked, and the island adds live filtering when the browser can run it.
 
-It's one filter on a five-page blog; it didn't need to be WebAssembly. But I wanted to see the whole pipeline, from a Rust component to a `.wasm` file the browser runs.
+It's one filter on a five-page blog; it didn't need to be WebAssembly. But I wanted to see the whole pipeline, from a Rust component to a `.wasm` file the browser runs. (I've since added a small canvas mini-game to the home page — a second island, in the same spirit.)
 
 ## Everything in Rust
 
@@ -77,7 +77,7 @@ About ten commits, plus the wrangler fix after the first deploy.
 
 ## The numbers
 
-Roughly 2,860 lines of Rust across four crates: the site is 1,878 lines, the build program 284, the WebAssembly island 159, and the tooling 536. The dependency tree is 275 crates. The island is 283 KB raw, about 100 KB gzipped; the CSS is 21 KB. A full production build and deploy runs about two minutes forty seconds cold, one to three minutes warm.
+When the rewrite shipped, it was roughly 2,860 lines of Rust across four crates: the site 1,878 lines, the build program 284, the WebAssembly island 159, and the tooling 536. The dependency tree is 275 crates. The island is 283 KB raw, about 100 KB gzipped; the CSS is 21 KB. A full production build and deploy runs about two minutes forty seconds cold, one to three minutes warm.
 
 275 crates and a 100 KB WebAssembly file to filter blog posts is not efficient by any product measure. For a learning project, that was not the point.
 

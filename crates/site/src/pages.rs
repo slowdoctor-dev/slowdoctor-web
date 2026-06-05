@@ -293,6 +293,7 @@ pub fn blog(posts: &[BlogPostSummary]) -> RenderedPage {
             <section class="pb-24">
                 <div id="blog-list-island">{blog_list_static(posts)}</div>
                 <script id="blog-data" type="application/json" inner_html=posts_json></script>
+                <script type="module" src="/_assets/blog-init.js"></script>
             </section>
         </div>
     };

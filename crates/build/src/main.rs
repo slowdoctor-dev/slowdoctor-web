@@ -62,6 +62,15 @@ fn main() {
         write_page(&format!("blog/{}.html", post.summary.slug), &pages::blog_post(post));
     }
 
+    // Entry module for the blog-filter island (loaded by /blog).
+    let assets = Path::new(DIST).join("_assets");
+    fs::create_dir_all(&assets).expect("create _assets");
+    fs::write(
+        assets.join("blog-init.js"),
+        "import init from \"/_assets/blog-filter.js\";\ninit();\n",
+    )
+    .expect("write blog-init.js");
+
     println!(
         "built {} static pages into {DIST}/ ({} blog posts)",
         7 + posts.len(),

@@ -32,7 +32,6 @@ const interests = [
 const projects: {
   name: string;
   description: string;
-  tag?: string;
   repo?: string;
 }[] = [
   {
@@ -48,14 +47,26 @@ const projects: {
     description: "Content viewer for clinic materials.",
   },
   {
-    name: "medical-scribe",
-    description: "AI-powered medical note transcription.",
-    tag: "in progress",
+    name: "workspace-md",
+    description:
+      "A workspace-topology spec — a sibling to agents.md defining how a human and an AI agent share a directory so memory and skills compound with use.",
+    repo: "https://github.com/slowdoctor-dev/workspace-md",
+  },
+  {
+    name: "seasoned-hand",
+    description:
+      "An open-source autonomous agent platform — deep task execution with learning that persists across sessions. Self-hosted and model-agnostic.",
+    repo: "https://github.com/slowdoctor-dev/seasoned-hand",
+  },
+  {
+    name: "ashy-walnut-desk",
+    description:
+      "A digital front-desk for regulated-service businesses — identity, interaction, and knowledge with AI augmentation and human approval.",
+    repo: "https://github.com/slowdoctor-dev/ashy-walnut-desk",
   },
   {
     name: "slowdoctor.dev",
     description: "This site.",
-    tag: "meta",
     repo: repoUrl,
   },
 ];
@@ -143,16 +154,9 @@ export default function EngineerPage() {
               className="flex items-start gap-4 rounded-2xl border border-border bg-card p-4"
             >
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-sm font-semibold font-mono">
-                    {project.name}
-                  </h3>
-                  {project.tag && (
-                    <span className="text-xs text-accent bg-accent-muted px-2 py-0.5 rounded-full">
-                      {project.tag}
-                    </span>
-                  )}
-                </div>
+                <h3 className="text-sm font-semibold font-mono">
+                  {project.name}
+                </h3>
                 <p className="mt-1 text-sm text-muted">
                   {project.description}
                 </p>

@@ -1,21 +1,28 @@
-use leptos::prelude::*;
-use std::fs;
 use std::path::Path;
 
-fn hello() -> impl IntoView {
-    view! { <h1>"Hello from Leptos SSR"</h1> }
-}
-
-fn render_page(inner: impl IntoView) -> String {
-    // RenderHtml::to_html (tachys) renders a view to a static HTML string.
-    let body = inner.to_html();
-    format!("<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"></head><body>{body}</body></html>")
-}
-
+// Temporary Phase-2 sanity check; replaced by the full builder in Phase 3.
 fn main() {
-    let dist = Path::new("dist");
-    fs::create_dir_all(dist).expect("create dist");
-    let html = render_page(hello());
-    fs::write(dist.join("index.html"), &html).expect("write index.html");
-    println!("wrote dist/index.html ({} bytes)", html.len());
+    let posts = site::markdown::load_posts(Path::new("src/content/blog"))
+        .expect("load posts");
+    println!("loaded {} posts", posts.len());
+    for p in &posts {
+        println!(
+            "- {} | {} | tags={:?} axes={:?}",
+            p.summary.slug, p.summary.formatted_date, p.summary.tags, p.summary.axes
+        );
+    }
+    let first = &posts[0];
+    println!("\n--- content_html of '{}' (first 400 chars) ---", first.summary.slug);
+    println!("{}", &first.content_html.chars().take(400).collect::<String>());
+
+    // Exercise meta + schema builders.
+    let meta = site::meta::build_page_meta(
+        "CV",
+        "Curriculum vitae",
+        "/cv",
+        site::meta::OgType::Website,
+        false,
+        vec![site::schema::person_schema()],
+    );
+    println!("\n--- head ---\n{}", site::meta::render_head(&meta));
 }

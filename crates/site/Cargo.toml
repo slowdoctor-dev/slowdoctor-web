@@ -11,10 +11,17 @@ path = "src/lib.rs"
 
 [features]
 default = []
-ssr = ["leptos/ssr"]
+# Server/build-time rendering: full page components + markdown loading.
+ssr = ["leptos/ssr", "dep:comrak", "dep:walkdir", "dep:serde_yaml", "dep:time", "dep:regex"]
+# Client-side island: only shared types + interactive components.
 csr = ["leptos/csr"]
 
 [dependencies]
 leptos = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
+comrak = { workspace = true, optional = true }
+walkdir = { workspace = true, optional = true }
+serde_yaml = { workspace = true, optional = true }
+time = { workspace = true, optional = true }
+regex = { workspace = true, optional = true }

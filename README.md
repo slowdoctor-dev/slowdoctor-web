@@ -2,50 +2,59 @@
 
 Personal site for Dr. Joonho Lim at `slowdoctor.dev`.
 
-The site is built with Next.js 16, React 19, TypeScript, Tailwind CSS v4, and MDX. It is exported as a fully static site with `output: "export"`.
+Built with **Rust + [Leptos](https://leptos.dev)**, rendered to a fully static site
+at build time and served by Cloudflare Workers static assets. Styling is Tailwind CSS
+v4; blog posts are Markdown (rendered with `comrak` + `syntect`). The only client-side
+interactivity — the blog tag filter — ships as a small Leptos→WASM island.
 
 ## Structure
 
-- `src/app/` — route pages and layout
-- `src/content/blog/` — MDX blog posts
-- `src/content/incoming/` — drop zone for MD drafts from content pipeline
-- `src/data/` — doctor profile (single source of truth)
-- `src/lib/` — config, blog utilities, SEO helpers
-- `scripts/` — build-time generators, conversion, validation
-
-See [CONTRIBUTING.md](CONTRIBUTING.md#project-structure) for the full file-level breakdown.
+- `crates/site/` — shared library: data, shared types, page + layout components,
+  metadata/JSON-LD builders, Markdown loader
+- `crates/build/` — the static site generator (renders every route to `dist/`,
+  hashes CSS, copies `public/`, generates sitemap + feed)
+- `crates/island-blog-filter/` — Leptos CSR/WASM island for the blog tag filter
+- `crates/tools/` — `new_post`, `convert`, `validate` build/authoring tools
+- `src/content/blog/` — Markdown blog posts
+- `src/content/incoming/` — drop zone for Markdown drafts (see content pipeline)
+- `public/` — static assets (og image, profile image, fonts, robots, `_headers`,
+  `_redirects`) copied verbatim into `dist/`
+- `globals.css` — Tailwind entry + theme + `.prose`/font `@font-face` rules
 
 ## Commands
 
 ```bash
-npm run dev          # local dev server
-npm run build        # production static build (generates sitemap + RSS first)
-npm run lint         # eslint
-npm run convert      # convert incoming MD drafts to MDX blog posts
-npm run new-post     # scaffold a new blog post
-npm run validate     # post-build SEO validation
+make build      # full static build into dist/
+make serve      # build + serve dist/ on http://localhost:8080
+make validate   # post-build SEO validation
+make new-post TITLE="My Post Title"   # scaffold a new blog post
+make convert                          # convert incoming drafts -> blog posts
+make convert FILE=draft.md            # convert a single draft
 ```
+
+See [DEPLOY.md](DEPLOY.md) for the toolchain setup (Rust, wasm-bindgen, Tailwind CLI)
+and the Cloudflare/GitHub Actions deployment.
 
 ## Content Pipeline
 
 ### From external drafts
 
 1. Place confirmed Markdown drafts into `src/content/incoming/`
-2. Run `npm run convert` to transform them into MDX blog posts
-3. Claude Code adds `tags` and `axes` to the frontmatter
+2. Run `make convert` to transform them into blog posts
+3. Add `tags` and `axes` to the frontmatter
 4. Branch, commit, PR, merge — auto-deploys to production
 
-The convert script handles:
-- Filename convention: `YYYY-MM-DD_CHANNEL_english-kebab-slug.md` -> `YYYY-MM-DD-english-kebab-slug.mdx`
+The convert tool handles:
+- Filename convention `YYYY-MM-DD_CHANNEL_english-kebab-slug.md` → `YYYY-MM-DD-english-kebab-slug.md`
 - Date extraction from filename prefix
-- Title extraction from first H1 heading
+- Title extraction from the first H1 heading
 - Auto-generated description from content
 - Existing frontmatter preservation (title, description, tags, axes, image)
 - Source file removal after successful conversion
 
 ### Manual creation
 
-Blog posts live in `src/content/blog/*.mdx` and support this frontmatter:
+Blog posts live in `src/content/blog/*.md` and support this frontmatter:
 
 ```yaml
 ---
@@ -65,17 +74,20 @@ Required: `title`, `date`, `description`. Optional: `image`, `tags`, `axes` (mus
 
 ## Deployment (Cloudflare Workers)
 
-The site is a fully static export (`output: "export"` in `next.config.ts`). The build produces an `out/` directory served via Cloudflare Workers + Assets.
-
-Push to `main` triggers automatic build and deployment. PRs get preview URLs.
+The build produces a `dist/` directory served via Cloudflare Workers + static assets.
+Builds + deploys run in **GitHub Actions** (`.github/workflows/deploy.yml`) on push to
+`main`. See [DEPLOY.md](DEPLOY.md).
 
 ### Configuration files
 
-- `public/_headers` — cache control and security headers
+- `public/_headers` — cache control and security headers (CSP includes
+  `'wasm-unsafe-eval'` for the WASM island)
 - `public/_redirects` — redirect rules (currently none needed)
+- `wrangler.toml` — `[assets] directory = "./dist"`
 
 ## Notes
 
-- `public/sitemap.xml` and `public/feed.xml` are generated during build and should not be edited manually.
-- The project uses `next/font/google`, so production builds need network access unless fonts are vendored locally.
-- `AGENTS.md` is authoritative for repo-specific agent instructions. Next.js 16 behavior may differ from older releases.
+- `sitemap.xml` and `feed.xml` are generated into `dist/` during the build.
+- Fonts (Inter, Plus Jakarta Sans) are vendored in `public/fonts/` — no network
+  needed at build time.
+- `AGENTS.md` is authoritative for repo-specific agent instructions.

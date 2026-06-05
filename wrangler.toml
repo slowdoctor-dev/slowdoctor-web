@@ -2,5 +2,5 @@ name = "slowdoctor-web"
 compatibility_date = "2026-04-11"
 
 [assets]
-directory = "./out"
+directory = "./dist"
 not_found_handling = "404-page"

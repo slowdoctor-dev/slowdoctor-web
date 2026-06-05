@@ -32,24 +32,7 @@ pub fn home(posts: &[BlogPostSummary]) -> RenderedPage {
 
     let inner = view! {
         <div class="mx-auto max-w-3xl px-6">
-            <section class="pt-24 pb-16 sm:pt-32 sm:pb-20">
-                <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{AUTHOR_NAME}</h1>
-                <p class="mt-4 text-lg text-accent font-medium">
-                    "Choosing the right way over the fast way."
-                </p>
-                <p class="mt-4 text-lg text-muted leading-relaxed">{DESCRIPTION_BRIEF}</p>
-                <p class="mt-6 text-foreground/90 leading-relaxed">
-                    "I practice both surgery and non-surgical medicine \u{2014} so the recommendation is always what you actually need. Outside the clinic, I explore CS and AI, looking for where they can solve real problems."
-                </p>
-            </section>
-
-            <section class="pb-16">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-sm font-medium text-accent uppercase tracking-wider">
-                        "The Burnout Runner"
-                    </h2>
-                    <span class="text-xs text-muted">"a tiny Rust + WASM game"</span>
-                </div>
+            <section class="pt-8 pb-10">
                 <div class="game-wrap">
                     // DOM contract: crates/game mounts into this canvas.
                     <canvas
@@ -57,15 +40,19 @@ pub fn home(posts: &[BlogPostSummary]) -> RenderedPage {
                         width="900"
                         height="260"
                         role="img"
-                        aria-label="The Burnout Runner — an endless-runner mini-game"
+                        aria-label="Mini-game"
                     ></canvas>
                 </div>
-                <p class="mt-3 text-xs text-muted">
-                    "Click the game, then "
-                    <span class="text-foreground">"Space / \u{2191}"</span>
-                    " to jump, "
-                    <span class="text-foreground">"\u{2193}"</span>
-                    " to duck. On touch: tap to jump, hold the lower half to duck. Grab \u{2615} for burnout relief. Press M to mute."
+            </section>
+
+            <section class="pb-16 sm:pb-20">
+                <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{AUTHOR_NAME}</h1>
+                <p class="mt-4 text-lg text-accent font-medium">
+                    "Choosing the right way over the fast way."
+                </p>
+                <p class="mt-4 text-lg text-muted leading-relaxed">{DESCRIPTION_BRIEF}</p>
+                <p class="mt-6 text-foreground/90 leading-relaxed">
+                    "I practice both surgery and non-surgical medicine \u{2014} so the recommendation is always what you actually need. Outside the clinic, I explore CS and AI, looking for where they can solve real problems."
                 </p>
             </section>
 

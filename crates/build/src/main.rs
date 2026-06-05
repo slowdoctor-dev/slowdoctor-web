@@ -1,3 +1,6 @@
+mod assets;
+mod generators;
+
 use site::markdown::{load_posts, FullPost};
 use site::meta::render_head;
 use site::pages::{self, RenderedPage};
@@ -5,13 +8,12 @@ use std::fs;
 use std::path::Path;
 
 const BLOG_DIR: &str = "src/content/blog";
+const PUBLIC: &str = "public";
 const DIST: &str = "dist";
-/// Stylesheet path injected into every page (Phase 5 will hash this).
-const CSS_HREF: &str = "/_assets/app.css";
 
 /// Global `<head>` fragment shared by every page (charset, viewport, icons,
 /// fonts, RSS alternate, stylesheet).
-fn global_head() -> String {
+fn global_head(css_href: &str) -> String {
     format!(
         concat!(
             "<meta charset=\"utf-8\"/>",
@@ -22,57 +24,70 @@ fn global_head() -> String {
             "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"Blog\" href=\"/feed.xml\"/>",
             "<link rel=\"stylesheet\" href=\"{css}\"/>",
         ),
-        css = CSS_HREF,
+        css = css_href,
     )
 }
 
-/// Wrap a rendered page body + head metadata in the full HTML document.
-fn document(page: &RenderedPage) -> String {
+fn document(page: &RenderedPage, css_href: &str) -> String {
     format!(
         "<!DOCTYPE html><html lang=\"en\" class=\"h-full antialiased\"><head>{global}{head}</head><body class=\"min-h-full flex flex-col\">{body}</body></html>",
-        global = global_head(),
+        global = global_head(css_href),
         head = render_head(&page.meta),
         body = page.body,
     )
 }
 
-fn write_page(rel_path: &str, page: &RenderedPage) {
+fn write_page(rel_path: &str, page: &RenderedPage, css_href: &str) {
     let path = Path::new(DIST).join(rel_path);
     if let Some(parent) = path.parent() {
         fs::create_dir_all(parent).expect("create parent dir");
     }
-    fs::write(&path, document(page)).expect("write page");
+    fs::write(&path, document(page, css_href)).expect("write page");
 }
 
 fn main() {
+    let dist = Path::new(DIST);
+    fs::create_dir_all(dist).expect("create dist");
+
+    // Copy static assets (og image, favicon, robots, images, fonts, _headers,
+    // _redirects). Does not touch dist/_assets (island + CSS land there).
+    assets::copy_dir(Path::new(PUBLIC), dist);
+
+    // Content-hash the Tailwind CSS (built by the pipeline before this runs).
+    let css_href = assets::hash_and_rename_css(dist);
+
     let posts: Vec<FullPost> = load_posts(Path::new(BLOG_DIR)).expect("load posts");
     let summaries: Vec<_> = posts.iter().map(|p| p.summary.clone()).collect();
 
-    fs::create_dir_all(DIST).expect("create dist");
-
-    write_page("index.html", &pages::home(&summaries));
-    write_page("cv.html", &pages::cv());
-    write_page("physician.html", &pages::physician());
-    write_page("engineer.html", &pages::engineer());
-    write_page("links.html", &pages::links());
-    write_page("blog.html", &pages::blog(&summaries));
-    write_page("404.html", &pages::not_found());
-
+    write_page("index.html", &pages::home(&summaries), &css_href);
+    write_page("cv.html", &pages::cv(), &css_href);
+    write_page("physician.html", &pages::physician(), &css_href);
+    write_page("engineer.html", &pages::engineer(), &css_href);
+    write_page("links.html", &pages::links(), &css_href);
+    write_page("blog.html", &pages::blog(&summaries), &css_href);
+    write_page("404.html", &pages::not_found(), &css_href);
     for post in &posts {
-        write_page(&format!("blog/{}.html", post.summary.slug), &pages::blog_post(post));
+        write_page(
+            &format!("blog/{}.html", post.summary.slug),
+            &pages::blog_post(post),
+            &css_href,
+        );
     }
 
-    // Entry module for the blog-filter island (loaded by /blog).
-    let assets = Path::new(DIST).join("_assets");
-    fs::create_dir_all(&assets).expect("create _assets");
+    // Island entry module (loaded by /blog).
+    let asset_dir = dist.join("_assets");
+    fs::create_dir_all(&asset_dir).expect("create _assets");
     fs::write(
-        assets.join("blog-init.js"),
+        asset_dir.join("blog-init.js"),
         "import init from \"/_assets/blog-filter.js\";\ninit();\n",
     )
     .expect("write blog-init.js");
 
+    generators::write_sitemap(dist, &summaries);
+    generators::write_feed(dist, &summaries);
+
     println!(
-        "built {} static pages into {DIST}/ ({} blog posts)",
+        "built {} static pages -> {DIST}/ (css {css_href}, {} blog posts, sitemap + feed)",
         7 + posts.len(),
         posts.len()
     );

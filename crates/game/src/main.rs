@@ -314,22 +314,8 @@ impl Game {
 
     fn draw_player(&self) {
         let (x, top, w, h) = self.player_box();
-        // Head
         self.fill(FG);
-        self.rect(x + 9.0, top, 16.0, 13.0);
-        // Body
-        self.rect(x, top + 13.0, w, h - 24.0);
-        // Legs: run cycle on the ground, tucked while airborne
-        if self.on_ground {
-            let s = self.run_phase.sin();
-            let l1 = if s > 0.0 { 0.0 } else { 4.0 };
-            let l2 = if s > 0.0 { 4.0 } else { 0.0 };
-            self.rect(x + 6.0, top + h - 11.0, 8.0, 11.0 - l1);
-            self.rect(x + w - 14.0, top + h - 11.0, 8.0, 11.0 - l2);
-        } else {
-            self.rect(x + 6.0, top + h - 8.0, 8.0, 8.0);
-            self.rect(x + w - 14.0, top + h - 8.0, 8.0, 8.0);
-        }
+        self.rect(x, top, w, h);
     }
 
     fn draw_obstacle(&self, o: &Obstacle) {

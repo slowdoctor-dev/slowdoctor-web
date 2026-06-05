@@ -2185,6 +2185,14 @@ dependencies = [
 [[package]]
 name = "tools"
 version = "0.1.0"
+dependencies = [
+ "regex",
+ "serde",
+ "serde_yaml",
+ "site",
+ "time",
+ "walkdir",
+]
 
 [[package]]
 name = "typed-arena"

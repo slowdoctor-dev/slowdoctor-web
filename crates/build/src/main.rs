@@ -82,6 +82,11 @@ fn main() {
         "import init from \"/_assets/blog-filter.js\";\ninit();\n",
     )
     .expect("write blog-init.js");
+    fs::write(
+        asset_dir.join("game-init.js"),
+        "import init from \"/_assets/game.js\";\ninit();\n",
+    )
+    .expect("write game-init.js");
 
     generators::write_sitemap(dist, &summaries);
     generators::write_feed(dist, &summaries);

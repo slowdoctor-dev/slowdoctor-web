@@ -191,3 +191,25 @@ button:focus-visible {
 .prose .sh__line {
   display: block;
 }
+
+/* Burnout Runner mini-game canvas (home page) */
+.game-wrap {
+  width: 100%;
+}
+
+#game-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 900 / 260;
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  background: var(--card-bg);
+  outline: none;
+  touch-action: manipulation;
+}
+
+#game-canvas:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

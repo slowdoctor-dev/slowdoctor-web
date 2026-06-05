@@ -4,6 +4,11 @@
 pub mod data;
 pub mod types;
 
+#[cfg(any(feature = "ssr", feature = "csr"))]
+pub mod components;
+
+#[cfg(feature = "ssr")]
+pub mod pages;
 #[cfg(feature = "ssr")]
 pub mod meta;
 #[cfg(feature = "ssr")]

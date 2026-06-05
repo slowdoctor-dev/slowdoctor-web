@@ -52,7 +52,7 @@ fn main() {
     fs::create_dir_all(dist).expect("create dist");
 
     // Copy static assets (og image, favicon, robots, images, fonts, _headers,
-    // _redirects). Does not touch dist/_assets (island + CSS land there).
+    // _redirects). Does not touch dist/_assets (the WASM islands + CSS land there).
     assets::copy_dir(Path::new(PUBLIC), dist);
 
     // Content-hash the Tailwind CSS (built by the pipeline before this runs).
@@ -76,7 +76,7 @@ fn main() {
         );
     }
 
-    // Island entry module (loaded by /blog).
+    // Island entry modules: the blog filter (/blog) and the home-page mini-game.
     let asset_dir = dist.join("_assets");
     fs::create_dir_all(&asset_dir).expect("create _assets");
     fs::write(

@@ -4,8 +4,9 @@ Personal site for Dr. Joonho Lim at `slowdoctor.dev`.
 
 Built with **Rust + [Leptos](https://leptos.dev)**, rendered to a fully static site
 at build time and served by Cloudflare Workers static assets. Styling is Tailwind CSS
-v4; blog posts are Markdown (rendered with `comrak` + `syntect`). The only client-side
-interactivity — the blog tag filter — ships as a small Leptos→WASM island.
+v4; blog posts are Markdown (rendered with `comrak` + `syntect`). Client-side
+interactivity ships as small Leptos→WASM islands: the blog tag filter and a canvas
+mini-game on the home page.
 
 ## Structure
 
@@ -14,6 +15,7 @@ interactivity — the blog tag filter — ships as a small Leptos→WASM island.
 - `crates/build-site/` — the static site generator (renders every route to `dist/`,
   hashes CSS, copies `public/`, generates sitemap + feed)
 - `crates/island-blog-filter/` — Leptos CSR/WASM island for the blog tag filter
+- `crates/game/` — Leptos→WASM canvas mini-game embedded on the home page
 - `crates/tools/` — `new_post`, `convert`, `validate` build/authoring tools
 - `src/content/blog/` — Markdown blog posts
 - `src/content/incoming/` — drop zone for Markdown drafts (see content pipeline)

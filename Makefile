@@ -22,7 +22,7 @@ island:
 	wasm-bindgen --target web --no-typescript \
 		--out-dir $(DIST)/_assets --out-name blog-filter $(ISLAND_WASM)
 
-# Compile + bindgen the Burnout Runner game WASM.
+# Compile + bindgen the mini-game WASM.
 game:
 	cargo build -p game --target wasm32-unknown-unknown --release
 	wasm-bindgen --target web --no-typescript \

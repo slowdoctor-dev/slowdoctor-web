@@ -36,12 +36,8 @@ function deriveSlug(fileName: string): string {
 
   // lead convention: YYYY-MM-DD_CHANNEL_english-kebab-slug
   const leadMatch = base.match(/^\d{4}-\d{2}-\d{2}_[A-Za-z0-9-]+_(.+)$/);
-  if (leadMatch) {
-    return leadMatch[1];
-  }
-
-  // Already kebab-case
-  const kebab = base
+  const slugSource = leadMatch ? leadMatch[1] : base;
+  const kebab = slugSource
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
@@ -138,12 +134,18 @@ function deriveDescription(content: string): string {
 
   // Pick the first meaningful paragraph (at least 20 chars)
   for (const p of paragraphs) {
-    if (p.length >= 20) {
+    const plainText = p
+      .replace(/!\[.*?\]\(.*?\)/g, "")
+      .replace(/\[(.*?)\]\(.*?\)/g, "$1")
+      .replace(/[*_`~]/g, "")
+      .trim();
+
+    if (plainText.length >= 20) {
       // Truncate to ~160 chars for SEO
-      if (p.length > 160) {
-        return p.slice(0, 157) + "...";
+      if (plainText.length > 160) {
+        return plainText.slice(0, 157) + "...";
       }
-      return p;
+      return plainText;
     }
   }
 
@@ -153,23 +155,23 @@ function deriveDescription(content: string): string {
 /** Strip the first H1 heading from content (since title goes to frontmatter). */
 function stripLeadingH1(content: string): string {
   const lines = content.split("\n");
-  let foundH1 = false;
+  const firstNonEmptyLine = lines.findIndex((line) => line.trim());
 
-  const result: string[] = [];
-  for (const line of lines) {
-    if (!foundH1 && line.trim().match(/^#\s+/)) {
-      foundH1 = true;
-      continue;
-    }
-    result.push(line);
+  if (
+    firstNonEmptyLine === -1 ||
+    !lines[firstNonEmptyLine].trim().match(/^#\s+/)
+  ) {
+    return content;
   }
+
+  lines.splice(firstNonEmptyLine, 1);
 
   // Trim leading blank lines
-  while (result.length > 0 && !result[0].trim()) {
-    result.shift();
+  while (lines.length > 0 && !lines[0].trim()) {
+    lines.shift();
   }
 
-  return result.join("\n");
+  return lines.join("\n");
 }
 
 // ---------------------------------------------------------------------------
@@ -340,8 +342,14 @@ function main() {
     const resolved = specificFile.endsWith(".md") || specificFile.endsWith(".mdx")
       ? specificFile
       : `${specificFile}.md`;
-    if (!fs.existsSync(path.join(incomingDir, resolved))) {
-      console.error(`File not found: ${path.join(incomingDir, resolved)}`);
+    const resolvedPath = path.resolve(incomingDir, resolved);
+    const relativePath = path.relative(incomingDir, resolvedPath);
+    if (relativePath.startsWith("..") || path.isAbsolute(relativePath)) {
+      console.error(`File must be inside ${incomingDir}: ${specificFile}`);
+      process.exit(1);
+    }
+    if (!fs.existsSync(resolvedPath)) {
+      console.error(`File not found: ${resolvedPath}`);
       process.exit(1);
     }
     files = [resolved];

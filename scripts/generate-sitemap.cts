@@ -7,6 +7,13 @@ const appDirectory = path.join(process.cwd(), "src/app");
 const blogDirectory = path.join(process.cwd(), "src/content/blog");
 const sitemapPath = path.join(process.cwd(), "public/sitemap.xml");
 
+function escapeXml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
+
 async function getStaticRoutes(directory: string, segments: string[] = []) {
   const entries = await fs.readdir(directory, { withFileTypes: true });
   const routes = new Set<string>();
@@ -88,7 +95,7 @@ async function getBlogRoutes() {
 function createUrl(route: string, lastmod?: string) {
   const lines = [
     "  <url>",
-    `    <loc>${siteUrl}${route === "/" ? "/" : route}</loc>`,
+    `    <loc>${escapeXml(`${siteUrl}${route === "/" ? "/" : route}`)}</loc>`,
   ];
   if (lastmod) {
     lines.push(`    <lastmod>${lastmod}</lastmod>`);

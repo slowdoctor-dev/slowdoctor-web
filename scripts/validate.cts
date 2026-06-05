@@ -43,6 +43,7 @@ const pages = [
   { file: "index.html", name: "Homepage" },
   { file: "physician.html", name: "Physician" },
   { file: "engineer.html", name: "Engineer" },
+  { file: "cv.html", name: "CV" },
   { file: "links.html", name: "Links" },
   { file: "blog.html", name: "Blog" },
 ];

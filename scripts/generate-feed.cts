@@ -6,7 +6,7 @@ const { parseDateOnly, stripDatePrefix, siteUrl } = require("./date-utils.cts");
 const blogDirectory = path.join(process.cwd(), "src/content/blog");
 const feedPath = path.join(process.cwd(), "public/feed.xml");
 
-function escapeXml(value) {
+function escapeXml(value: unknown) {
   return String(value)
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")

@@ -2,12 +2,14 @@
 //! Ports `src/lib/blog.ts`: frontmatter parse, validation, slug derivation,
 //! UTC date formatting, and content rendering (comrak + syntect).
 
+use crate::dates::{parse_date_only, strip_date_prefix};
+use crate::frontmatter::split_frontmatter;
 use crate::types::{Axes, BlogPostSummary};
 use comrak::plugins::syntect::SyntectAdapter;
 use comrak::{markdown_to_html_with_plugins, Options, Plugins};
 use serde::Deserialize;
 use std::path::Path;
-use time::{Date, Month};
+use time::Date;
 
 /// A blog post with rendered content HTML, for the `/blog/{slug}` pages.
 pub struct FullPost {
@@ -33,35 +35,28 @@ struct RawAxes {
 }
 
 const MONTHS: [&str; 12] = [
-    "January", "February", "March", "April", "May", "June", "July", "August", "September",
-    "October", "November", "December",
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
 ];
-
-/// Parse `YYYY-MM-DD`, rejecting invalid calendar dates. (parseDateOnly)
-fn parse_date_only(date: &str, file: &str) -> Result<Date, String> {
-    let parts: Vec<&str> = date.split('-').collect();
-    let ok_shape = parts.len() == 3
-        && parts[0].len() == 4
-        && parts[1].len() == 2
-        && parts[2].len() == 2
-        && parts.iter().all(|p| p.chars().all(|c| c.is_ascii_digit()));
-    if !ok_shape {
-        return Err(format!(
-            "Invalid date in {file}: expected YYYY-MM-DD, received \"{date}\""
-        ));
-    }
-    let year: i32 = parts[0].parse().map_err(|_| format!("Invalid date in {file}"))?;
-    let month_n: u8 = parts[1].parse().map_err(|_| format!("Invalid date in {file}"))?;
-    let day: u8 = parts[2].parse().map_err(|_| format!("Invalid date in {file}"))?;
-    let month = Month::try_from(month_n)
-        .map_err(|_| format!("Invalid calendar date in {file}: \"{date}\""))?;
-    Date::from_calendar_date(year, month, day)
-        .map_err(|_| format!("Invalid calendar date in {file}: \"{date}\""))
-}
 
 /// "Month D, YYYY" in en-US, UTC (matches Intl.DateTimeFormat). (formatDate)
 fn format_date(d: Date) -> String {
-    format!("{} {}, {}", MONTHS[(d.month() as u8 - 1) as usize], d.day(), d.year())
+    format!(
+        "{} {}, {}",
+        MONTHS[(d.month() as u8 - 1) as usize],
+        d.day(),
+        d.year()
+    )
 }
 
 /// Validate axes: integers in 0..=10 summing to 10, else None. (parseAxes)
@@ -79,7 +74,11 @@ fn parse_axes(raw: &Option<RawAxes>) -> Option<Axes> {
     if p + e + l != 10 {
         return None;
     }
-    Some(Axes { physician: p, engineer: e, life: l })
+    Some(Axes {
+        physician: p,
+        engineer: e,
+        life: l,
+    })
 }
 
 /// Trim, drop empties, dedup (preserving order). (parseTags)
@@ -97,36 +96,6 @@ fn parse_tags(raw: &Option<Vec<String>>) -> Option<Vec<String>> {
     } else {
         Some(tags)
     }
-}
-
-/// Split gray-matter style frontmatter: returns (yaml, body).
-fn split_frontmatter(raw: &str) -> (String, String) {
-    let trimmed_start = raw.strip_prefix('\u{feff}').unwrap_or(raw);
-    if let Some(rest) = trimmed_start.strip_prefix("---") {
-        // Require the opening fence to be its own line.
-        if let Some(rest) = rest.strip_prefix('\n').or_else(|| rest.strip_prefix("\r\n")) {
-            // Find the closing `---` line.
-            if let Some(end) = find_closing_fence(rest) {
-                let yaml = rest[..end.0].to_string();
-                let body = rest[end.1..].to_string();
-                return (yaml, body);
-            }
-        }
-    }
-    (String::new(), raw.to_string())
-}
-
-/// Locate the closing `---` fence; returns (yaml_end, body_start) byte offsets.
-fn find_closing_fence(rest: &str) -> Option<(usize, usize)> {
-    let mut offset = 0;
-    for line in rest.split_inclusive('\n') {
-        let stripped = line.trim_end_matches(['\n', '\r']);
-        if stripped == "---" {
-            return Some((offset, offset + line.len()));
-        }
-        offset += line.len();
-    }
-    None
 }
 
 /// Render Markdown to HTML with syntax highlighting + external-link hardening.
@@ -149,25 +118,11 @@ fn render_markdown(body: &str) -> String {
     // External links open in a new tab, like mdx-components.tsx.
     let external = regex::Regex::new(r#"<a href="(https?://[^"]*)""#).unwrap();
     external
-        .replace_all(&html, r#"<a target="_blank" rel="noopener noreferrer" href="$1""#)
+        .replace_all(
+            &html,
+            r#"<a target="_blank" rel="noopener noreferrer" href="$1""#,
+        )
         .into_owned()
-}
-
-fn strip_date_prefix(stem: &str) -> String {
-    // Strip a leading YYYY-MM-DD- date prefix.
-    let bytes = stem.as_bytes();
-    if bytes.len() > 11
-        && bytes[4] == b'-'
-        && bytes[7] == b'-'
-        && bytes[10] == b'-'
-        && bytes[..4].iter().all(|b| b.is_ascii_digit())
-        && bytes[5..7].iter().all(|b| b.is_ascii_digit())
-        && bytes[8..10].iter().all(|b| b.is_ascii_digit())
-    {
-        stem[11..].to_string()
-    } else {
-        stem.to_string()
-    }
 }
 
 fn parse_one(path: &Path) -> Result<FullPost, String> {
@@ -216,6 +171,46 @@ fn parse_one(path: &Path) -> Result<FullPost, String> {
         summary,
         content_html: render_markdown(&body),
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn axes_require_integer_values_summing_to_ten() {
+        let valid = Some(RawAxes {
+            physician: Some(4.0),
+            engineer: Some(3.0),
+            life: Some(3.0),
+        });
+        assert_eq!(parse_axes(&valid).unwrap().physician, 4);
+
+        let invalid = Some(RawAxes {
+            physician: Some(4.5),
+            engineer: Some(3.0),
+            life: Some(2.5),
+        });
+        assert!(parse_axes(&invalid).is_none());
+
+        let wrong_sum = Some(RawAxes {
+            physician: Some(4.0),
+            engineer: Some(3.0),
+            life: Some(2.0),
+        });
+        assert!(parse_axes(&wrong_sum).is_none());
+    }
+
+    #[test]
+    fn tags_are_trimmed_deduplicated_and_empties_removed() {
+        let raw = Some(vec![
+            " Rust ".into(),
+            "".into(),
+            "Rust".into(),
+            "WASM".into(),
+        ]);
+        assert_eq!(parse_tags(&raw), Some(vec!["Rust".into(), "WASM".into()]));
+    }
 }
 
 /// Load + render every `.md` post, sorted newest-first. Errors fail the build.

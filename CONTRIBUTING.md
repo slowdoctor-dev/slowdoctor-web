@@ -119,9 +119,9 @@ Edit `crates/site/src/data.rs` (`social_links` / `medical_links`). All consumers
 1. Add a `pub fn your_page() -> RenderedPage` in `crates/site/src/pages.rs`
    (build metadata with `build_page_meta`, include a `breadcrumb_schema`).
 2. Add a `write_page("your-page.html", &pages::your_page(), &css_href)` call in
-   `crates/build/src/main.rs`.
+   `crates/build-site/src/main.rs`.
 3. Add the route to `nav_links` and to `other_static` in
-   `crates/build/src/generators.rs` (sitemap) if it should be listed.
+   `crates/build-site/src/generators.rs` (sitemap) if it should be listed.
 
 ## Build & Preview
 

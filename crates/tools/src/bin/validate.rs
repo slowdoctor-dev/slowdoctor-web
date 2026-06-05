@@ -1,6 +1,8 @@
 //! Post-build SEO validation. Port of `scripts/validate.cts` (retargeted to dist/).
 //! Usage: cargo run -p tools --bin validate   (run after a build)
 
+// This validation tool intentionally fails fast when generated output violates a contract.
+
 use site::markdown::load_posts;
 use std::path::Path;
 use std::process::exit;
@@ -48,8 +50,14 @@ fn main() {
     println!("\n[Sitemap]");
     let sitemap = read(&sitemap_path).unwrap_or_default();
     c.check(sitemap.contains("<lastmod>"), "sitemap has <lastmod>");
-    c.check(!sitemap.contains("<priority>"), "sitemap has no <priority> (Google ignores it)");
-    c.check(!sitemap.contains("Invalid Date"), "sitemap has no invalid date values");
+    c.check(
+        !sitemap.contains("<priority>"),
+        "sitemap has no <priority> (Google ignores it)",
+    );
+    c.check(
+        !sitemap.contains("Invalid Date"),
+        "sitemap has no invalid date values",
+    );
 
     println!("\n[HTML pages]");
     let pages = [
@@ -70,10 +78,16 @@ fn main() {
             Some(html) => {
                 println!("\n  {name} ({file})");
                 c.check(html.contains("<title>"), &format!("{name} has <title>"));
-                c.check(html.contains("rel=\"canonical\""), &format!("{name} has canonical URL"));
+                c.check(
+                    html.contains("rel=\"canonical\""),
+                    &format!("{name} has canonical URL"),
+                );
                 c.check(html.contains("og:title"), &format!("{name} has og:title"));
                 if file != "index.html" {
-                    c.check(html.contains("BreadcrumbList"), &format!("{name} has BreadcrumbList JSON-LD"));
+                    c.check(
+                        html.contains("BreadcrumbList"),
+                        &format!("{name} has BreadcrumbList JSON-LD"),
+                    );
                 }
             }
         }
@@ -92,9 +106,15 @@ fn main() {
             Some(html) => {
                 println!("\n  /blog/{slug}");
                 c.check(html.contains("BlogPosting"), "has BlogPosting JSON-LD");
-                c.check(html.contains("BreadcrumbList"), "has BreadcrumbList JSON-LD");
+                c.check(
+                    html.contains("BreadcrumbList"),
+                    "has BreadcrumbList JSON-LD",
+                );
                 c.check(html.contains("rel=\"canonical\""), "has canonical URL");
-                c.check(html.contains(&post.summary.formatted_date), "shows formatted publication date");
+                c.check(
+                    html.contains(&post.summary.formatted_date),
+                    "shows formatted publication date",
+                );
                 c.check(!html.contains("Invalid Date"), "has no invalid date text");
             }
         }
@@ -102,9 +122,15 @@ fn main() {
 
     println!("\n[RSS]");
     let index = read(&dist.join("index.html")).unwrap_or_default();
-    c.check(index.contains("application/rss+xml"), "RSS link tag in layout");
+    c.check(
+        index.contains("application/rss+xml"),
+        "RSS link tag in layout",
+    );
     let feed = read(&feed_path).unwrap_or_default();
-    c.check(!feed.contains("Invalid Date"), "feed has no invalid date values");
+    c.check(
+        !feed.contains("Invalid Date"),
+        "feed has no invalid date values",
+    );
 
     println!("\n{}", "=".repeat(40));
     if c.errors == 0 {

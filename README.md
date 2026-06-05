@@ -11,7 +11,7 @@ interactivity — the blog tag filter — ships as a small Leptos→WASM island.
 
 - `crates/site/` — shared library: data, shared types, page + layout components,
   metadata/JSON-LD builders, Markdown loader
-- `crates/build/` — the static site generator (renders every route to `dist/`,
+- `crates/build-site/` — the static site generator (renders every route to `dist/`,
   hashes CSS, copies `public/`, generates sitemap + feed)
 - `crates/island-blog-filter/` — Leptos CSR/WASM island for the blog tag filter
 - `crates/tools/` — `new_post`, `convert`, `validate` build/authoring tools

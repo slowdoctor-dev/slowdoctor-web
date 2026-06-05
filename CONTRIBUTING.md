@@ -8,13 +8,14 @@ no database or CMS. Edit the files, rebuild (`make build`), and deploy. See
 
 | What to change | File | Notes |
 |---|---|---|
-| Homepage (hero) | `crates/site/src/pages.rs` (`home`) | Edit text directly |
-| Physician page | `crates/site/src/pages.rs` (`physician`) | Clinical focus, philosophy |
-| Engineer page | `crates/site/src/pages.rs` (`engineer`) | `interests`, `projects` arrays |
-| CV page | `crates/site/src/pages.rs` (`cv`) | Education, career, publications |
+| Homepage (hero) | `crates/site/src/pages/home.rs` | Edit text directly |
+| Physician page | `crates/site/src/pages/physician.rs` | Clinical focus, philosophy |
+| Engineer page | `crates/site/src/pages/engineer.rs` | `interests`, `projects` arrays |
+| CV page | `crates/site/src/pages/cv.rs` | Education, career, publications |
 | Publications | `crates/site/src/data.rs` (`publications`) | Publication list |
-| Links page | `crates/site/src/pages.rs` (`links`) | Auto-populated from shared data |
-| Navigation & footer | `crates/site/src/pages.rs` (`nav_links`, `footer`) | |
+| Links page | `crates/site/src/pages/links.rs` | Auto-populated from shared data |
+| Navigation & footer | `crates/site/src/pages/layout.rs` (`nav_links`, `footer`) | |
+| Mini-game | `crates/game/src/main.rs` | Canvas endless-runner (WASM) |
 | Site constants | `crates/site/src/data.rs` | `SITE_*`, `AUTHOR_*`, `PRACTICE_*` |
 | Social / profile URLs | `crates/site/src/data.rs` (`social_links`, etc.) | Single source of truth |
 | JSON-LD / SEO | `crates/site/src/{schema,meta}.rs` | Person/Practice/Breadcrumb schemas |
@@ -116,12 +117,13 @@ Edit `crates/site/src/data.rs` (`social_links` / `medical_links`). All consumers
 
 ## Adding a New Page
 
-1. Add a `pub fn your_page() -> RenderedPage` in `crates/site/src/pages.rs`
-   (build metadata with `build_page_meta`, include a `breadcrumb_schema`).
+1. Add a `pub fn your_page() -> RenderedPage` in `crates/site/src/pages/your_page.rs`
+   and declare the module in `crates/site/src/pages/mod.rs` (build metadata with
+   `build_page_meta`, include a `breadcrumb_schema`).
 2. Add a `write_page("your-page.html", &pages::your_page(), &css_href)` call in
    `crates/build-site/src/main.rs`.
-3. Add the route to `nav_links` and to `other_static` in
-   `crates/build-site/src/generators.rs` (sitemap) if it should be listed.
+3. Add the route to `nav_links` in `crates/site/src/pages/layout.rs`, and to
+   `other_static` in `crates/build-site/src/generators.rs` (sitemap), if it should be listed.
 
 ## Build & Preview
 
@@ -144,17 +146,21 @@ crates/
     lib.rs            # module wiring + feature gates (ssr / csr)
     data.rs           # doctor profile, site/author/practice constants, links, CV
     types.rs          # shared serde types (BlogPostSummary, Axes)
-    components.rs      # shared views: social icons, axis bar, post card
-    pages.rs          # layout shell + all page views (home, blog, cv, ...)
+    dates.rs          # shared date parse/format helpers
+    frontmatter.rs    # shared YAML frontmatter split/parse
+    components.rs     # shared views: social icons, axis bar, post card
+    pages/            # one file per route (home, blog, cv, ...) + layout.rs
     meta.rs           # <head> metadata builder + JSON-LD escaping
-    schema.rs         # Person / Practice / Breadcrumb JSON-LD
+    schema.rs         # Person/Practice/Breadcrumb + per-page JSON-LD
     markdown.rs       # blog loading: frontmatter, validation, comrak+syntect
-  build/src/
-    main.rs           # SSG: HTML shell, writes dist/, island loader
+  build-site/src/
+    main.rs           # SSG: HTML shell, writes dist/, island loaders
     assets.rs         # public/ copy, CSS content-hashing
     generators.rs     # sitemap.xml + feed.xml
   island-blog-filter/src/
     main.rs           # Leptos CSR/WASM blog tag-filter island
+  game/src/
+    main.rs           # Leptos/WASM canvas mini-game (home page)
   tools/src/bin/
     new_post.rs       # scaffold a new post
     convert.rs        # incoming drafts -> blog posts

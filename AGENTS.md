@@ -6,13 +6,16 @@ serves from Cloudflare Workers static assets. There is **no server runtime**.
 
 Before writing code, know the layout (see `README.md` "Structure"):
 
-- `crates/site/` — shared lib. Data lives in `src/data.rs`; page + layout views in
-  `src/pages.rs`; shared components (used by SSR pages *and* the WASM island) in
-  `src/components.rs`; metadata/JSON-LD in `src/meta.rs` + `src/schema.rs`; Markdown
-  loading in `src/markdown.rs`. Feature-gated: `ssr` (build) vs `csr` (island).
+- `crates/site/` — shared lib. Data lives in `src/data.rs`; page views in `src/pages/`
+  (one file per route) with the layout in `src/pages/layout.rs`; shared components (used
+  by SSR pages *and* the WASM island) in `src/components.rs`; metadata/JSON-LD in
+  `src/meta.rs` + `src/schema.rs`; Markdown loading in `src/markdown.rs`; shared date +
+  frontmatter helpers in `src/dates.rs` + `src/frontmatter.rs`. Feature-gated: `ssr`
+  (build) vs `csr` (island).
 - `crates/build-site/` — the SSG. Owns the HTML document shell (`<html>/<head>`) and the
   asset pipeline (CSS hashing, `public/` copy, sitemap + feed).
-- `crates/island-blog-filter/` — the only client-side code (Leptos CSR → WASM).
+- `crates/island-blog-filter/` — the blog tag-filter island (Leptos CSR → WASM).
+- `crates/game/` — the home-page canvas mini-game (Leptos → WASM).
 - `crates/tools/` — `new_post`, `convert`, `validate`.
 
 Conventions:

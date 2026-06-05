@@ -31,7 +31,7 @@ such cap and caches `~/.cargo` + `target/`, so incremental builds are ~1–3 min
 4. **Merge `rewrite/rust-leptos` → `main`.** The `Deploy` workflow
    (`.github/workflows/deploy.yml`) builds and deploys on every push to `main`.
 
-After this, the workflow: builds the WASM island, compiles CSS, renders the static
+After this, the workflow: builds the WASM bundles (blog filter + game), compiles CSS, renders the static
 pages, runs `make validate`, then `wrangler deploy` uploads `dist/` to Cloudflare.
 
 ## Local build & dev

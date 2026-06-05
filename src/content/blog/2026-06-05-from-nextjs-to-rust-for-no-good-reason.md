@@ -1,5 +1,5 @@
 ---
-title: "From Next.js to Rust for No Good Reason"
+title: "From Next.js to Rust"
 date: "2026-06-05"
 description: "I rewrote a site that already worked — from Next.js to Rust and Leptos — to learn the stack underneath."
 tags: ["meta", "engineering", "rust", "ai", "retrospective"]

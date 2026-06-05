@@ -51,10 +51,10 @@ async function main() {
     return [
       "    <item>",
       `      <title>${escapeXml(post.title)}</title>`,
-      `      <link>${link}</link>`,
+      `      <link>${escapeXml(link)}</link>`,
       `      <description>${escapeXml(post.description)}</description>`,
       `      <pubDate>${post.date.toUTCString()}</pubDate>`,
-      `      <guid isPermaLink="true">${link}</guid>`,
+      `      <guid isPermaLink="true">${escapeXml(link)}</guid>`,
       "    </item>",
     ].join("\n");
   });

@@ -56,10 +56,6 @@ export const metadata: Metadata = {
     description: DESCRIPTIONS.brief,
     images: [SITE.ogImage],
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
 };
 
 const currentYear = new Date().getFullYear();

@@ -3,6 +3,3 @@
 
 # SPA-style catch-all is NOT needed — this is a fully static site.
 # Cloudflare Workers static assets serves 404.html for missing routes.
-
-# Shortened blog slug — preserve the original published URL.
-/blog/from-nextjs-to-rust-for-no-good-reason /blog/from-nextjs-to-rust 301

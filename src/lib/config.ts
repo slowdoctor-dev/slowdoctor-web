@@ -11,7 +11,7 @@ export const SITE = {
 export const AUTHOR = {
   name: doctor.name,
   korean: doctor.alternateName,
-  title: doctor.title,
+  credentialedName: doctor.title,
   jobTitle: doctor.jobTitle,
 } as const;
 

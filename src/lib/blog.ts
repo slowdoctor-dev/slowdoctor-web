@@ -156,7 +156,7 @@ export const getAllPosts = cache(async (): Promise<BlogPostSummary[]> => {
  * Resolve a clean slug to its .mdx filename on disk.
  * Handles both date-prefixed (2026-04-07-hello-world.mdx) and plain (hello-world.mdx) filenames.
  */
-async function resolveSlugToFile(slug: string): Promise<string | null> {
+const resolveSlugToFile = cache(async (slug: string): Promise<string | null> => {
   // Try exact match first (supports legacy non-prefixed files)
   const exactName = `${slug}.mdx`;
   try {
@@ -171,7 +171,7 @@ async function resolveSlugToFile(slug: string): Promise<string | null> {
   const pattern = new RegExp(`^\\d{4}-\\d{2}-\\d{2}-${slug.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\.mdx$`);
   const match = entries.find((entry) => pattern.test(entry));
   return match ?? null;
-}
+});
 
 export const getPostFrontmatter = cache(async (
   slug: string,

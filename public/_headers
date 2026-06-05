@@ -1,5 +1,5 @@
-# Cloudflare Pages custom headers
-# https://developers.cloudflare.com/pages/configuration/headers/
+# Cloudflare Workers static assets custom headers
+# https://developers.cloudflare.com/workers/static-assets/
 
 # Hashed static assets — immutable long cache
 /_next/static/*
@@ -12,6 +12,7 @@
 # RSS and sitemap — short cache
 /feed.xml
   Cache-Control: public, max-age=3600
+  Content-Type: application/rss+xml; charset=utf-8
 /sitemap.xml
   Cache-Control: public, max-age=3600
 
@@ -20,3 +21,4 @@
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'

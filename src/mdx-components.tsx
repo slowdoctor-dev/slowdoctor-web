@@ -1,4 +1,5 @@
 import { highlight } from "sugar-high";
+import NextLink from "next/link";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import type { MDXComponents } from "mdx/types";
 
@@ -37,7 +38,18 @@ function Link({
   children,
   ...props
 }: ComponentPropsWithoutRef<"a"> & { children?: ReactNode }) {
-  const isExternal = href?.startsWith("http");
+  // Only same-origin path links use client-side routing. Everything else
+  // (http(s), protocol-relative //, mailto:, tel:, #hash) stays a plain <a>.
+  // The inline check narrows `href` to a defined string for NextLink.
+  if (href?.startsWith("/")) {
+    return (
+      <NextLink href={href} {...props}>
+        {children}
+      </NextLink>
+    );
+  }
+
+  const isExternal = href?.startsWith("http") || href?.startsWith("//");
 
   return (
     <a

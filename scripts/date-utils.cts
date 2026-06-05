@@ -39,7 +39,6 @@ function stripDatePrefix(stem: string): string {
 }
 
 // Canonical site URL — single source for build scripts.
-// Keep in sync with src/lib/config.ts SITE.url
-const siteUrl = "https://slowdoctor.dev";
+const { url: siteUrl } = require("../src/data/site.json");
 
 module.exports = { parseDateOnly, formatDate, stripDatePrefix, siteUrl };

@@ -10,7 +10,15 @@ export function AxisBar({ values }: { values: Axes }) {
   return (
     <div role="group" aria-label="Post axes" className="space-y-1.5">
       {axes.map(({ key, label }) => (
-        <div key={key} className="flex items-center gap-2 text-xs">
+        <div
+          key={key}
+          role="meter"
+          aria-valuenow={values[key]}
+          aria-valuemin={0}
+          aria-valuemax={10}
+          aria-label={label}
+          className="flex items-center gap-2 text-xs"
+        >
           <span className="w-16 text-muted shrink-0">{label}</span>
           <div
             aria-hidden="true"

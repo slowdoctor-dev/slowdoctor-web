@@ -61,12 +61,14 @@ async function main() {
 
   const feed = [
     '<?xml version="1.0" encoding="UTF-8"?>',
-    '<rss version="2.0">',
+    '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',
     "  <channel>",
     "    <title>Joonho Lim - Blog</title>",
     `    <link>${siteUrl}/blog</link>`,
+    `    <atom:link href="${siteUrl}/feed.xml" rel="self" type="application/rss+xml" />`,
     "    <description>Writing by Joonho Lim on medicine, engineering, and the slower path.</description>",
     "    <language>en-us</language>",
+    `    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>`,
     ...items,
     "  </channel>",
     "</rss>",

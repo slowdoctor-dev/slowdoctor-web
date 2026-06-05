@@ -47,6 +47,7 @@ export default function CvPage() {
     author: pub.authors.split(", ").map((name) => ({
       "@type": "Person",
       name,
+      ...(name === "Lim J" && { "@id": doctor.id }),
     })),
     datePublished: pub.publishedDate ?? `${pub.year}`,
     isPartOf: {
@@ -73,7 +74,7 @@ export default function CvPage() {
       {/* Header */}
       <section className="pt-24 pb-8 sm:pt-32 sm:pb-10 text-center">
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-          {AUTHOR.title}
+          {AUTHOR.credentialedName}
         </h1>
         <p className="mt-1 text-muted text-sm">{AUTHOR.korean}</p>
         <p className="mt-3 text-sm text-muted">

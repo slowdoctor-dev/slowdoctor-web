@@ -1,3 +1,5 @@
+import site from "./site.json";
+
 export const doctor = {
   name: "Joonho Lim",
   alternateName: "임준호",
@@ -7,9 +9,9 @@ export const doctor = {
   jobTitle: "Board-Certified Plastic Surgeon",
   description:
     "Board-certified plastic surgeon specializing in slow-aging, scar treatment, and natural eye surgery. Founder of LEAD Plastic Surgery Clinic in Seoul.",
-  id: "https://slowdoctor.dev/#person",
-  url: "https://slowdoctor.dev",
-  image: "https://slowdoctor.dev/images/profile.jpg",
+  id: `${site.url}/#person`,
+  url: site.url,
+  image: `${site.url}/images/profile.jpg`,
 
   alumniOf: [
     { name: "Seoul Science High School", type: "EducationalOrganization" as const },

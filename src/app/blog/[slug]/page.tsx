@@ -76,7 +76,12 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
     headline: post.title,
     description: post.description,
     datePublished: post.date,
+    dateModified: post.date,
     url: `${SITE.url}/blog/${slug}`,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${SITE.url}/blog/${slug}`,
+    },
     inLanguage: "en",
     author: {
       "@type": "Person",

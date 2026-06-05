@@ -1,5 +1,5 @@
-# Cloudflare Pages redirects
-# https://developers.cloudflare.com/pages/configuration/redirects/
+# Cloudflare Workers static assets redirects
+# https://developers.cloudflare.com/workers/static-assets/
 
 # SPA-style catch-all is NOT needed — this is a fully static site.
-# Cloudflare Pages serves 404.html automatically for missing routes.
+# Cloudflare Workers static assets serves 404.html for missing routes.

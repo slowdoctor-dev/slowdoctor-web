@@ -53,7 +53,7 @@ if (collidingFile) {
 }
 
 const content = `---
-title: "${title}"
+title: ${JSON.stringify(title)}
 date: "${date}"
 description: "TODO: Write a short description for this post."
 ---

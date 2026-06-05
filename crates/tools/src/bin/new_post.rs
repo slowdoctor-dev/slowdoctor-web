@@ -1,6 +1,9 @@
 //! Scaffold a new blog post. Port of `scripts/new-post.cts`.
 //! Usage: cargo run -p tools --bin new_post -- "My Post Title"
 
+// This authoring tool intentionally fails fast on invalid input or filesystem errors.
+
+use site::dates::{has_date_prefix, strip_date_prefix};
 use std::path::Path;
 use std::process::exit;
 use time::OffsetDateTime;
@@ -30,21 +33,17 @@ fn today() -> String {
 /// True if a blog file already resolves to this slug (bare or date-prefixed).
 fn slug_collision(slug: &str) -> Option<String> {
     let bare = format!("{slug}.md");
-    for entry in std::fs::read_dir(BLOG_DIR).expect("read blog dir").flatten() {
+    for entry in std::fs::read_dir(BLOG_DIR)
+        .expect("read blog dir")
+        .flatten()
+    {
         let name = entry.file_name().to_string_lossy().to_string();
         if name == bare {
             return Some(name);
         }
-        // date-prefixed: YYYY-MM-DD-{slug}.md
         if let Some(stem) = name.strip_suffix(".md") {
-            if stem.len() > 11 && &stem[10..11] == "-" && &stem[11..] == slug {
-                let prefix = &stem[..10];
-                let ok = prefix.as_bytes()[4] == b'-'
-                    && prefix.as_bytes()[7] == b'-'
-                    && prefix[..4].chars().all(|c| c.is_ascii_digit());
-                if ok {
-                    return Some(name);
-                }
+            if has_date_prefix(stem) && strip_date_prefix(stem) == slug {
+                return Some(name);
             }
         }
     }

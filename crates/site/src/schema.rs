@@ -1,6 +1,9 @@
 //! JSON-LD structured data — ported from `src/lib/{schema,breadcrumbs}.ts`.
 
-use crate::data::{doctor, SITE_URL};
+use crate::data::{
+    doctor, Publication, AUTHOR_JOB_TITLE, AUTHOR_NAME, PRACTICE_NAME, PRACTICE_URL, SITE_URL,
+};
+use crate::types::BlogPostSummary;
 use serde_json::{json, Value};
 
 /// Person + Physician schema for the author. (was `generatePersonSchema`)
@@ -88,4 +91,91 @@ pub fn breadcrumb_schema(items: &[(&str, &str)]) -> Value {
             "item": format!("{SITE_URL}{href}"),
         })).collect::<Vec<_>>(),
     })
+}
+
+pub fn blog_collection_schema(name: &str, description: &str, posts: &[BlogPostSummary]) -> Value {
+    json!({
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": name,
+        "description": description,
+        "url": format!("{SITE_URL}/blog"),
+        "mainEntity": {
+            "@type": "ItemList",
+            "itemListElement": posts.iter().enumerate().map(|(i, post)| json!({
+                "@type": "ListItem",
+                "position": i + 1,
+                "url": format!("{SITE_URL}/blog/{}", post.slug),
+                "name": post.title,
+            })).collect::<Vec<_>>(),
+        },
+    })
+}
+
+pub fn blog_posting_schema(summary: &BlogPostSummary, canonical: &str, image_url: &str) -> Value {
+    let d = doctor();
+    let mut article = json!({
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": summary.title,
+        "description": summary.description,
+        "datePublished": summary.date,
+        "dateModified": summary.date,
+        "url": canonical,
+        "mainEntityOfPage": { "@type": "WebPage", "@id": canonical },
+        "inLanguage": "en",
+        "author": {
+            "@type": "Person",
+            "@id": d.id(),
+            "name": AUTHOR_NAME,
+            "url": format!("{SITE_URL}/cv"),
+            "jobTitle": AUTHOR_JOB_TITLE,
+            "worksFor": {
+                "@type": "MedicalBusiness",
+                "@id": d.works_for.id,
+                "name": PRACTICE_NAME,
+                "url": PRACTICE_URL,
+            },
+        },
+        "publisher": { "@type": "Person", "@id": d.id(), "name": AUTHOR_NAME },
+        "image": image_url,
+    });
+    if let Some(tags) = &summary.tags {
+        if !tags.is_empty() {
+            article["keywords"] = json!(tags.join(", "));
+        }
+    }
+    article
+}
+
+pub fn scholarly_article_schema(publication: &Publication) -> Value {
+    let d = doctor();
+    let authors: Vec<_> = publication
+        .authors
+        .split(", ")
+        .map(|name| {
+            if name == "Lim J" {
+                json!({ "@type": "Person", "name": name, "@id": d.id() })
+            } else {
+                json!({ "@type": "Person", "name": name })
+            }
+        })
+        .collect();
+    let mut schema = json!({
+        "@context": "https://schema.org",
+        "@type": "ScholarlyArticle",
+        "headline": publication.title,
+        "author": authors,
+        "datePublished": publication.published_date.map(|s| s.to_string()).unwrap_or_else(|| publication.year.to_string()),
+        "isPartOf": { "@type": "Periodical", "name": publication.journal },
+    });
+    if let Some(doi) = publication.doi {
+        schema["url"] = json!(format!("https://doi.org/{doi}"));
+        schema["identifier"] = json!({
+            "@type": "PropertyValue",
+            "propertyID": "DOI",
+            "value": doi,
+        });
+    }
+    schema
 }

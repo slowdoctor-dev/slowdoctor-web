@@ -10,7 +10,7 @@ Before writing code, know the layout (see `README.md` "Structure"):
   `src/pages.rs`; shared components (used by SSR pages *and* the WASM island) in
   `src/components.rs`; metadata/JSON-LD in `src/meta.rs` + `src/schema.rs`; Markdown
   loading in `src/markdown.rs`. Feature-gated: `ssr` (build) vs `csr` (island).
-- `crates/build/` — the SSG. Owns the HTML document shell (`<html>/<head>`) and the
+- `crates/build-site/` — the SSG. Owns the HTML document shell (`<html>/<head>`) and the
   asset pipeline (CSS hashing, `public/` copy, sitemap + feed).
 - `crates/island-blog-filter/` — the only client-side code (Leptos CSR → WASM).
 - `crates/tools/` — `new_post`, `convert`, `validate`.

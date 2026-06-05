@@ -1,6 +1,8 @@
 mod assets;
 mod generators;
 
+// This build-only binary intentionally fails fast on invalid content or filesystem errors.
+
 use site::markdown::{load_posts, FullPost};
 use site::meta::render_head;
 use site::pages::{self, RenderedPage};

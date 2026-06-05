@@ -95,7 +95,10 @@ struct Audio {
 
 impl Audio {
     fn new() -> Self {
-        Audio { ctx: None, muted: false }
+        Audio {
+            ctx: None,
+            muted: false,
+        }
     }
 
     fn ensure(&mut self) {
@@ -120,7 +123,8 @@ impl Audio {
             osc.frequency().set_value(freq as f32);
             let t = ctx.current_time();
             gain.gain().set_value_at_time(vol as f32, t)?;
-            gain.gain().exponential_ramp_to_value_at_time(0.0001, t + dur)?;
+            gain.gain()
+                .exponential_ramp_to_value_at_time(0.0001, t + dur)?;
             osc.connect_with_audio_node(&gain)?;
             gain.connect_with_audio_node(&ctx.destination())?;
             osc.start_with_when(t)?;
@@ -279,7 +283,13 @@ impl Game {
             ObKind::Pager => (48.0, 30.0, FLY_Y),
             ObKind::Slack => (44.0, 32.0, FLY_Y - 4.0),
         };
-        self.obstacles.push(Obstacle { x: W + 20.0, y, w, h, kind });
+        self.obstacles.push(Obstacle {
+            x: W + 20.0,
+            y,
+            w,
+            h,
+            kind,
+        });
         // Gap in pixels (constant) → time gap shrinks as speed rises = harder.
         self.dist_to_next = 300.0 + rand_unit(&mut self.rng) * 320.0;
     }
@@ -431,7 +441,11 @@ impl Game {
             ),
             State::Over => self.draw_center_panel(
                 "SYSTEM CRASH & BURNOUT!",
-                &format!("Patients cured: {}    ·    Best: {}", self.score as i64, self.best.max(self.score) as i64),
+                &format!(
+                    "Patients cured: {}    ·    Best: {}",
+                    self.score as i64,
+                    self.best.max(self.score) as i64
+                ),
                 Some("[ Restart ]  (Space / Tap)"),
             ),
             State::Playing => {}
@@ -477,7 +491,13 @@ impl Game {
         self.rect(x + 6.0, top + 14.0, 3.0, 12.0);
         self.rect(x + w - 9.0, top + 14.0, 3.0, 12.0);
         self.ctx.begin_path();
-        let _ = self.ctx.arc(x + w / 2.0, top + 28.0, 3.0, 0.0, std::f64::consts::PI * 2.0);
+        let _ = self.ctx.arc(
+            x + w / 2.0,
+            top + 28.0,
+            3.0,
+            0.0,
+            std::f64::consts::PI * 2.0,
+        );
         self.fill(TEAL);
         self.ctx.fill();
         // Laptop held in front
@@ -508,7 +528,12 @@ impl Game {
                 for i in 0..n {
                     self.fill(colors[i % colors.len()]);
                     let inset = (i as f64) * 2.0;
-                    self.rect(o.x + inset, o.y + bh * i as f64, o.w - inset * 2.0, bh - 2.0);
+                    self.rect(
+                        o.x + inset,
+                        o.y + bh * i as f64,
+                        o.w - inset * 2.0,
+                        bh - 2.0,
+                    );
                     self.fill("rgba(0,0,0,0.35)"); // spine
                     self.rect(o.x + inset + 3.0, o.y + bh * i as f64 + 2.0, 2.0, bh - 6.0);
                 }
@@ -516,29 +541,64 @@ impl Game {
             ObKind::Bug => {
                 self.fill(DANGER);
                 self.rect(o.x, o.y, o.w, o.h);
-                self.text("404", o.x + o.w / 2.0, o.y + o.h / 2.0 + 4.0, "#1a1a1a", "bold 12px ui-monospace, monospace", "center");
+                self.text(
+                    "404",
+                    o.x + o.w / 2.0,
+                    o.y + o.h / 2.0 + 4.0,
+                    "#1a1a1a",
+                    "bold 12px ui-monospace, monospace",
+                    "center",
+                );
             }
             ObKind::Crash => {
                 self.fill("#1a1a1a");
                 self.rect(o.x, o.y, o.w, o.h);
                 self.fill(DANGER);
                 self.rect(o.x, o.y, o.w, 4.0);
-                self.text("\u{26A0}", o.x + o.w / 2.0, o.y + o.h / 2.0 + 6.0, DANGER, "bold 18px sans-serif", "center");
-                self.text("500", o.x + o.w / 2.0, o.y + o.h - 5.0, MUTED, "bold 9px ui-monospace, monospace", "center");
+                self.text(
+                    "\u{26A0}",
+                    o.x + o.w / 2.0,
+                    o.y + o.h / 2.0 + 6.0,
+                    DANGER,
+                    "bold 18px sans-serif",
+                    "center",
+                );
+                self.text(
+                    "500",
+                    o.x + o.w / 2.0,
+                    o.y + o.h - 5.0,
+                    MUTED,
+                    "bold 9px ui-monospace, monospace",
+                    "center",
+                );
             }
             ObKind::Pager => {
                 self.fill(CARD);
                 self.rect(o.x, o.y, o.w, o.h);
                 self.fill(BORDER);
                 self.rect(o.x, o.y, o.w, 2.0);
-                self.text("BEEP", o.x + o.w / 2.0, o.y + o.h / 2.0 + 4.0, TEAL, "bold 11px ui-monospace, monospace", "center");
+                self.text(
+                    "BEEP",
+                    o.x + o.w / 2.0,
+                    o.y + o.h / 2.0 + 4.0,
+                    TEAL,
+                    "bold 11px ui-monospace, monospace",
+                    "center",
+                );
             }
             ObKind::Slack => {
                 self.fill("#1a1a1a");
                 self.rect(o.x, o.y, o.w, o.h);
                 self.fill(ACCENT);
                 self.rect(o.x, o.y, 4.0, o.h);
-                self.text("@here", o.x + o.w / 2.0 + 2.0, o.y + o.h / 2.0 + 4.0, FG, "bold 10px ui-monospace, monospace", "center");
+                self.text(
+                    "@here",
+                    o.x + o.w / 2.0 + 2.0,
+                    o.y + o.h / 2.0 + 4.0,
+                    FG,
+                    "bold 10px ui-monospace, monospace",
+                    "center",
+                );
             }
         }
     }
@@ -568,10 +628,31 @@ impl Game {
     fn draw_hud(&self) {
         let cured = self.score as i64;
         let salary = cured * 7;
-        self.text(&format!("Patients Cured  {cured}"), W - 16.0, 28.0, FG, "bold 16px ui-monospace, monospace", "right");
-        self.text(&format!("$ {salary}", ), W - 16.0, 46.0, MUTED, "12px ui-monospace, monospace", "right");
+        self.text(
+            &format!("Patients Cured  {cured}"),
+            W - 16.0,
+            28.0,
+            FG,
+            "bold 16px ui-monospace, monospace",
+            "right",
+        );
+        self.text(
+            &format!("$ {salary}",),
+            W - 16.0,
+            46.0,
+            MUTED,
+            "12px ui-monospace, monospace",
+            "right",
+        );
         if self.best > 0.0 {
-            self.text(&format!("Best  {}", self.best as i64), 16.0, 28.0, MUTED, "12px ui-monospace, monospace", "left");
+            self.text(
+                &format!("Best  {}", self.best as i64),
+                16.0,
+                28.0,
+                MUTED,
+                "12px ui-monospace, monospace",
+                "left",
+            );
         }
         if self.invincible > 0.0 {
             self.text(
@@ -588,10 +669,31 @@ impl Game {
     fn draw_center_panel(&self, title: &str, sub: &str, action: Option<&str>) {
         self.fill("rgba(10,10,10,0.72)");
         self.rect(0.0, 0.0, W, H);
-        self.text(title, W / 2.0, H / 2.0 - 14.0, FG, "bold 26px sans-serif", "center");
-        self.text(sub, W / 2.0, H / 2.0 + 14.0, MUTED, "14px ui-monospace, monospace", "center");
+        self.text(
+            title,
+            W / 2.0,
+            H / 2.0 - 14.0,
+            FG,
+            "bold 26px sans-serif",
+            "center",
+        );
+        self.text(
+            sub,
+            W / 2.0,
+            H / 2.0 + 14.0,
+            MUTED,
+            "14px ui-monospace, monospace",
+            "center",
+        );
         if let Some(a) = action {
-            self.text(a, W / 2.0, H / 2.0 + 44.0, ACCENT, "bold 15px ui-monospace, monospace", "center");
+            self.text(
+                a,
+                W / 2.0,
+                H / 2.0 + 44.0,
+                ACCENT,
+                "bold 15px ui-monospace, monospace",
+                "center",
+            );
         }
     }
 }
@@ -610,6 +712,7 @@ fn main() {
     console_error_panic_hook::set_once();
 
     let document = window().document().expect("document");
+    // DOM contract: this ID is rendered by site::pages::home.
     let Some(canvas) = document.get_element_by_id("game-canvas") else {
         return; // not on a page with the game
     };
@@ -634,32 +737,33 @@ fn main() {
     // Keyboard (listens on the canvas; click-to-focus avoids hijacking page scroll).
     {
         let game = game.clone();
-        let on_keydown = Closure::<dyn FnMut(KeyboardEvent)>::new(move |e: KeyboardEvent| {
-            match e.code().as_str() {
-                "Space" | "ArrowUp" | "KeyW" => {
-                    e.prevent_default();
-                    if !e.repeat() {
-                        game.borrow_mut().primary_action();
-                    }
+        let on_keydown = Closure::<dyn FnMut(KeyboardEvent)>::new(move |e: KeyboardEvent| match e
+            .code()
+            .as_str()
+        {
+            "Space" | "ArrowUp" | "KeyW" => {
+                e.prevent_default();
+                if !e.repeat() {
+                    game.borrow_mut().primary_action();
                 }
-                "ArrowDown" | "KeyS" => {
-                    e.prevent_default();
-                    game.borrow_mut().set_duck(true);
-                }
-                "Enter" => {
-                    let mut g = game.borrow_mut();
-                    if g.state != State::Playing {
-                        g.primary_action();
-                    }
-                }
-                "KeyM" => {
-                    if !e.repeat() {
-                        let mut g = game.borrow_mut();
-                        g.audio.muted = !g.audio.muted;
-                    }
-                }
-                _ => {}
             }
+            "ArrowDown" | "KeyS" => {
+                e.prevent_default();
+                game.borrow_mut().set_duck(true);
+            }
+            "Enter" => {
+                let mut g = game.borrow_mut();
+                if g.state != State::Playing {
+                    g.primary_action();
+                }
+            }
+            "KeyM" => {
+                if !e.repeat() {
+                    let mut g = game.borrow_mut();
+                    g.audio.muted = !g.audio.muted;
+                }
+            }
+            _ => {}
         });
         canvas
             .add_event_listener_with_callback("keydown", on_keydown.as_ref().unchecked_ref())
@@ -683,19 +787,20 @@ fn main() {
     {
         let game = game.clone();
         let cv = canvas.clone();
-        let on_down = Closure::<dyn FnMut(web_sys::MouseEvent)>::new(move |e: web_sys::MouseEvent| {
-            e.prevent_default();
-            let _ = cv.focus();
-            let rect = cv.get_bounding_client_rect();
-            let ly = ((e.client_y() as f64) - rect.top()) / rect.height().max(1.0) * H;
-            let mut g = game.borrow_mut();
-            if g.state == State::Playing && ly > H * 0.55 {
-                g.set_duck(true);
-                g.touch_duck = true;
-            } else {
-                g.primary_action();
-            }
-        });
+        let on_down =
+            Closure::<dyn FnMut(web_sys::MouseEvent)>::new(move |e: web_sys::MouseEvent| {
+                e.prevent_default();
+                let _ = cv.focus();
+                let rect = cv.get_bounding_client_rect();
+                let ly = ((e.client_y() as f64) - rect.top()) / rect.height().max(1.0) * H;
+                let mut g = game.borrow_mut();
+                if g.state == State::Playing && ly > H * 0.55 {
+                    g.set_duck(true);
+                    g.touch_duck = true;
+                } else {
+                    g.primary_action();
+                }
+            });
         canvas
             .add_event_listener_with_callback("pointerdown", on_down.as_ref().unchecked_ref())
             .expect("pointerdown");
@@ -704,13 +809,14 @@ fn main() {
     // Pointer release: end a touch-duck.
     {
         let game = game.clone();
-        let on_up = Closure::<dyn FnMut(web_sys::MouseEvent)>::new(move |_e: web_sys::MouseEvent| {
-            let mut g = game.borrow_mut();
-            if g.touch_duck {
-                g.set_duck(false);
-                g.touch_duck = false;
-            }
-        });
+        let on_up =
+            Closure::<dyn FnMut(web_sys::MouseEvent)>::new(move |_e: web_sys::MouseEvent| {
+                let mut g = game.borrow_mut();
+                if g.touch_duck {
+                    g.set_duck(false);
+                    g.touch_duck = false;
+                }
+            });
         for ev in ["pointerup", "pointercancel", "pointerleave"] {
             canvas
                 .add_event_listener_with_callback(ev, on_up.as_ref().unchecked_ref())

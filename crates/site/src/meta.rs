@@ -84,6 +84,30 @@ pub fn build_page_meta(
     }
 }
 
+pub fn article_meta(
+    title: &str,
+    description: &str,
+    path: &str,
+    image: Option<&str>,
+    json_ld: Vec<Value>,
+) -> HeadMeta {
+    let canonical = absolute_url(path);
+    let image_url = absolute_url(image.unwrap_or(OG_IMAGE));
+    HeadMeta {
+        title: SITE_TITLE_TEMPLATE.replace("%s", title),
+        description: description.to_string(),
+        canonical: canonical.clone(),
+        og_title: title.to_string(),
+        og_type: OgType::Article,
+        og_url: canonical,
+        og_image: image_url.clone(),
+        og_image_dims: false,
+        twitter_title: title.to_string(),
+        twitter_image: image_url,
+        json_ld,
+    }
+}
+
 /// The layout default head (used by pages with no metadata export, e.g. 404).
 pub fn default_meta(path: &str) -> HeadMeta {
     let abs = absolute_url(path);
@@ -208,4 +232,24 @@ pub fn render_head(meta: &HeadMeta) -> String {
     }
 
     h
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn escapes_html_text_and_attributes() {
+        assert_eq!(
+            esc("<a href='x'>&\""),
+            "&lt;a href=&#39;x&#39;&gt;&amp;&quot;"
+        );
+    }
+
+    #[test]
+    fn json_ld_escapes_script_breakouts_and_js_separators() {
+        let rendered = stringify_json_ld(&json!({"value": "</script>\u{2028}\u{2029}"}));
+        assert_eq!(rendered, r#"{"value":"\u003c/script>\u2028\u2029"}"#);
+    }
 }

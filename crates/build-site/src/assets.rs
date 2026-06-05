@@ -50,3 +50,14 @@ pub fn hash_and_rename_css(dist: &Path) -> String {
     }
     "/_assets/app.css".to_string()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn fnv_hash_is_stable() {
+        assert_eq!(hash_bytes(b""), "84222325");
+        assert_eq!(hash_bytes(b"hello"), "80aabd0b");
+    }
+}

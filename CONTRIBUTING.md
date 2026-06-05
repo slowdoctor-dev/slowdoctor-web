@@ -1,23 +1,25 @@
 # Content Editing Guide
 
-This is a static Next.js 16 site. All content lives in source files — there is no database or CMS. Edit the files, rebuild, and deploy.
+This is a static **Rust + Leptos** site. All content lives in source files — there is
+no database or CMS. Edit the files, rebuild (`make build`), and deploy. See
+[DEPLOY.md](DEPLOY.md) for toolchain setup.
 
 ## Quick Reference
 
 | What to change | File | Notes |
 |---|---|---|
-| Homepage (hero) | `src/app/page.tsx` | Edit text directly |
-| Physician page | `src/app/physician/page.tsx` | Clinical focus, philosophy |
-| Engineer page | `src/app/engineer/page.tsx` | `interests`, `projects` arrays |
-| CV page | `src/app/cv/page.tsx` | Education, career, publications |
-| Publications | `src/lib/cv.ts` | `publications` array |
-| Links page | `src/app/links/page.tsx` | Auto-populated from shared data |
-| Navigation & footer | `src/app/layout.tsx` | `navLinks` array |
-| Site constants | `src/lib/config.ts` | `SITE`, `AUTHOR`, `PRACTICE` |
-| Social / profile URLs | `src/lib/links.ts` | Single source of truth for all URLs |
-| Site metadata & SEO | `src/app/layout.tsx` | `metadata` and `personSchema` objects |
-| Theme & colors | `src/app/globals.css` | CSS variables in `:root` |
-| Blog posts | `src/content/blog/*.mdx` | See "Adding a Blog Post" below |
+| Homepage (hero) | `crates/site/src/pages.rs` (`home`) | Edit text directly |
+| Physician page | `crates/site/src/pages.rs` (`physician`) | Clinical focus, philosophy |
+| Engineer page | `crates/site/src/pages.rs` (`engineer`) | `interests`, `projects` arrays |
+| CV page | `crates/site/src/pages.rs` (`cv`) | Education, career, publications |
+| Publications | `crates/site/src/data.rs` (`publications`) | Publication list |
+| Links page | `crates/site/src/pages.rs` (`links`) | Auto-populated from shared data |
+| Navigation & footer | `crates/site/src/pages.rs` (`nav_links`, `footer`) | |
+| Site constants | `crates/site/src/data.rs` | `SITE_*`, `AUTHOR_*`, `PRACTICE_*` |
+| Social / profile URLs | `crates/site/src/data.rs` (`social_links`, etc.) | Single source of truth |
+| JSON-LD / SEO | `crates/site/src/{schema,meta}.rs` | Person/Practice/Breadcrumb schemas |
+| Theme & colors | `globals.css` | CSS variables in `:root` |
+| Blog posts | `src/content/blog/*.md` | See "Adding a Blog Post" below |
 
 ## Adding a Blog Post
 
@@ -27,31 +29,33 @@ This is a static Next.js 16 site. All content lives in source files — there is
 2. Run the conversion:
 
 ```bash
-npm run convert                              # convert all files in incoming/
-npm run convert -- "2026-04-11_PT_my-post.md"  # convert a single file
+make convert                       # convert all files in incoming/
+make convert FILE=2026-04-11_PT_my-post.md   # convert a single file
 ```
 
-3. The script creates `src/content/blog/2026-04-11-my-post.mdx` (date-prefixed) with correct frontmatter
-4. Claude Code reads the post and adds `tags` and `axes` to the frontmatter
+3. The tool creates `src/content/blog/2026-04-11-my-post.md` (date-prefixed) with
+   correct frontmatter
+4. Add `tags` and `axes` to the frontmatter
 5. Review and edit as needed
 
-Files follow the naming convention `YYYY-MM-DD_CHANNEL_slug.md`. The date and slug are extracted from the filename, and the output keeps the `YYYY-MM-DD-slug.mdx` convention (the date prefix is stripped to form the URL slug).
+Files follow the naming convention `YYYY-MM-DD_CHANNEL_slug.md`. The date and slug are
+extracted from the filename, and the output keeps the `YYYY-MM-DD-slug.md` convention
+(the date prefix is stripped to form the URL slug).
 
 ### From scratch
 
-Run the helper script:
-
 ```bash
-npm run new-post -- "My Post Title"
+make new-post TITLE="My Post Title"
 ```
 
-This creates `src/content/blog/2026-04-11-my-post-title.mdx` (with today's date) with frontmatter pre-filled. Open it and write your content in Markdown/MDX.
+This creates `src/content/blog/2026-04-11-my-post-title.md` (with today's date) with
+frontmatter pre-filled. Open it and write your content in Markdown.
 
 ### Manual creation
 
-Create a file in `src/content/blog/` with the `YYYY-MM-DD-slug.mdx` naming convention:
+Create a file in `src/content/blog/` with the `YYYY-MM-DD-slug.md` naming convention:
 
-```mdx
+```md
 ---
 title: "Post Title"
 date: "2026-04-08"
@@ -83,104 +87,90 @@ const x = 42;
 | `tags` | No | Array of lowercase tags, e.g. `["meta", "introduction"]` |
 | `axes` | No | Physician/Engineer/Life weights (integers 0-10, must sum to 10) |
 
-**File naming:** Blog filenames use a `YYYY-MM-DD-slug.mdx` convention. The date prefix is stripped to produce the URL slug. `2026-04-08-my-post.mdx` → `/blog/my-post`
+**File naming:** Blog filenames use a `YYYY-MM-DD-slug.md` convention. The date prefix
+is stripped to produce the URL slug. `2026-04-08-my-post.md` → `/blog/my-post`
 
 ## Adding a Publication
 
-Edit `src/lib/cv.ts`. Add an entry to the `publications` array:
+Edit `crates/site/src/data.rs`. Add an entry to the `publications()` vector:
 
-```typescript
-{
-  title: "Full paper title",
-  authors: "Author A, Author B, Lim J",
-  journal: "Journal Name",
-  year: 2026,
-  volume: "1",                 // optional
-  issue: "2",                  // optional
-  pages: "10-15",              // optional
-  doi: "10.xxxx/xxxxx",       // optional
-  pubmed: "12345678",          // optional
+```rust
+Publication {
+    title: "Full paper title",
+    authors: "Author A, Author B, Lim J",
+    journal: "Journal Name",
+    year: 2026,
+    published_date: Some("2026-01-15"), // optional
+    volume: Some("1"),                  // optional
+    issue: Some("2"),                   // optional
+    pages: Some("10-15"),               // optional
+    doi: Some("10.xxxx/xxxxx"),         // optional
+    pubmed: Some("12345678"),           // optional
 },
 ```
 
 ## Changing Social Links
 
-Edit `src/lib/links.ts`. All consumers (layout footer, homepage channels, links page, JSON-LD sameAs) update automatically.
-
-```typescript
-export const socialLinks = [
-  { label: "YouTube", url: "https://...", handle: "@slowdoctor" },
-  // add or remove entries here
-];
-```
+Edit `crates/site/src/data.rs` (`social_links` / `medical_links`). All consumers
+(footer, links page, JSON-LD `sameAs`) update automatically.
 
 ## Adding a New Page
 
-1. Create `src/app/your-page/page.tsx`
-2. Add metadata with `alternates: { canonical: "/your-page" }`
-3. Add a BreadcrumbList JSON-LD (see existing pages for pattern)
-4. Add the route to `navLinks` in `src/app/layout.tsx` if it should appear in navigation
+1. Add a `pub fn your_page() -> RenderedPage` in `crates/site/src/pages.rs`
+   (build metadata with `build_page_meta`, include a `breadcrumb_schema`).
+2. Add a `write_page("your-page.html", &pages::your_page(), &css_href)` call in
+   `crates/build/src/main.rs`.
+3. Add the route to `nav_links` and to `other_static` in
+   `crates/build/src/generators.rs` (sitemap) if it should be listed.
 
 ## Build & Preview
 
 ```bash
-npm run build                                    # Build (generates sitemap + RSS)
-python3 -m http.server 3001 --directory out      # Preview locally
+make build      # build into dist/ (CSS, WASM island, pages, sitemap, feed)
+make serve      # build + serve dist/ on http://localhost:8080
 ```
 
 ## Validation
 
-After building, run the SEO check:
-
 ```bash
-npm run validate
+make validate   # verifies metadata, canonical URLs, and structured data
 ```
-
-This verifies all pages have proper metadata, canonical URLs, and structured data.
 
 ## Project Structure
 
 ```
-src/
-  app/
-    layout.tsx          # Root layout (nav, footer, fonts, metadata)
-    page.tsx            # Homepage
-    not-found.tsx       # Custom 404
-    globals.css         # Theme, colors, prose styles
-    blog/
-      page.tsx          # Blog listing
-      [slug]/page.tsx   # Individual blog post
-    cv/page.tsx         # Curriculum vitae
-    physician/page.tsx  # Clinical philosophy and focus
-    engineer/page.tsx   # Engineering thesis and projects
-    links/page.tsx      # External profile links
-  components/
-    axis-bar.tsx        # Physician/Engineer/Life axis visualization
-    blog-list.tsx       # Blog listing with tag filtering
-    json-ld.tsx         # JSON-LD structured data component
-  content/
-    blog/*.mdx          # Blog posts (Markdown + JSX)
-    incoming/           # Drop zone for MD drafts
-  data/
-    doctor.ts           # Doctor profile (single source of truth)
-  lib/
-    blog.ts             # Blog utilities (read posts, parse MDX)
-    breadcrumbs.ts      # BreadcrumbList JSON-LD helper
-    config.ts           # Site, author, practice constants
-    cv.ts               # Publication data
-    links.ts            # Centralized social/profile URLs
-    metadata.ts         # Page metadata builder
-  mdx-components.tsx    # MDX component overrides (syntax highlighting, links)
-scripts/
-  date-utils.cts        # Shared date parsing + stripDatePrefix for build scripts
-  generate-feed.cts     # Build-time RSS feed generator
-  generate-sitemap.cts  # Build-time sitemap generator
-  convert-md.cts        # Convert incoming MD drafts to MDX blog posts
-  new-post.cts          # Scaffold new blog post
-  validate.cts          # Post-build SEO validation
+crates/
+  site/src/
+    lib.rs            # module wiring + feature gates (ssr / csr)
+    data.rs           # doctor profile, site/author/practice constants, links, CV
+    types.rs          # shared serde types (BlogPostSummary, Axes)
+    components.rs      # shared views: social icons, axis bar, post card
+    pages.rs          # layout shell + all page views (home, blog, cv, ...)
+    meta.rs           # <head> metadata builder + JSON-LD escaping
+    schema.rs         # Person / Practice / Breadcrumb JSON-LD
+    markdown.rs       # blog loading: frontmatter, validation, comrak+syntect
+  build/src/
+    main.rs           # SSG: HTML shell, writes dist/, island loader
+    assets.rs         # public/ copy, CSS content-hashing
+    generators.rs     # sitemap.xml + feed.xml
+  island-blog-filter/src/
+    main.rs           # Leptos CSR/WASM blog tag-filter island
+  tools/src/bin/
+    new_post.rs       # scaffold a new post
+    convert.rs        # incoming drafts -> blog posts
+    validate.rs       # post-build SEO validation
+src/content/
+  blog/*.md           # blog posts
+  incoming/           # drop zone for MD drafts
 public/
+  fonts/              # vendored Inter + Plus Jakarta Sans woff2
+  images/profile.jpg
+  og-default.png      # default social sharing image
+  favicon.ico
   robots.txt
-  og-default.png        # Default social sharing image
-  feed.xml              # Generated RSS feed
-  sitemap.xml           # Generated sitemap
+  _headers            # cache + security headers (copied to dist/)
+  _redirects          # redirect rules (copied to dist/)
+globals.css           # Tailwind entry + theme + prose/font rules
+Makefile              # build / serve / validate / new-post / convert
+wrangler.toml         # Cloudflare assets config (directory = ./dist)
 ```

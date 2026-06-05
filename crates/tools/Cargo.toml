@@ -1,0 +1,16 @@
+[package]
+name = "tools"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+publish = false
+
+# Bins are auto-discovered from src/bin/{new_post,convert,validate}.rs
+
+[dependencies]
+site = { path = "../site", features = ["ssr"] }
+serde = { workspace = true }
+serde_yaml = { workspace = true }
+time = { workspace = true }
+walkdir = { workspace = true }
+regex = { workspace = true }

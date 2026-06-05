@@ -1,0 +1,31 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/site",
+    "crates/build",
+    "crates/island-blog-filter",
+    "crates/tools",
+]
+
+[workspace.package]
+edition = "2021"
+license = "MIT"
+publish = false
+
+[workspace.dependencies]
+leptos = { version = "0.8", default-features = false }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_yaml = "0.9"
+comrak = "0.29"
+walkdir = "2"
+regex = "1"
+time = { version = "0.3", features = ["macros", "formatting", "parsing"] }
+wasm-bindgen = "0.2"
+
+# Size-optimized release builds (primarily for the WASM island).
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"

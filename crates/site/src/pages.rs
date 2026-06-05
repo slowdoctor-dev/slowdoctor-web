@@ -155,6 +155,31 @@ pub fn home(posts: &[BlogPostSummary]) -> RenderedPage {
                 </p>
             </section>
 
+            <section class="pb-16">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-sm font-medium text-accent uppercase tracking-wider">
+                        "The Burnout Runner"
+                    </h2>
+                    <span class="text-xs text-muted">"a tiny Rust + WASM game"</span>
+                </div>
+                <div class="game-wrap">
+                    <canvas
+                        id="game-canvas"
+                        width="900"
+                        height="260"
+                        role="img"
+                        aria-label="The Burnout Runner — an endless-runner mini-game"
+                    ></canvas>
+                </div>
+                <p class="mt-3 text-xs text-muted">
+                    "Click the game, then "
+                    <span class="text-foreground">"Space / \u{2191}"</span>
+                    " to jump, "
+                    <span class="text-foreground">"\u{2193}"</span>
+                    " to duck. On touch: tap to jump, hold the lower half to duck. Grab \u{2615} for burnout relief. Press M to mute."
+                </p>
+            </section>
+
             <section class="pb-16 grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <a
                     href="/physician"
@@ -195,6 +220,7 @@ pub fn home(posts: &[BlogPostSummary]) -> RenderedPage {
                     <div class="space-y-3">{recent}</div>
                 </section>
             })}
+            <script type="module" src="/_assets/game-init.js"></script>
         </div>
     };
 

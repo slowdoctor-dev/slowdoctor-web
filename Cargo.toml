@@ -4,6 +4,7 @@ members = [
     "crates/site",
     "crates/build",
     "crates/island-blog-filter",
+    "crates/game",
     "crates/tools",
 ]
 

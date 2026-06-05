@@ -7,13 +7,26 @@ const appDirectory = path.join(process.cwd(), "src/app");
 const blogDirectory = path.join(process.cwd(), "src/content/blog");
 const sitemapPath = path.join(process.cwd(), "public/sitemap.xml");
 
-async function getStaticRoutes(directory, segments = []) {
+async function getStaticRoutes(directory: string, segments: string[] = []) {
   const entries = await fs.readdir(directory, { withFileTypes: true });
-  const routes = new Set();
+  const routes = new Set<string>();
 
   for (const entry of entries) {
     if (entry.isDirectory()) {
-      if (entry.name.startsWith("[") || entry.name.startsWith("(")) {
+      if (entry.name.startsWith("[")) {
+        continue;
+      }
+
+      if (entry.name.startsWith("(")) {
+        const groupedRoutes = await getStaticRoutes(
+          path.join(directory, entry.name),
+          segments,
+        );
+
+        for (const route of groupedRoutes) {
+          routes.add(route);
+        }
+
         continue;
       }
 
@@ -72,7 +85,7 @@ async function getBlogRoutes() {
   return results.sort((a, b) => a.route.localeCompare(b.route));
 }
 
-function createUrl(route, lastmod) {
+function createUrl(route: string, lastmod?: string) {
   const lines = [
     "  <url>",
     `    <loc>${siteUrl}${route === "/" ? "/" : route}</loc>`,

@@ -34,6 +34,24 @@ if (fs.existsSync(filePath)) {
   process.exit(1);
 }
 
+const escapedSlug = slug.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const datePrefixedSlug = new RegExp(
+  `^\\d{4}-\\d{2}-\\d{2}-${escapedSlug}\\.mdx$`,
+);
+const collidingFile = fs
+  .readdirSync(path.join(process.cwd(), "src/content/blog"))
+  .find(
+    (entry: string) =>
+      entry === `${slug}.mdx` || datePrefixedSlug.test(entry),
+  );
+
+if (collidingFile) {
+  console.error(
+    `Post slug "${slug}" already exists as src/content/blog/${collidingFile}`,
+  );
+  process.exit(1);
+}
+
 const content = `---
 title: "${title}"
 date: "${date}"

@@ -68,6 +68,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
   }
 
   const { Content } = post;
+  const imageUrl = new URL(post.image ?? SITE.ogImage, SITE.url).toString();
 
   const articleSchema = {
     "@context": "https://schema.org",
@@ -95,7 +96,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
       "@id": doctor.id,
       name: AUTHOR.name,
     },
-    image: `${SITE.url}${post.image ?? SITE.ogImage}`,
+    image: imageUrl,
     ...(post.tags && post.tags.length > 0 && { keywords: post.tags.join(", ") }),
   };
 

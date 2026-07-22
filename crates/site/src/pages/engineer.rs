@@ -12,7 +12,7 @@ use leptos::prelude::*;
 pub fn engineer() -> RenderedPage {
     let interests = [
         ("Medical Informatics", "Applying computing to clinical workflows \u{2014} charting, records, and knowledge systems that actually fit how medicine works."),
-        ("Infodemiology", "How health information spreads online \u{2014} using search and social data to understand what patients are actually looking for."),
+        ("Applied Machine Learning", "Adapting and evaluating LLMs and multimodal foundation models for specialized clinical domains \u{2014} imaging, video, and clinical text."),
         ("Health IT", "Building custom tools for a solo clinic \u{2014} scheduling, inventory, patient flow, and digital signage \u{2014} instead of relying on off-the-shelf solutions."),
     ];
     let interest_cards: Vec<_> = interests
@@ -96,7 +96,7 @@ pub fn engineer() -> RenderedPage {
 
     let meta = build_page_meta(
         "Engineer",
-        "Medical informatics, infodemiology, and health IT. Building custom scheduling, inventory, and digital signage tools for a solo plastic surgery clinic.",
+        "Medical informatics, applied machine learning, and health IT. Building custom scheduling, inventory, and digital signage tools for a solo plastic surgery clinic.",
         "/engineer",
         OgType::Website,
         false,

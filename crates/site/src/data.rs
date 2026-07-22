@@ -81,7 +81,7 @@ pub fn doctor() -> Doctor {
         credential: Credential {
             name: "Plastic Surgery Specialist",
             category: "Board Certification",
-            recognized_by: "Korean Medical Association",
+            recognized_by: "Ministry of Health and Welfare, Republic of Korea",
         },
         member_of: vec![
             "Korean Society of Plastic and Reconstructive Surgeons",

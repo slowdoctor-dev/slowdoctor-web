@@ -95,7 +95,7 @@ pub fn cv() -> RenderedPage {
             <section class="pb-10">
                 {cv_section_heading("Education")}
                 <div class="space-y-3 text-sm">
-                    {cv_entry("Korea National Open University", Some("B.S. in Statistics and Data Science / B.S. in Computer Science (Double Major, in progress)"), "2025 \u{2013} Present")}
+                    {cv_entry("Korea National Open University", Some("B.S. in Statistics and Data Science; Double Major in Computer Science (in progress)"), "2025 \u{2013} Present")}
                     {cv_entry("Seoul National University College of Medicine", Some("Doctor of Medicine (M.D.)"), "2006 \u{2013} 2012")}
                     {cv_entry("Seoul Science High School", Some("Early graduation, Valedictorian"), "2004 \u{2013} 2006")}
                 </div>

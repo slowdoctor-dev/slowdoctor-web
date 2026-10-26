@@ -1,7 +1,8 @@
 //! JSON-LD structured data — ported from `src/lib/{schema,breadcrumbs}.ts`.
 
 use crate::data::{
-    doctor, Publication, AUTHOR_JOB_TITLE, AUTHOR_NAME, PRACTICE_NAME, PRACTICE_URL, SITE_URL,
+    doctor, Publication, AUTHOR_JOB_TITLE, AUTHOR_NAME, CONTACT_EMAIL, PRACTICE_NAME, PRACTICE_URL,
+    SITE_URL,
 };
 use crate::types::BlogPostSummary;
 use serde_json::{json, Value};
@@ -20,6 +21,7 @@ pub fn person_schema() -> Value {
         "jobTitle": d.job_title,
         "description": d.description,
         "url": d.url,
+        "email": CONTACT_EMAIL,
         "image": d.image,
         "medicalSpecialty": d.medical_specialty,
         "alumniOf": d.alumni_of.iter().map(|s| json!({

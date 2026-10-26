@@ -104,6 +104,9 @@ fn render_markdown(body: &str) -> String {
     options.extension.strikethrough = true;
     options.extension.autolink = true;
     options.extension.table = true;
+    // Posts are authored in this repo only; allow raw HTML so write-ups can use
+    // <figure>/<figcaption> for photos.
+    options.render.unsafe_ = true;
 
     let adapter = SyntectAdapter::new(Some("base16-ocean.dark"));
     let mut plugins = Plugins::default();

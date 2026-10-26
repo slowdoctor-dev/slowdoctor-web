@@ -55,6 +55,10 @@ pub fn home(posts: &[BlogPostSummary]) -> RenderedPage {
                     <a href=PRACTICE_URL target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">{PRACTICE_NAME}</a>
                     "."
                 </p>
+                <p class="mt-3 text-sm text-muted">
+                    "Contact: "
+                    <a href=format!("mailto:{CONTACT_EMAIL}") class="text-accent hover:underline">{CONTACT_EMAIL}</a>
+                </p>
             </section>
 
             <section class="pb-12 grid grid-cols-1 sm:grid-cols-2 gap-4">

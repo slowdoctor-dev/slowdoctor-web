@@ -168,6 +168,10 @@ pub const TYPING_URL: &str = "https://type.slowdoctor.dev";
 pub const TYPING_REPO_URL: &str = "https://github.com/slowdoctor-dev/slowdoctor-type";
 /// Shown on /cv so readers know how current the page is. Bump when editing CV data.
 pub const CV_UPDATED: &str = "2026-10-26";
+/// Public contact address. A domain address (Cloudflare Email Routing -> Gmail) is
+/// used so it survives changes of school or employer; set up the route before merging
+/// or swap in a Gmail address here.
+pub const CONTACT_EMAIL: &str = "hello@slowdoctor.dev";
 
 pub fn social_links() -> Vec<SocialLink> {
     vec![
@@ -304,24 +308,34 @@ pub struct Talk {
     pub event: &'static str,
     /// Month/year or year, as it should print on the CV.
     pub date: &'static str,
+    /// One or two sentences for the CV; the fuller write-up (photos, context)
+    /// lives in a blog post linked by `href`.
+    pub summary: Option<&'static str>,
+    /// Site-relative link to the write-up, e.g. "/blog/vhf-hybrid-dielectric-heating".
+    pub href: Option<&'static str>,
 }
 
 /// Invited talks and lectures, newest first.
 ///
-/// TODO(owner): fill in the two bracketed fields below (conference name, in-house
-/// lecture title/organization) before merging. Only the talk title of the first
-/// entry was taken from the deck shared on 2026-09-01.
+/// TODO(owner): fill in the bracketed fields (conference name, in-house lecture
+/// title/organization, months). Only the talk title of the first entry was taken
+/// from the deck shared on 2026-09-01. Write-ups: convert the drafts in
+/// `src/content/incoming/` (`make convert`), then set `href` to the post URL.
 pub fn talks() -> Vec<Talk> {
     vec![
         Talk {
             title: "Hybrid dielectric heating in VHF radiofrequency: theory, mechanism, and clinical application",
             event: "Industrial session, [Conference name \u{2014} confirm]",
             date: "2026",
+            summary: Some("Skin-layer anatomy, how very-high-frequency radiofrequency heats tissue, and where the device fits among ultrasound and monopolar options in a slow-aging plan."),
+            href: None,
         },
         Talk {
             title: "[Lecture title \u{2014} confirm]",
             event: "In-house lecture, [Organization \u{2014} confirm]",
             date: "2026",
+            summary: Some("[One-sentence summary \u{2014} confirm]"),
+            href: None,
         },
     ]
 }

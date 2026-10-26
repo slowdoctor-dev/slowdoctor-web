@@ -71,7 +71,22 @@ pub fn cv() -> RenderedPage {
 
     let talk_items: Vec<_> = talks()
         .into_iter()
-        .map(|t| cv_entry(t.title, Some(t.event), t.date))
+        .map(|t| {
+            view! {
+                <div>
+                    {cv_entry(t.title, Some(t.event), t.date)}
+                    {t.summary.map(|summary| view! {
+                        <p class="mt-1 text-muted leading-relaxed">
+                            {summary}
+                            {t.href.map(|href| view! {
+                                " "
+                                <a href=href class="text-accent hover:underline">"Write-up \u{2192}"</a>
+                            })}
+                        </p>
+                    })}
+                </div>
+            }
+        })
         .collect();
 
     let publication_count = publications().len();
@@ -97,6 +112,9 @@ pub fn cv() -> RenderedPage {
                     <a href=PRACTICE_URL target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
                         "leadps.co.kr"
                     </a>
+                </p>
+                <p class="mt-1 text-sm text-muted">
+                    <a href=format!("mailto:{CONTACT_EMAIL}") class="text-accent hover:underline">{CONTACT_EMAIL}</a>
                 </p>
                 <p class="mt-3 text-xs text-muted">{format!("Updated {CV_UPDATED}")}</p>
             </section>

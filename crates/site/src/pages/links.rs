@@ -56,6 +56,18 @@ pub fn links() -> RenderedPage {
             </section>
             <div class="pb-24 space-y-10">
                 <section>
+                    {section_heading("Contact", "text-sm font-medium text-accent uppercase tracking-wider mb-4")}
+                    <div class="rounded-2xl border border-border bg-card">
+                        <a
+                            href=format!("mailto:{CONTACT_EMAIL}")
+                            class="flex items-center justify-between px-5 py-4 hover:bg-accent-muted transition-colors rounded-2xl"
+                        >
+                            <span class="text-foreground font-medium">"Email"</span>
+                            <span class="text-sm text-muted">{CONTACT_EMAIL}</span>
+                        </a>
+                    </div>
+                </section>
+                <section>
                     {section_heading("Practice", "text-sm font-medium text-accent uppercase tracking-wider mb-4")}
                     <div class="rounded-2xl border border-border bg-card">
                         <a

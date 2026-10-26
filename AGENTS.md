@@ -28,6 +28,11 @@ Conventions:
 - Build + verify with `make build && make validate` (CI runs the same on PRs plus
   `cargo fmt --check` and unit tests). Match the existing Tailwind
   class usage in `view!` macros (Tailwind v4 scans `crates/**/src` via `@source`).
+- Talks: `talks()` in `data.rs` holds title/event/date/summary; the fuller write-up
+  (photos in `public/images/talks/`, context) is a normal blog post tagged `talks`,
+  linked from the entry's `href`. Drafts start in `src/content/incoming/`.
+- Contact address is `CONTACT_EMAIL` in `data.rs` (rendered on /, /cv, /links and in
+  the Person JSON-LD).
 - Keep SEO parity: every route ships full `<head>` metadata + JSON-LD. Blog pages
   render the full post list statically (no-JS/SEO fallback) before the island enhances it.
 - Pin notes: `wasm-bindgen` CLI must match the crate version in `Cargo.lock`; see

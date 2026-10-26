@@ -55,6 +55,13 @@ The convert tool handles:
 - Existing frontmatter preservation (title, description, tags, axes, image)
 - Source file removal after successful conversion
 
+### Talk write-ups
+
+Talks are listed from `talks()` in `crates/site/src/data.rs`. For a talk with photos
+and a summary, write a blog post (drafts for the current entries are in
+`src/content/incoming/`), drop images into `public/images/talks/`, run `make convert`,
+then set the entry's `href` to the post URL.
+
 ### Manual creation
 
 Blog posts live in `src/content/blog/*.md` and support this frontmatter:

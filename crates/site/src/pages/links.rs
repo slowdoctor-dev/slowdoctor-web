@@ -16,7 +16,7 @@ pub fn links() -> RenderedPage {
             <a
                 href=link.url
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="me noopener noreferrer"
                 class="flex items-center justify-between px-5 py-3.5 hover:bg-accent-muted transition-colors first:rounded-t-2xl last:rounded-b-2xl"
             >
                 <span class="text-foreground font-medium">{link.label}</span>
@@ -34,7 +34,7 @@ pub fn links() -> RenderedPage {
             <a
                 href=link.url
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="me noopener noreferrer"
                 class="flex items-center justify-between px-5 py-3.5 hover:bg-accent-muted transition-colors first:rounded-t-2xl last:rounded-b-2xl"
             >
                 <span class="text-foreground font-medium">{link.label}</span>
@@ -51,7 +51,7 @@ pub fn links() -> RenderedPage {
             <section class="pt-24 pb-12 sm:pt-32 sm:pb-16">
                 <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">"Links"</h1>
                 <p class="mt-4 max-w-xl text-lg leading-relaxed text-muted">
-                    "Official profiles, social channels, and practice links for Joonho Lim."
+                    "Profiles, social channels, and clinic links."
                 </p>
             </section>
             <div class="pb-24 space-y-10">
@@ -78,16 +78,28 @@ pub fn links() -> RenderedPage {
                 </section>
                 <section>
                     {section_heading("Code", "text-sm font-medium text-accent uppercase tracking-wider mb-4")}
-                    <div class="rounded-2xl border border-border bg-card">
+                    <div class="rounded-2xl border border-border bg-card divide-y divide-border">
                         <a
                             href=GITHUB_URL
                             target="_blank"
-                            rel="noopener noreferrer"
-                            class="flex items-center justify-between px-5 py-3.5 hover:bg-accent-muted transition-colors rounded-2xl"
+                            rel="me noopener noreferrer"
+                            class="flex items-center justify-between px-5 py-3.5 hover:bg-accent-muted transition-colors first:rounded-t-2xl last:rounded-b-2xl"
                         >
                             <span class="text-foreground font-medium">"GitHub"</span>
                             <span class="text-sm text-muted flex items-center gap-2">
                                 "@slowdoctor-dev"
+                                <span>"\u{2197}"</span>
+                            </span>
+                        </a>
+                        <a
+                            href=TYPING_URL
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="flex items-center justify-between px-5 py-3.5 hover:bg-accent-muted transition-colors first:rounded-t-2xl last:rounded-b-2xl"
+                        >
+                            <span class="text-foreground font-medium">"Typing trainer"</span>
+                            <span class="text-sm text-muted flex items-center gap-2">
+                                "type.slowdoctor.dev"
                                 <span>"\u{2197}"</span>
                             </span>
                         </a>
@@ -103,7 +115,7 @@ pub fn links() -> RenderedPage {
 
     let meta = build_page_meta(
         "Links",
-        "Official profiles and social links for Joonho Lim \u{2014} ORCID, Google Scholar, ResearchGate, YouTube, Instagram, and LEAD Plastic Surgery Clinic.",
+        "Profiles and links for Joonho Lim: ORCID, Google Scholar, ResearchGate, LinkedIn, GitHub, YouTube, Instagram, and LEAD Plastic Surgery Clinic.",
         "/links",
         OgType::Website,
         false,

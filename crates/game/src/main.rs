@@ -418,28 +418,29 @@ fn main() {
     // Keyboard (listens on the canvas; click-to-focus avoids hijacking page scroll).
     {
         let game = game.clone();
-        let on_keydown = Closure::<dyn FnMut(KeyboardEvent)>::new(move |e: KeyboardEvent| {
-            match e.code().as_str() {
-                "Space" | "ArrowUp" | "KeyW" => {
-                    e.prevent_default();
-                    if !e.repeat() {
-                        game.borrow_mut().primary_action();
-                    }
+        let on_keydown = Closure::<dyn FnMut(KeyboardEvent)>::new(move |e: KeyboardEvent| match e
+            .code()
+            .as_str()
+        {
+            "Space" | "ArrowUp" | "KeyW" => {
+                e.prevent_default();
+                if !e.repeat() {
+                    game.borrow_mut().primary_action();
                 }
-                "Enter" => {
-                    let mut g = game.borrow_mut();
-                    if g.state != State::Playing {
-                        g.primary_action();
-                    }
-                }
-                "KeyM" => {
-                    if !e.repeat() {
-                        let mut g = game.borrow_mut();
-                        g.audio.muted = !g.audio.muted;
-                    }
-                }
-                _ => {}
             }
+            "Enter" => {
+                let mut g = game.borrow_mut();
+                if g.state != State::Playing {
+                    g.primary_action();
+                }
+            }
+            "KeyM" => {
+                if !e.repeat() {
+                    let mut g = game.borrow_mut();
+                    g.audio.muted = !g.audio.muted;
+                }
+            }
+            _ => {}
         });
         canvas
             .add_event_listener_with_callback("keydown", on_keydown.as_ref().unchecked_ref())

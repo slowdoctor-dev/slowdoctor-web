@@ -6,7 +6,8 @@ serves from Cloudflare Workers static assets. There is **no server runtime**.
 
 Before writing code, know the layout (see `README.md` "Structure"):
 
-- `crates/site/` — shared lib. Data lives in `src/data.rs`; page views in `src/pages/`
+- `crates/site/` — shared lib. Data lives in `src/data.rs` (profile, clinic programs,
+  talks, publications; `CV_UPDATED` is bumped by hand); page views in `src/pages/`
   (one file per route) with the layout in `src/pages/layout.rs`; shared components (used
   by SSR pages *and* the WASM island) in `src/components.rs`; metadata/JSON-LD in
   `src/meta.rs` + `src/schema.rs`; Markdown loading in `src/markdown.rs`; shared date +
@@ -24,7 +25,8 @@ Conventions:
   no `leptos::ssr::render_to_string` in 0.8). Mount the island with `leptos::mount::mount_to`.
 - A *dynamic* `inner_html=expr` injects raw inner content; a *literal*
   `inner_html="..."` becomes a plain attribute — use an expression (or external file).
-- Build + verify with `make build && make validate`. Match the existing Tailwind
+- Build + verify with `make build && make validate` (CI runs the same on PRs plus
+  `cargo fmt --check` and unit tests). Match the existing Tailwind
   class usage in `view!` macros (Tailwind v4 scans `crates/**/src` via `@source`).
 - Keep SEO parity: every route ships full `<head>` metadata + JSON-LD. Blog pages
   render the full post list statically (no-JS/SEO fallback) before the island enhances it.

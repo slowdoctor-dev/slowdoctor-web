@@ -69,6 +69,16 @@ pub fn cv() -> RenderedPage {
         })
         .collect();
 
+    let talk_items: Vec<_> = talks()
+        .into_iter()
+        .map(|t| cv_entry(t.title, Some(t.event), t.date))
+        .collect();
+
+    let publication_count = publications().len();
+    let cv_description = format!(
+        "Curriculum vitae of Joonho Lim, M.D.: Seoul National University College of Medicine, plastic surgery residency at Seoul National University Hospital, board certification, talks, and {publication_count} peer-reviewed publications."
+    );
+
     let memberships: Vec<_> = d
         .member_of
         .iter()
@@ -85,9 +95,10 @@ pub fn cv() -> RenderedPage {
                 </p>
                 <p class="mt-1 text-sm text-muted">
                     <a href=PRACTICE_URL target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
-                        "LEAD Plastic Surgery Clinic website"
+                        "leadps.co.kr"
                     </a>
                 </p>
+                <p class="mt-3 text-xs text-muted">{format!("Updated {CV_UPDATED}")}</p>
             </section>
 
             <hr class="border-border mb-10"/>
@@ -95,7 +106,8 @@ pub fn cv() -> RenderedPage {
             <section class="pb-10">
                 {cv_section_heading("Education")}
                 <div class="space-y-3 text-sm">
-                    {cv_entry("Korea National Open University", Some("B.S. in Statistics and Data Science / B.S. in Computer Science (Double Major, in progress)"), "2025 \u{2013} Present")}
+                    {cv_entry("The University of Texas at Austin", Some("M.S. in Computer Science (Online), admitted; begins 2027"), "2027 \u{2013}")}
+                    {cv_entry("Korea National Open University", Some("B.S. in Computer Science / B.S. in Statistics and Data Science (double major, in progress)"), "2025 \u{2013} Present")}
                     {cv_entry("Seoul National University College of Medicine", Some("Doctor of Medicine (M.D.)"), "2006 \u{2013} 2012")}
                     {cv_entry("Seoul Science High School", Some("Early graduation, Valedictorian"), "2004 \u{2013} 2006")}
                 </div>
@@ -132,7 +144,7 @@ pub fn cv() -> RenderedPage {
                             <p class="text-foreground font-medium">"Founder & Director"</p>
                             <p class="text-muted">
                                 <a href=PRACTICE_URL target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
-                                    "LEAD Plastic Surgery Clinic website"
+                                    {PRACTICE_NAME}
                                 </a>
                                 ", Gangnam, Seoul"
                             </p>
@@ -143,6 +155,11 @@ pub fn cv() -> RenderedPage {
                     {cv_entry("Plastic Surgeon", Some("POP Plastic Surgery Clinic, Gangnam, Seoul"), "2021 \u{2013} 2022")}
                     {cv_entry("Plastic Surgeon", Some("THE Plastic Surgery Clinic, Gangnam, Seoul"), "2020 \u{2013} 2021")}
                 </div>
+            </section>
+
+            <section class="pb-10">
+                {cv_section_heading("Talks & Teaching")}
+                <div class="space-y-3 text-sm">{talk_items}</div>
             </section>
 
             <section class="pb-10">
@@ -162,7 +179,7 @@ pub fn cv() -> RenderedPage {
 
     let meta = build_page_meta(
         "CV",
-        "Curriculum vitae of Joonho Lim, M.D. \u{2014} education at Seoul National University, plastic surgery residency, board certification, and eight peer-reviewed publications.",
+        &cv_description,
         "/cv",
         OgType::Website,
         false,

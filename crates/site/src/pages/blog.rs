@@ -11,7 +11,8 @@ use crate::schema::{blog_collection_schema, blog_posting_schema, breadcrumb_sche
 use crate::types::BlogPostSummary;
 use leptos::prelude::*;
 
-const BLOG_DESCRIPTION: &str = "Writing by Joonho Lim on plastic surgery, clinical thinking, engineering, and the slower path. Notes from a surgeon who builds his own tools.";
+const BLOG_DESCRIPTION: &str =
+    "Writing by Joonho Lim on plastic surgery, clinical practice, software, and computer science.";
 
 fn blog_list_static(posts: &[BlogPostSummary]) -> impl IntoView {
     let mut all_tags: Vec<String> = posts
@@ -70,7 +71,7 @@ pub fn blog(posts: &[BlogPostSummary]) -> RenderedPage {
             <section class="pt-24 pb-12 sm:pt-32 sm:pb-16">
                 <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">"Blog"</h1>
                 <p class="mt-4 max-w-xl text-lg leading-relaxed text-muted">
-                    "Notes on plastic surgery, clinical thinking, and building with code."
+                    "Notes on plastic surgery, software, and computer science."
                 </p>
             </section>
             <section class="pb-24">

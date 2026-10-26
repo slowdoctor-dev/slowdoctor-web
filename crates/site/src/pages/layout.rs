@@ -57,7 +57,7 @@ fn footer() -> impl IntoView {
                 <a
                     href=link.url
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel="me noopener noreferrer"
                     aria-label=link.label
                     class="text-muted hover:text-foreground transition-colors"
                 >
@@ -75,11 +75,18 @@ fn footer() -> impl IntoView {
                     <a
                         href=GITHUB_URL
                         target="_blank"
-                        rel="noopener noreferrer"
+                        rel="me noopener noreferrer"
                         aria-label="GitHub"
                         class="text-muted hover:text-foreground transition-colors"
                     >
                         {social_icon("GitHub", "w-4 h-4")}
+                    </a>
+                    <a
+                        href="/feed.xml"
+                        aria-label="RSS feed"
+                        class="text-xs text-muted hover:text-foreground transition-colors"
+                    >
+                        "RSS"
                     </a>
                 </div>
             </div>

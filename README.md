@@ -10,8 +10,9 @@ mini-game on the home page.
 
 ## Structure
 
-- `crates/site/` — shared library: data, shared types, page + layout components,
-  metadata/JSON-LD builders, Markdown loader
+- `crates/site/` — shared library: data (`src/data.rs`: profile, clinic programs, talks,
+  publications), shared types, page + layout components, metadata/JSON-LD builders,
+  Markdown loader
 - `crates/build-site/` — the static site generator (renders every route to `dist/`,
   hashes CSS, copies `public/`, generates sitemap + feed)
 - `crates/island-blog-filter/` — Leptos CSR/WASM island for the blog tag filter
@@ -78,7 +79,8 @@ Required: `title`, `date`, `description`. Optional: `image`, `tags`, `axes` (mus
 
 The build produces a `dist/` directory served via Cloudflare Workers + static assets.
 Builds + deploys run in **GitHub Actions** (`.github/workflows/deploy.yml`) on push to
-`main`. See [DEPLOY.md](DEPLOY.md).
+`main`. Pull requests and non-`main` pushes run `.github/workflows/ci.yml` (format check,
+unit tests, `make build && make validate`) without deploying. See [DEPLOY.md](DEPLOY.md).
 
 ### Configuration files
 

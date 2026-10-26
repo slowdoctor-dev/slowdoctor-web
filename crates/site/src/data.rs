@@ -71,7 +71,7 @@ pub fn doctor() -> Doctor {
         family_name: "Lim",
         title: "Joonho Lim, M.D.",
         job_title: "Board-Certified Plastic Surgeon",
-        description: "Board-certified plastic surgeon specializing in slow-aging, scar treatment, and natural eye surgery. Founder of LEAD Plastic Surgery Clinic in Seoul.",
+        description: "Board-certified plastic surgeon. Founder and director of LEAD Plastic Surgery Clinic in Gangnam, Seoul, practicing non-surgical scar treatment, slow-aging care, and eyelid surgery.",
         url: SITE_URL,
         image: format!("{SITE_URL}/images/profile.jpg"),
         alumni_of: vec![
@@ -102,19 +102,10 @@ pub fn doctor() -> Doctor {
             },
             phone: "+82-2-6953-3231",
         },
-        knows_about: vec![
-            "Anti-aging medicine",
-            "Non-surgical facial rejuvenation",
-            "Ultrasound skin lifting",
-            "Radiofrequency skin tightening",
-            "Dermal filler",
-            "Botulinum toxin injection",
-            "Scar treatment and revision",
-            "Keloid management",
-            "Non-incisional blepharoplasty",
-            "Lower blepharoplasty with fat repositioning",
-            "Endoscopic brow lift",
-        ],
+        knows_about: clinical_programs()
+            .iter()
+            .flat_map(|p| p.items.iter().copied())
+            .collect(),
         medical_specialty: "PlasticSurgery",
         same_as: vec![
             "https://orcid.org/0000-0002-4556-1536",
@@ -146,8 +137,8 @@ pub const AUTHOR_KOREAN: &str = "임준호";
 pub const AUTHOR_CREDENTIALED_NAME: &str = "Joonho Lim, M.D.";
 pub const AUTHOR_JOB_TITLE: &str = "Board-Certified Plastic Surgeon";
 
-pub const DESCRIPTION_FULL: &str = "Board-certified plastic surgeon and engineer specializing in slow-aging, scar treatment, and blepharoplasty. Practicing in Gangnam, Seoul, with a focus on long-term results over quick fixes.";
-pub const DESCRIPTION_BRIEF: &str = "Board-certified plastic surgeon and engineer, practicing in Gangnam, Seoul.";
+pub const DESCRIPTION_FULL: &str = "Board-certified plastic surgeon in Gangnam, Seoul. Founder of LEAD Plastic Surgery Clinic. Studies computer science and builds the software the clinic runs on.";
+pub const DESCRIPTION_BRIEF: &str = "Board-certified plastic surgeon in Gangnam, Seoul. Studies computer science and builds the clinic\u{2019}s own software.";
 
 pub const PRACTICE_NAME: &str = "LEAD Plastic Surgery Clinic";
 pub const PRACTICE_LOCATION: &str = "Dogok-dong, Gangnam-gu, Seoul, South Korea";
@@ -172,23 +163,166 @@ pub struct MedicalLink {
 pub const GITHUB_URL: &str = "https://github.com/slowdoctor-dev";
 pub const REPO_URL: &str = "https://github.com/slowdoctor-dev/slowdoctor-web";
 pub const PRACTICE_URL: &str = "https://leadps.co.kr";
+/// Typing trainer side project (separate repo: slowdoctor-type).
+pub const TYPING_URL: &str = "https://type.slowdoctor.dev";
+pub const TYPING_REPO_URL: &str = "https://github.com/slowdoctor-dev/slowdoctor-type";
+/// Shown on /cv so readers know how current the page is. Bump when editing CV data.
+pub const CV_UPDATED: &str = "2026-10-26";
 
 pub fn social_links() -> Vec<SocialLink> {
     vec![
-        SocialLink { label: "YouTube", url: "https://www.youtube.com/@slowdoctor", handle: "@slowdoctor" },
-        SocialLink { label: "Instagram", url: "https://www.instagram.com/slowdoctor_/", handle: "@slowdoctor_" },
-        SocialLink { label: "Threads", url: "https://www.threads.net/@slowdoctor_", handle: "@slowdoctor_" },
-        SocialLink { label: "TikTok", url: "https://www.tiktok.com/@slowdoctor_", handle: "@slowdoctor_" },
-        SocialLink { label: "Naver Blog", url: "https://blog.naver.com/plastic_talks", handle: "plastic_talks" },
+        SocialLink {
+            label: "YouTube",
+            url: "https://www.youtube.com/@slowdoctor",
+            handle: "@slowdoctor",
+        },
+        SocialLink {
+            label: "Instagram",
+            url: "https://www.instagram.com/slowdoctor_/",
+            handle: "@slowdoctor_",
+        },
+        SocialLink {
+            label: "Threads",
+            url: "https://www.threads.net/@slowdoctor_",
+            handle: "@slowdoctor_",
+        },
+        SocialLink {
+            label: "TikTok",
+            url: "https://www.tiktok.com/@slowdoctor_",
+            handle: "@slowdoctor_",
+        },
+        SocialLink {
+            label: "Naver Blog",
+            url: "https://blog.naver.com/plastic_talks",
+            handle: "plastic_talks",
+        },
     ]
 }
 
 pub fn medical_links() -> Vec<MedicalLink> {
     vec![
-        MedicalLink { label: "ORCID", url: "https://orcid.org/0000-0002-4556-1536", detail: "0000-0002-4556-1536" },
-        MedicalLink { label: "Google Scholar", url: "https://scholar.google.com/citations?user=i_e44lEAAAAJ", detail: "Publications" },
-        MedicalLink { label: "ResearchGate", url: "https://www.researchgate.net/profile/Joonho-Lim", detail: "Profile" },
-        MedicalLink { label: "LinkedIn", url: "https://www.linkedin.com/in/slowdoctor/", detail: "@slowdoctor" },
+        MedicalLink {
+            label: "ORCID",
+            url: "https://orcid.org/0000-0002-4556-1536",
+            detail: "0000-0002-4556-1536",
+        },
+        MedicalLink {
+            label: "Google Scholar",
+            url: "https://scholar.google.com/citations?user=i_e44lEAAAAJ",
+            detail: "Publications",
+        },
+        MedicalLink {
+            label: "ResearchGate",
+            url: "https://www.researchgate.net/profile/Joonho-Lim",
+            detail: "Profile",
+        },
+        MedicalLink {
+            label: "LinkedIn",
+            url: "https://www.linkedin.com/in/slowdoctor/",
+            detail: "@slowdoctor",
+        },
+    ]
+}
+
+// ---------------------------------------------------------------------------
+// Clinical programs — mirrors the treatment catalogue on leadps.co.kr
+// ---------------------------------------------------------------------------
+
+pub struct ClinicalProgram {
+    pub name: &'static str,
+    /// Korean name as used on the clinic site, if the program has one.
+    pub korean_name: Option<&'static str>,
+    pub summary: &'static str,
+    /// Specific treatments; also feeds `Person.knowsAbout` in the JSON-LD.
+    pub items: &'static [&'static str],
+}
+
+pub fn clinical_programs() -> Vec<ClinicalProgram> {
+    vec![
+        ClinicalProgram {
+            name: "Scars",
+            korean_name: Some("새살틔움술"),
+            summary: "A non-surgical scar program that combines lasers, injections, and release techniques, staged by scar maturity. Surgical revision when indicated.",
+            items: &[
+                "Non-surgical scar treatment",
+                "Keloid and hypertrophic scar management",
+                "Vascular laser (pulsed dye)",
+                "Fractional laser",
+                "CO2 pinhole method",
+                "Intralesional injection",
+                "Subcision",
+                "Jet injector",
+                "Scar revision surgery",
+            ],
+        },
+        ClinicalProgram {
+            name: "Slow-aging",
+            korean_name: Some("슬로우에이징"),
+            summary: "Device, injectable, and metabolic care matched to the diagnosis, planned as ongoing maintenance rather than a single session.",
+            items: &[
+                "Ultrasound skin lifting",
+                "Radiofrequency skin tightening",
+                "Laser toning and pigment treatment",
+                "Botulinum toxin injection",
+                "Dermal filler",
+                "Poly-L-lactic acid (collagen stimulator)",
+                "Hyperbaric oxygen therapy",
+                "Medical weight management",
+            ],
+        },
+        ClinicalProgram {
+            name: "Eyes",
+            korean_name: Some("눈성형"),
+            summary: "Eyelid and periorbital surgery with an emphasis on non-incisional and fat-preserving techniques.",
+            items: &[
+                "Non-incisional blepharoplasty",
+                "Lower blepharoplasty with fat repositioning",
+                "Upper eyelid fat grafting",
+                "Endoscopic brow lift",
+            ],
+        },
+        ClinicalProgram {
+            name: "Face and soft tissue",
+            korean_name: None,
+            summary: "Facial rejuvenation surgery and excision of skin and soft-tissue lesions.",
+            items: &[
+                "Face lift",
+                "Thread lift",
+                "Skin and soft-tissue tumor excision",
+            ],
+        },
+    ]
+}
+
+// ---------------------------------------------------------------------------
+// Talks & teaching
+// ---------------------------------------------------------------------------
+
+pub struct Talk {
+    pub title: &'static str,
+    /// Event or setting, e.g. "Industrial session, <Conference>".
+    pub event: &'static str,
+    /// Month/year or year, as it should print on the CV.
+    pub date: &'static str,
+}
+
+/// Invited talks and lectures, newest first.
+///
+/// TODO(owner): fill in the two bracketed fields below (conference name, in-house
+/// lecture title/organization) before merging. Only the talk title of the first
+/// entry was taken from the deck shared on 2026-09-01.
+pub fn talks() -> Vec<Talk> {
+    vec![
+        Talk {
+            title: "Hybrid dielectric heating in VHF radiofrequency: theory, mechanism, and clinical application",
+            event: "Industrial session, [Conference name \u{2014} confirm]",
+            date: "2026",
+        },
+        Talk {
+            title: "[Lecture title \u{2014} confirm]",
+            event: "In-house lecture, [Organization \u{2014} confirm]",
+            date: "2026",
+        },
     ]
 }
 

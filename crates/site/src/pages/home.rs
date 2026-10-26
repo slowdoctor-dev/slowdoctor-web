@@ -9,6 +9,15 @@ use crate::schema::person_schema;
 use crate::types::BlogPostSummary;
 use leptos::prelude::*;
 
+/// Short "what I'm doing now" list. Keep it to facts that are true today;
+/// update when they change (and bump `CV_UPDATED` if the CV changed too).
+const NOW: [&str; 4] = [
+    "Founder and director, LEAD Plastic Surgery Clinic, Gangnam (since 2024)",
+    "B.S. Computer Science and B.S. Statistics & Data Science, Korea National Open University (in progress)",
+    "Admitted to the online M.S. in Computer Science at The University of Texas at Austin; starting 2027",
+    "Building: this site (Rust/Leptos) and a typing trainer at type.slowdoctor.dev",
+];
+
 pub fn home(posts: &[BlogPostSummary]) -> RenderedPage {
     let recent: Vec<_> = posts
         .iter()
@@ -30,9 +39,65 @@ pub fn home(posts: &[BlogPostSummary]) -> RenderedPage {
         .collect();
     let has_recent = !recent.is_empty();
 
+    let now_items: Vec<_> = NOW
+        .iter()
+        .map(|item| view! { <li class="text-sm text-foreground/90 leading-relaxed">{*item}</li> })
+        .collect();
+
     let inner = view! {
         <div class="mx-auto max-w-3xl px-6">
-            <section class="pt-8 pb-10">
+            <section class="pt-24 pb-12 sm:pt-32 sm:pb-16">
+                <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{AUTHOR_NAME}</h1>
+                <p class="mt-3 text-base text-muted">{AUTHOR_KOREAN}" \u{00b7} "{AUTHOR_JOB_TITLE}</p>
+                <p class="mt-5 text-lg text-foreground/90 leading-relaxed">{DESCRIPTION_BRIEF}</p>
+                <p class="mt-3 text-sm text-muted leading-relaxed">
+                    "Trained at Seoul National University Hospital. Practicing in Gangnam, Seoul at "
+                    <a href=PRACTICE_URL target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">{PRACTICE_NAME}</a>
+                    "."
+                </p>
+            </section>
+
+            <section class="pb-12 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <a
+                    href="/physician"
+                    class="group rounded-2xl border border-border bg-card p-6 transition-all hover:border-accent/30 hover:bg-accent-muted"
+                >
+                    <h2 class="text-lg font-semibold group-hover:text-accent transition-colors">
+                        "Physician"
+                    </h2>
+                    <p class="mt-2 text-sm text-muted">"Scars, slow-aging, and eyelid surgery."</p>
+                </a>
+                <a
+                    href="/engineer"
+                    class="group rounded-2xl border border-border bg-card p-6 transition-all hover:border-accent/30 hover:bg-accent-muted"
+                >
+                    <h2 class="text-lg font-semibold group-hover:text-accent transition-colors">
+                        "Engineer"
+                    </h2>
+                    <p class="mt-2 text-sm text-muted">
+                        "Clinic software, medical informatics, and CS coursework."
+                    </p>
+                </a>
+            </section>
+
+            <section class="pb-12">
+                <h2 class="text-sm font-medium text-accent uppercase tracking-wider mb-4">"Now"</h2>
+                <ul class="list-disc list-outside ml-4 space-y-1.5">{now_items}</ul>
+            </section>
+
+            {has_recent.then(|| view! {
+                <section class="pb-12">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-sm font-medium text-accent uppercase tracking-wider">"Latest"</h2>
+                        <a href="/blog" class="text-sm text-muted hover:text-foreground transition-colors">
+                            "All posts \u{2192}"
+                        </a>
+                    </div>
+                    <div class="space-y-3">{recent}</div>
+                </section>
+            })}
+
+            <section class="pb-24">
                 <div class="game-wrap">
                     // DOM contract: crates/game mounts into this canvas.
                     <canvas
@@ -43,59 +108,11 @@ pub fn home(posts: &[BlogPostSummary]) -> RenderedPage {
                         aria-label="Mini-game"
                     ></canvas>
                 </div>
-            </section>
-
-            <section class="pb-16 sm:pb-20">
-                <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">{AUTHOR_NAME}</h1>
-                <p class="mt-4 text-lg text-accent font-medium">
-                    "Choosing the right way over the fast way."
-                </p>
-                <p class="mt-4 text-lg text-muted leading-relaxed">{DESCRIPTION_BRIEF}</p>
-                <p class="mt-6 text-foreground/90 leading-relaxed">
-                    "I practice both surgery and non-surgical medicine \u{2014} so the recommendation is always what you actually need. Outside the clinic, I explore CS and AI, looking for where they can solve real problems."
+                <p class="mt-2 text-xs text-muted">
+                    "A small canvas game written in Rust and compiled to WebAssembly. "
+                    <a href=REPO_URL target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">"Source \u{2197}"</a>
                 </p>
             </section>
-
-            <section class="pb-16 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <a
-                    href="/physician"
-                    class="group rounded-2xl border border-border bg-card p-6 transition-all hover:border-accent/30 hover:bg-accent-muted"
-                >
-                    <h2 class="text-lg font-semibold group-hover:text-accent transition-colors">
-                        "As a Physician"
-                    </h2>
-                    <p class="mt-2 text-sm text-muted">"Slow-aging, scars, and natural eyes."</p>
-                    <span class="mt-4 inline-block text-sm text-accent opacity-0 group-hover:opacity-100 transition-opacity">
-                        "Learn more \u{2192}"
-                    </span>
-                </a>
-                <a
-                    href="/engineer"
-                    class="group rounded-2xl border border-border bg-card p-6 transition-all hover:border-accent/30 hover:bg-accent-muted"
-                >
-                    <h2 class="text-lg font-semibold group-hover:text-accent transition-colors">
-                        "As an Engineer"
-                    </h2>
-                    <p class="mt-2 text-sm text-muted">
-                        "AI, automation, and real-world problem solving."
-                    </p>
-                    <span class="mt-4 inline-block text-sm text-accent opacity-0 group-hover:opacity-100 transition-opacity">
-                        "Learn more \u{2192}"
-                    </span>
-                </a>
-            </section>
-
-            {has_recent.then(|| view! {
-                <section class="pb-24">
-                    <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-sm font-medium text-accent uppercase tracking-wider">"Latest"</h2>
-                        <a href="/blog" class="text-sm text-muted hover:text-foreground transition-colors">
-                            "All posts \u{2192}"
-                        </a>
-                    </div>
-                    <div class="space-y-3">{recent}</div>
-                </section>
-            })}
             <script type="module" src="/_assets/game-init.js"></script>
         </div>
     };
